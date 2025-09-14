@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TextInput, Button, SafeAreaView } from 'react-n
 export default function App() {
   return (
     <SafeAreaView style={styles.appContainer}>
+      <StatusBar style='dark'/>
       <View style={styles.chatContainer}>
         <Text>Chat starts here</Text>
       </View>
