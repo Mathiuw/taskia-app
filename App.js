@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
+import Calendar from './components/Calendar';
 
 const IAScreen = () => {
   return (
@@ -56,48 +57,42 @@ const TaskScreen = () => {
   }
 
   return (
-    <>
-      <StatusBar style="auto" />
-      <SafeAreaView style={styles.taskContainer}>
-        <FlatList
-          data={courseGoals}
-          renderItem={(itemData) => {
-            return (
-              <GoalItem
-                text={itemData.item.text}
-                id={itemData.item.key}
-                onDeleteItem={DeleteGoalHandler}
-              />
-            );
-          }}
-        />
-        <Button
-          title="Adicionar Tarefa"
-          color="#0088ffff"
-          onPress={StartAddGoalHandler}
-        />
-        <GoalInput
-          visible={modalIsVisible}
-          GoalInput
-          onAddGoal={AddGoalHandler}
-          onCancel={EndAddGoalHandler}
-        />
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={styles.taskContainer}>
+      <FlatList
+        data={courseGoals}
+        renderItem={(itemData) => {
+          return (
+            <GoalItem
+              text={itemData.item.text}
+              id={itemData.item.key}
+              onDeleteItem={DeleteGoalHandler}
+            />
+          );
+        }}
+      />
+      <Button
+        title="Adicionar Tarefa"
+        color="#0088ffff"
+        onPress={StartAddGoalHandler}
+      />
+      <GoalInput
+        visible={modalIsVisible}
+        GoalInput
+        onAddGoal={AddGoalHandler}
+        onCancel={EndAddGoalHandler}
+      />
+    </SafeAreaView>
   );
 }
 
 const CalendarScreen = () => {
   return (
-    <SafeAreaView style={styles.appContainer}>
-      <StatusBar style='dark'/>
-      <View style={{flex: 1, justifyContent: 'center'}}>
-        <Text>Calendar here</Text>
-      </View>
-      <View style={{flex: 1, justifyContent:'center'}}>
+    <View style={{flex: 1}}>
+      <Calendar />
+      <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
         <Text>Tasks here</Text>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -105,7 +100,7 @@ const NoteScreen = () => {
   return (
     <SafeAreaView style={styles.appContainer}>
       <StatusBar style='dark'/>
-
+      <Text>Notes here</Text>
     </SafeAreaView>
   );
 }
@@ -115,7 +110,7 @@ const MyDrawer = createDrawerNavigator({
     IA: IAScreen,
     Tarefas: TaskScreen,
     Calendario: CalendarScreen,
-    Anotacoes: NoteScreen,
+    Anotaçoes: NoteScreen,
   },
 });
 
@@ -130,14 +125,13 @@ export default function App() {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   chatContainer: {
     flex: 15,
-    marginBottom: 4,
+    marginBottom: 16,
     justifyContent: 'flex-end'
   },
 
@@ -151,7 +145,6 @@ const styles = StyleSheet.create({
 
   taskContainer: {
     flex: 1,
-    backgroundColor: "#fff",
   },
 
   inputContainer: {
