@@ -7,6 +7,10 @@ import { useState } from 'react';
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
+
+import NoteInput from "./components/NoteInput";
+import NoteItem from "./components/NoteItem";
+
 import Calendar from './components/Calendar';
 
 const IAScreen = () => {
@@ -97,10 +101,63 @@ const CalendarScreen = () => {
 }
 
 const NoteScreen = () => {
+ const [modalIsVisible, SetModalIsVisible] = useState(false);
+  const [notes, setNotes] = useState([]);
+
+  function StartAddGoalHandler() {
+    SetModalIsVisible(true);
+  }
+
+  function EndAddGoalHandler() {
+    SetModalIsVisible(false);
+  }
+
+  function AddGoalHandler(enteredNoteTitle, enteredNoteText) {
+    if (enteredNoteTitle === "" || enteredNoteText === "") {
+      return;
+    }
+
+    setNotes((currentCourseGoals) => [
+      ...currentCourseGoals,
+      { key: Math.random().toString(), title: enteredNoteTitle, text: enteredNoteText },
+    ]);
+
+    EndAddGoalHandler();
+  }
+
+  function DeleteGoalHandler(id) {
+    console.log("Deleted ", id);
+    setNotes((currentCourseGoals) => {
+      return currentCourseGoals.filter((goal) => goal.key !== id);
+    });
+  }
+
   return (
-    <SafeAreaView style={styles.appContainer}>
-      <StatusBar style='dark'/>
-      <Text>Notes here</Text>
+    <SafeAreaView style={styles.taskContainer}>
+      <FlatList
+        data={notes}
+        renderItem={(itemData) => {
+          return (
+            <NoteItem
+              id={itemData.item.key}
+              title={itemData.item.title}
+              text={itemData.item.text}
+              onDeleteItem={DeleteGoalHandler}
+            />
+          );
+        }}
+      />
+      <Button
+        title="Adicionar nota"
+        color="#0088ffff"
+        onPress={StartAddGoalHandler}
+      />
+      <NoteInput
+        visible={modalIsVisible}
+        GoalInput
+        onAddGoal={AddGoalHandler}
+        onCancel={EndAddGoalHandler}
+      />
     </SafeAreaView>
   );
 }
