@@ -1,22 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { createStaticNavigation, useNavigation} from '@react-navigation/native';
+import { createStaticNavigation} from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useState } from 'react';
 
 import GoalItem from "./components/GoalItem";
 import GoalInput from "./components/GoalInput";
-
 import NoteInput from "./components/NoteInput";
 import NoteItem from "./components/NoteItem";
-
 import Calendar from './components/Calendar';
 
 const IAScreen = () => {
   return (
     <SafeAreaView style={styles.appContainer}>
-      <StatusBar style='auto'/>
       <View style={styles.chatContainer}>
         <Text>Chat starts here</Text>
       </View>
@@ -175,7 +172,10 @@ const Navigation = createStaticNavigation(MyDrawer)
 
 export default function App() {
   return (
-    <Navigation />
+    <>
+      <StatusBar style='auto'/>
+      <Navigation />
+    </>
   )
 }
 

@@ -1,15 +1,48 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import {
   StyleSheet,
   View,
+  Text,
   Button,
   TextInput,
   Modal,
-  Image,
+  Pressable,
+  Platform,
+  TouchableOpacity
 } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 function GoalInput(props) {
   const [interedGoalText, setEnteredGoaltext] = useState("");
+
+  const [dueDate, setDueDate] = useState(new Date())
+
+  const [date, setDate] = useState(new Date())
+  const [showDatePicker, setShowDatePicker] = useState(false)
+
+  const toggleDatePicker = () => {
+    setShowDatePicker(!showDatePicker)
+  }
+
+  const confirmIOSDate = () => {
+    setDueDate(date.toDateString())
+    toggleDatePicker()
+  }
+
+  const onChange = ({ type }, selectedDate) => {
+    if (type == "set"){
+      const currentDate = selectedDate
+      setDate(currentDate)
+
+      if (Platform.OS === "android") {
+        toggleDatePicker()
+        setDueDate(currentDate.toDateString())
+      }
+    }
+    else {
+      toggleDatePicker()
+    }
+  }
 
   function GoalInputHandler(enteredText) {
     setEnteredGoaltext(enteredText);
@@ -23,6 +56,7 @@ function GoalInput(props) {
   return (
     <Modal visible={props.visible} animationType="slide">
       <View style={styles.inputContainer}>
+        <Text>Nome da Tarefa</Text>
         <TextInput
           style={styles.textInput}
           placeholder="insira o nome da tarefa"
@@ -30,15 +64,49 @@ function GoalInput(props) {
           onChangeText={GoalInputHandler}
           value={interedGoalText}
         />
-        <View style={styles.buttomContainer}>
-          <View style={styles.buttom}>
-            <Button title="Cancelar" onPress={props.onCancel} color="#ff0000ff" />
-          </View>
-          <View style={styles.buttom}>
-            <Button
-              title="Adicionar" onPress={AddGoalHandler} color="#0088ffff" 
+        <Text>Data de Conclusao</Text>
+        {!showDatePicker && (
+          <Pressable on onPress={toggleDatePicker}>
+            <TextInput
+              style={styles.textInput}
+              placeholder="insira a data de conclusao"
+              placeholderTextColor={"#0088ffff"}
+              onChangeText={setDate}
+              value={dueDate}
+              editable={false}
+              onPressIn={toggleDatePicker}
             />
+          </Pressable>
+        )}
+        {showDatePicker && (
+          <DateTimePicker 
+          mode='date'
+          value={date}
+          display='spinner'
+          onChange={onChange}
+          style={styles.datePicker}
+          themeVariant="light"
+          />
+        )}
+        {showDatePicker && Platform.OS === "ios" && (
+          <View style={{ flexDirection: "row", justifyContent: "space-around"}}>
+            <TouchableOpacity style={styles.pickerButtom} onPress={toggleDatePicker}>
+              <Text style={styles.pickerButtomText}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.pickerButtom} onPress={confirmIOSDate}>
+              <Text style={styles.pickerButtomText}>Confirmar</Text>
+            </TouchableOpacity>
           </View>
+        )}
+        <Text>Prioridade</Text>
+        <Text>Tags</Text>
+        <View style={styles.buttomContainer}>
+          <TouchableOpacity style={[styles.pickerButtom, {backgroundColor: "#ff0000ff"}]} onPress={props.onCancel}>
+            <Text style={styles.pickerButtomText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.pickerButtom} onPress={AddGoalHandler}>
+            <Text style={styles.pickerButtomText}>Adicionar</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -60,6 +128,8 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 2,
     borderColor: "#0088ffff",
+    color: "#0088ffff",
+    marginVertical: 5,
     borderRadius: 16,
     width: "100%",
     padding: 16,
@@ -80,4 +150,26 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 20,
   },
+
+  pickerButtom: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    marginTop: 10,
+    marginHorizontal: 10,
+    marginBottom: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#0088ffff'
+  },
+
+  pickerButtomText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: '#fff'
+  },  
+
+  datePicker: {
+    height: 120,
+  }
 });
