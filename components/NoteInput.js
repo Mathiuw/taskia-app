@@ -2,13 +2,13 @@ import { useState } from "react";
 import {
   StyleSheet,
   View,
-  Button,
+  TouchableOpacity,
   TextInput,
   Modal,
   Text
 } from "react-native";
 
-function GoalInput(props) {
+function NoteInput(props) {
   const [interedGoalText, setEnteredGoaltext] = useState("")
   const [enteredNoteText, setEnteredNoteText] = useState("")
 
@@ -40,21 +40,19 @@ function GoalInput(props) {
           value={enteredNoteText}
         />
         <View style={styles.buttomContainer}>
-          <View style={styles.buttom}>
-            <Button title="Cancelar" onPress={props.onCancel} color="#ff0000ff" />
-          </View>
-          <View style={styles.buttom}>
-            <Button
-              title="Adicionar" onPress={AddGoalHandler} color="#0088ffff" 
-            />
-          </View>
+          <TouchableOpacity style={[styles.pickerButtom, {backgroundColor: "#ff0000ff"}]} onPress={props.onCancel}>
+            <Text style={styles.pickerButtomText}>Cancelar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.pickerButtom} onPress={AddGoalHandler}>
+            <Text style={styles.pickerButtomText}>Adicionar</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
   );
 }
 
-export default GoalInput;
+export default NoteInput
 
 const styles = StyleSheet.create({
   inputContainer: {
@@ -83,6 +81,25 @@ const styles = StyleSheet.create({
     width: "30%",
     marginHorizontal: 8,
   },
+
+  pickerButtom: {
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 50,
+    marginTop: 10,
+    marginHorizontal: 10,
+    marginBottom: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#0088ffff'
+  },
+
+  pickerButtomText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: '#fff'
+  },  
+
 
   image: {
     width: 100,

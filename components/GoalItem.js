@@ -1,24 +1,32 @@
-import { StyleSheet, Text, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 function GoalItem(props) {
     return (
-        <Pressable 
-        android_ripple={{color: '#35aeff8e'}}
-        style={({pressed}) => pressed && styles.pressedItem}
-        onPress={props.onDeleteItem.bind(this, props.id)}>
-            <Text style={styles.goalItem} >{props.text}</Text>
-        </Pressable>
+        <BouncyCheckbox 
+        style = {styles.goalItem}
+        size={25}
+        text={props.text + " - " + props.date}
+        fillColor="red"
+        unFillColor="#fff"
+        //onPress={(isChecked) => {}}
+        />
     );
 };
 
 export default GoalItem;
 
 const styles = StyleSheet.create({
+    goalItemContainer: {
+        flexDirection: "row",
+        justifyContent: "space-evenly"
+    },
+    
     goalItem: {
         margin: 8,
         padding: 8,
         borderRadius: 6,
-        backgroundColor: "#0088ffff",
+        //backgroundColor: "#0088ffff",
         color: "white",
         overflow: "hidden",
     },

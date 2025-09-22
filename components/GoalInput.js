@@ -1,9 +1,8 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
-  Button,
   TextInput,
   Modal,
   Pressable,
@@ -15,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 function GoalInput(props) {
   const [interedGoalText, setEnteredGoaltext] = useState("");
 
-  const [dueDate, setDueDate] = useState(new Date())
+  const [dueDate, setDueDate] = useState("")
 
   const [date, setDate] = useState(new Date())
   const [showDatePicker, setShowDatePicker] = useState(false)
@@ -49,14 +48,14 @@ function GoalInput(props) {
   }
 
   function AddGoalHandler() {
-    props.onAddGoal(interedGoalText);
+    props.onAddGoal({ text: interedGoalText, date: dueDate});
     setEnteredGoaltext("");
   }
 
   return (
     <Modal visible={props.visible} animationType="slide">
       <View style={styles.inputContainer}>
-        <Text>Nome da Tarefa</Text>
+        <Text style={styles.nameText}>Nome da Tarefa</Text>
         <TextInput
           style={styles.textInput}
           placeholder="insira o nome da tarefa"
@@ -64,14 +63,14 @@ function GoalInput(props) {
           onChangeText={GoalInputHandler}
           value={interedGoalText}
         />
-        <Text>Data de Conclusao</Text>
+        <Text style={styles.nameText}>Data de Conclusao</Text>
         {!showDatePicker && (
           <Pressable on onPress={toggleDatePicker}>
             <TextInput
               style={styles.textInput}
               placeholder="insira a data de conclusao"
               placeholderTextColor={"#0088ffff"}
-              onChangeText={setDate}
+              //onChangeText={setDate}
               value={dueDate}
               editable={false}
               onPressIn={toggleDatePicker}
@@ -98,8 +97,8 @@ function GoalInput(props) {
             </TouchableOpacity>
           </View>
         )}
-        <Text>Prioridade</Text>
-        <Text>Tags</Text>
+        <Text style={styles.nameText}>Prioridade</Text>
+        <Text style={styles.nameText}>Tags</Text>
         <View style={styles.buttomContainer}>
           <TouchableOpacity style={[styles.pickerButtom, {backgroundColor: "#ff0000ff"}]} onPress={props.onCancel}>
             <Text style={styles.pickerButtomText}>Cancelar</Text>
@@ -125,13 +124,20 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
+  nameText: {
+    fontSize: 20,
+    alignSelf: "flex-start",
+    marginHorizontal: 50,
+    marginTop: 15
+  },
+
   textInput: {
     borderWidth: 2,
     borderColor: "#0088ffff",
     color: "#0088ffff",
     marginVertical: 5,
-    borderRadius: 16,
-    width: "100%",
+    borderRadius: 50,
+    width: 300,
     padding: 16,
   },
 

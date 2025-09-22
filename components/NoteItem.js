@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Pressable, View } from "react-native";
 
-function GoalItem(props) {
+function NoteItem(props) {
     return (
         <Pressable 
         android_ripple={{color: '#cbd26bff'}}
@@ -14,7 +14,7 @@ function GoalItem(props) {
     );
 };
 
-export default GoalItem;
+export default NoteItem;
 
 const styles = StyleSheet.create({
     goalItem: {
