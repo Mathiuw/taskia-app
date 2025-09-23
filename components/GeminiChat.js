@@ -21,6 +21,7 @@ const GeminiChat = () => {
 
   useEffect(() => {
     const startChat = async () => {
+      return
       setLoading(true);
 
       const response = await ai.models.generateContent({

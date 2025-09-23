@@ -12,15 +12,15 @@ import CalendarScreen from './screens/CalendarScreen';
 import NoteScreen from './screens/NotesScreen';
 
 export default function App() {
-  const [notes, setNotes] = useState([]);
-  const [tasks, setTasks] = useState([]);
+  let notes = []
+  let tasks = []
 
   const MyDrawer = createDrawerNavigator({
   screens: {
     IA: () => <GeminiChat />,
-    Tarefas: () => <TaskScreen tasks={tasks} setTasks={setTasks} />,
-    Calendario: () => <CalendarScreen tasks={tasks} />,
-    Anotaçoes: () => <NoteScreen notes={notes} setNotes={setNotes} />,
+    Tarefas: () => <TaskScreen tasksData={tasks} />,
+    Calendario: () => <CalendarScreen tasksData={tasks} />,
+    Anotaçoes: () => <NoteScreen notesData={notes} />,
   },
   });
 

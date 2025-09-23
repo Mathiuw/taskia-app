@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  StyleSheet,
   View,
   Text,
   TextInput,
@@ -10,6 +9,8 @@ import {
   TouchableOpacity
 } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
+
+import styles from "../styles";
 
 function GoalInput(props) {
   const [interedGoalText, setEnteredGoaltext] = useState("");
@@ -54,7 +55,7 @@ function GoalInput(props) {
 
   return (
     <Modal visible={props.visible} animationType="slide">
-      <View style={styles.inputContainer}>
+      <View style={styles.inputModalContainer}>
         <Text style={styles.nameText}>Nome da Tarefa</Text>
         <TextInput
           style={styles.textInput}
@@ -112,70 +113,4 @@ function GoalInput(props) {
   );
 }
 
-export default GoalInput;
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    flex: 1,
-    backgroundColor: "#ffffffff",
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-
-  nameText: {
-    fontSize: 20,
-    alignSelf: "flex-start",
-    marginHorizontal: 50,
-    marginTop: 15
-  },
-
-  textInput: {
-    borderWidth: 2,
-    borderColor: "#0088ffff",
-    color: "#0088ffff",
-    marginVertical: 5,
-    borderRadius: 50,
-    width: 300,
-    padding: 16,
-  },
-
-  buttomContainer: {
-    marginTop: 16,
-    flexDirection: "row",
-  },
-
-  buttom: {
-    width: "30%",
-    marginHorizontal: 8,
-  },
-
-  image: {
-    width: 100,
-    height: 100,
-    margin: 20,
-  },
-
-  pickerButtom: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
-    marginTop: 10,
-    marginHorizontal: 10,
-    marginBottom: 15,
-    paddingHorizontal: 20,
-    backgroundColor: '#0088ffff'
-  },
-
-  pickerButtomText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: '#fff'
-  },  
-
-  datePicker: {
-    height: 120,
-  }
-});
+export default GoalInput

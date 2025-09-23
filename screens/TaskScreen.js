@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Text, TouchableOpacity } from "react-native";
-import { useNavigation } from '@react-navigation/native';
 
 import GoalItem from "../components/GoalItem";
 import GoalInput from "../components/GoalInput";
@@ -10,7 +9,7 @@ import styles from "../styles";
 
 const TaskScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
-  const navigation = useNavigation()
+  const [tasks, setTasks] = useState(props.tasksData);
 
   function StartAddGoalHandler() {
     setShowModal(true);
@@ -25,19 +24,19 @@ const TaskScreen = (props) => {
       return;
     }
 
-    props.setTasks((currentCourseGoals) => [
+    setTasks((currentCourseGoals) => [
       ...currentCourseGoals,
       { key: Math.random().toString(), text: interedGoalText.text, date: interedGoalText.date },
     ]);
 
-    EndAddGoalHandler();
+    //props.tasksData = tasks
 
-    navigation.navigate('Anotaçoes')
+    EndAddGoalHandler();
   }
 
   function DeleteGoalHandler(id) {
     console.log("Deleted ", id);
-    props.setTasks((currentCourseGoals) => {
+    setTasks((currentCourseGoals) => {
       return currentCourseGoals.filter((goal) => goal.key !== id);
     });
   }
@@ -45,7 +44,7 @@ const TaskScreen = (props) => {
   return (
     <SafeAreaView style={{flex:1}}>
       <FlatList
-        data={props.tasks}
+        data={tasks}
         renderItem={(itemData) => {
           return (
             <GoalItem

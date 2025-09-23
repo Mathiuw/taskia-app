@@ -1,12 +1,13 @@
 import { useState } from "react";
 import {
-  StyleSheet,
   View,
   TouchableOpacity,
   TextInput,
   Modal,
   Text
 } from "react-native";
+
+import styles from "../styles";
 
 function NoteInput(props) {
   const [interedGoalText, setEnteredGoaltext] = useState("")
@@ -24,7 +25,7 @@ function NoteInput(props) {
 
   return (
     <Modal visible={props.visible} animationType="slide">
-      <View style={styles.inputContainer}>
+      <View style={styles.inputModalContainer}>
         <Text>Nome da nota</Text>
         <TextInput
           style={styles.textInput}
@@ -53,57 +54,3 @@ function NoteInput(props) {
 }
 
 export default NoteInput
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    flex: 1,
-    backgroundColor: "#ffffffff",
-    padding: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-
-  textInput: {
-    borderWidth: 2,
-    borderColor: "#0088ffff",
-    borderRadius: 16,
-    width: "100%",
-    padding: 16,
-  },
-
-  buttomContainer: {
-    marginTop: 16,
-    flexDirection: "row",
-  },
-
-  buttom: {
-    width: "30%",
-    marginHorizontal: 8,
-  },
-
-  pickerButtom: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
-    marginTop: 10,
-    marginHorizontal: 10,
-    marginBottom: 15,
-    paddingHorizontal: 20,
-    backgroundColor: '#0088ffff'
-  },
-
-  pickerButtomText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: '#fff'
-  },  
-
-
-  image: {
-    width: 100,
-    height: 100,
-    margin: 20,
-  },
-});

@@ -9,6 +9,7 @@ import styles from "../styles";
 
 const NoteScreen = (props) => {
   const [showModal, setShowModal] = useState(false);
+  const [notes, setNotes] = useState(props.notesData);
 
   function startAddNote() {
     setShowModal(true);
@@ -23,10 +24,11 @@ const NoteScreen = (props) => {
       return;
     }
 
-    props.setNotes((currentNotes) => [
+    setNotes((currentNotes) => [
       ...currentNotes,
       { key: Math.random().toString(), title: enteredNoteTitle, text: enteredNoteText },
     ]);
+    //props.notesData = notes
 
     endAddNote();
   }
@@ -41,7 +43,7 @@ const NoteScreen = (props) => {
   return (
     <SafeAreaView style={{flex:1}}>
       <FlatList
-        data={props.notes}
+        data={notes}
         renderItem={(itemData) => {
           return (
             <NoteItem
