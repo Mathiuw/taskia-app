@@ -3,9 +3,9 @@ import { createStaticNavigation} from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useState } from 'react';
 
-
 // Screens import
 import LoginScreen from './screens/LoginScreen';
+import GeminiChat from './components/GeminiChat';
 import IAScreen from './screens/AIScreen';
 import TaskScreen from './screens/TaskScreen';
 import CalendarScreen from './screens/CalendarScreen';
@@ -17,7 +17,7 @@ export default function App() {
 
   const MyDrawer = createDrawerNavigator({
   screens: {
-    IA: () => <IAScreen />,
+    IA: () => <GeminiChat />,
     Tarefas: () => <TaskScreen tasks={tasks} setTasks={setTasks} />,
     Calendario: () => <CalendarScreen tasks={tasks} />,
     Anotaçoes: () => <NoteScreen notes={notes} setNotes={setNotes} />,

@@ -5,14 +5,13 @@ import styles from "../styles";
 
 const IAScreen = () => {
   return (
-    <SafeAreaView style={styles.appContainer}>
+    <SafeAreaView style={{flex:1}}>
       <View style={styles.chatContainer}>
-        <Text>Chat starts here</Text>
       </View>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.inputText} placeholder='Descreva sua rotina' placeholderTextColor={"#0088ffff"}/>
+        <TextInput style={styles.aiChatInputText} placeholder='Descreva sua rotina' placeholderTextColor={"#0088ffff"}/>
         <TouchableOpacity style={styles.sendButtom}>
-          <Text style={styles.sendButtomText}>Enviar</Text>
+          <Text style={styles.buttomText}>Enviar</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

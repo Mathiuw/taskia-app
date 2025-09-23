@@ -39,7 +39,7 @@ const NoteScreen = (props) => {
   }
 
   return (
-    <SafeAreaView style={styles.taskContainer}>
+    <SafeAreaView style={{flex:1}}>
       <FlatList
         data={props.notes}
         renderItem={(itemData) => {
@@ -53,8 +53,8 @@ const NoteScreen = (props) => {
           );
         }}
       />
-      <TouchableOpacity style={styles.sendButtom} onPress={startAddNote}>
-        <Text style={[styles.sendButtomText, {fontSize: 18}]}>Adicionar Nota</Text>
+      <TouchableOpacity style={styles.addBottomButtom} onPress={startAddNote}>
+        <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Nota</Text>
       </TouchableOpacity>
       <NoteInput
         visible={showModal}

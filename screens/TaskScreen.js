@@ -43,7 +43,7 @@ const TaskScreen = (props) => {
   }
 
   return (
-    <SafeAreaView style={styles.taskContainer}>
+    <SafeAreaView style={{flex:1}}>
       <FlatList
         data={props.tasks}
         renderItem={(itemData) => {
@@ -56,12 +56,11 @@ const TaskScreen = (props) => {
           );
         }}
       />
-      <TouchableOpacity style={styles.sendButtom} onPress={StartAddGoalHandler}>
-        <Text style={[styles.sendButtomText, {fontSize: 18}]}>Adicionar Tarefa</Text>
+      <TouchableOpacity style={styles.addBottomButtom} onPress={StartAddGoalHandler}>
+        <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Tarefa</Text>
       </TouchableOpacity>
       <GoalInput
         visible={showModal}
-        //GoalInput
         onAddGoal={AddGoalHandler}
         onCancel={EndAddGoalHandler}
       />

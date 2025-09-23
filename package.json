@@ -9,6 +9,8 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@google/genai": "^1.20.0",
+    "@google/generative-ai": "0.24.1",
     "@react-native-community/datetimepicker": "^8.4.4",
     "@react-navigation/drawer": "^7.5.8",
     "expo": "~54.0.0",
