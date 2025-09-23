@@ -6,7 +6,6 @@ import { useState } from 'react';
 // Screens import
 import LoginScreen from './screens/LoginScreen';
 import GeminiChat from './components/GeminiChat';
-import IAScreen from './screens/AIScreen';
 import TaskScreen from './screens/TaskScreen';
 import CalendarScreen from './screens/CalendarScreen';
 import NoteScreen from './screens/NotesScreen';
