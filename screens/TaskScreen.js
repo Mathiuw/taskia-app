@@ -2,39 +2,29 @@ import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 
-import GoalItem from "../components/GoalItem";
-import GoalInput from "../components/GoalInput";
+import TaskItem from "../components/TaskItem";
+import TaskInput from "../components/TaskInput";
 
 import styles from "../styles";
 
-const TaskScreen = (props) => {
-  const [showModal, setShowModal] = useState(false);
-  const [tasks, setTasks] = useState(props.tasksData);
+const TaskScreen = () => {
+  const [showModal, setShowModal] = useState(false)
+  const [tasks, setTasks] = useState([])
 
-  function StartAddGoalHandler() {
-    setShowModal(true);
-  }
-
-  function EndAddGoalHandler() {
-    setShowModal(false);
-  }
-
-  function AddGoalHandler(interedGoalText) {
-    if (interedGoalText.text == "") {
+  function AddTaskHandler(taskName, taskDate, taskPriority) {
+    if (taskName == "" || taskDate == "" || taskPriority == "") {
       return;
     }
 
     setTasks((currentCourseGoals) => [
       ...currentCourseGoals,
-      { key: Math.random().toString(), text: interedGoalText.text, date: interedGoalText.date },
+      { key: Math.random().toString(), text: taskName, date: taskDate, priority: taskPriority },
     ]);
 
-    //props.tasksData = tasks
-
-    EndAddGoalHandler();
+    setShowModal(false)
   }
 
-  function DeleteGoalHandler(id) {
+  function DeleteTaskHandler(id) {
     console.log("Deleted ", id);
     setTasks((currentCourseGoals) => {
       return currentCourseGoals.filter((goal) => goal.key !== id);
@@ -47,21 +37,23 @@ const TaskScreen = (props) => {
         data={tasks}
         renderItem={(itemData) => {
           return (
-            <GoalItem
+            <TaskItem
               text={itemData.item.text}
+              date={itemData.item.date}
+              priority={itemData.item.priority}
               id={itemData.item.key}
-              onDeleteItem={DeleteGoalHandler}
+              onDeleteItem={DeleteTaskHandler}
             />
           );
         }}
       />
-      <TouchableOpacity style={styles.addBottomButtom} onPress={StartAddGoalHandler}>
+      <TouchableOpacity style={styles.addBottomButtom} onPress={() => {setShowModal(true)}}>
         <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Tarefa</Text>
       </TouchableOpacity>
-      <GoalInput
+      <TaskInput
         visible={showModal}
-        onAddGoal={AddGoalHandler}
-        onCancel={EndAddGoalHandler}
+        onAddGoal={AddTaskHandler}
+        onCancel={() => {setShowModal(false)}}
       />
     </SafeAreaView>
   );

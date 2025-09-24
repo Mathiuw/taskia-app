@@ -4,16 +4,16 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 15,
     marginBottom: 16,
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end",
   },
 
   aiChatInputText: {
     borderWidth: 2,
-    borderColor: '#0088ffff',
+    borderColor: "#0088ffff",
     borderRadius: 50,
     paddingVertical: 8,
     paddingHorizontal: 7,
-    marginHorizontal:5,
+    marginHorizontal: 5,
   },
 
   addBottomButtom: {
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     paddingHorizontal: 20,
     borderRadius: 50,
-    backgroundColor: '#0088ffff'
+    backgroundColor: "#0088ffff",
   },
 
   inputContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 
   sendButtom: {
@@ -39,17 +39,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 20,
     borderRadius: 50,
-    backgroundColor: '#0088ffff'
+    backgroundColor: "#0088ffff",
   },
-  
+
   buttomText: {
     fontSize: 14,
     fontWeight: "500",
-    color: '#fff'
-  }, 
+    color: "#fff",
+  },
 
   messageContainer: {
-    borderColor: '#0088ffff',
+    borderColor: "#0088ffff",
     borderWidth: 2,
     borderRadius: 15,
     marginVertical: 10,
@@ -57,12 +57,12 @@ const styles = StyleSheet.create({
 
   messageText: {
     fontSize: 12,
-    color: '#fff'
+    color: "#fff",
   },
-  
+
   inputModalContainer: {
     flex: 1,
-    backgroundColor: "#ffffffff",
+    backgroundColor: "#fff",
     padding: 16,
     justifyContent: "center",
     alignItems: "center",
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: "flex-start",
     marginHorizontal: 50,
-    marginTop: 15
+    marginTop: 15,
   },
 
   textInput: {
@@ -84,6 +84,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 300,
     padding: 16,
+  },
+
+  priorityInput: {
+    borderWidth: 2,
+    borderColor: "#0088ffff",
+    color: "#0088ffff",
+    marginVertical: 5,
+    justifyContent: "center",
+    paddingHorizontal:10,
+    borderRadius: 50,
+    height: 50,
+    width: 300,
   },
 
   buttomContainer: {
@@ -100,18 +112,32 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 15,
     paddingHorizontal: 20,
-    backgroundColor: '#0088ffff'
+    backgroundColor: "#0088ffff",
   },
 
   pickerButtomText: {
     fontSize: 14,
     fontWeight: "500",
-    color: '#fff'
-  },  
+    color: "#fff",
+  },
 
   datePicker: {
     height: 120,
-  }
+  },
+
+  taskItemContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+
+  taskItem: {
+    margin: 8,
+    padding: 8,
+    borderRadius: 6,
+    //backgroundColor: "#0088ffff",
+    color: "white",
+    overflow: "hidden",
+  },
 });
 
-export default styles
+export default styles;

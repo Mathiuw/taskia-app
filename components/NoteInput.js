@@ -10,17 +10,13 @@ import {
 import styles from "../styles";
 
 function NoteInput(props) {
-  const [interedGoalText, setEnteredGoaltext] = useState("")
-  const [enteredNoteText, setEnteredNoteText] = useState("")
+  const [noteName, setNoteName] = useState("")
+  const [noteContent, setNoteContent] = useState("")
 
-  function GoalInputHandler(enteredText) {
-    setEnteredGoaltext(enteredText);
-  }
-
-  function AddGoalHandler() {
-    props.onAddGoal(interedGoalText, enteredNoteText)
-    setEnteredGoaltext("")
-    setEnteredNoteText("")
+  function AddNote() {
+    props.onAddNote(noteName, noteContent)
+    setNoteName("")
+    setNoteContent("")
   }
 
   return (
@@ -30,21 +26,21 @@ function NoteInput(props) {
         <TextInput
           style={styles.textInput}
           placeholderTextColor={"#0088ffff"}
-          onChangeText={GoalInputHandler}
-          value={interedGoalText}
+          onChangeText={setNoteName}
+          value={noteName}
         />
         <Text>Conteudo da nota</Text>
         <TextInput
-          style={[styles.textInput, {paddingBottom: 50}]}
+          style={[styles.textInput, {height: 500}]}
           placeholderTextColor={"#0088ffff"}
-          onChangeText={(enteredText) => setEnteredNoteText(enteredText)}
-          value={enteredNoteText}
+          onChangeText={setNoteContent}
+          value={noteContent}
         />
         <View style={styles.buttomContainer}>
           <TouchableOpacity style={[styles.pickerButtom, {backgroundColor: "#ff0000ff"}]} onPress={props.onCancel}>
             <Text style={styles.pickerButtomText}>Cancelar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.pickerButtom} onPress={AddGoalHandler}>
+          <TouchableOpacity style={styles.pickerButtom} onPress={AddNote}>
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>
         </View>

@@ -7,19 +7,11 @@ import NoteItem from "../components/NoteItem";
 
 import styles from "../styles";
 
-const NoteScreen = (props) => {
+const NoteScreen = () => {
   const [showModal, setShowModal] = useState(false);
-  const [notes, setNotes] = useState(props.notesData);
+  const [notes, setNotes] = useState([]);
 
-  function startAddNote() {
-    setShowModal(true);
-  }
-
-  function endAddNote() {
-    setShowModal(false);
-  }
-
-  function AddGoalHandler(enteredNoteTitle, enteredNoteText) {
+  function AddNote(enteredNoteTitle, enteredNoteText) {
     if (enteredNoteTitle === "" || enteredNoteText === "") {
       return;
     }
@@ -28,9 +20,8 @@ const NoteScreen = (props) => {
       ...currentNotes,
       { key: Math.random().toString(), title: enteredNoteTitle, text: enteredNoteText },
     ]);
-    //props.notesData = notes
 
-    endAddNote();
+    setShowModal(false);
   }
 
   function DeleteGoalHandler(id) {
@@ -55,13 +46,13 @@ const NoteScreen = (props) => {
           );
         }}
       />
-      <TouchableOpacity style={styles.addBottomButtom} onPress={startAddNote}>
+      <TouchableOpacity style={styles.addBottomButtom} onPress={()=> {setShowModal(true)}}>
         <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Nota</Text>
       </TouchableOpacity>
       <NoteInput
         visible={showModal}
-        onAddGoal={AddGoalHandler}
-        onCancel={endAddNote}
+        onAddNote={AddNote}
+        onCancel={()=> {setShowModal(false)}}
       />
     </SafeAreaView>
   );
