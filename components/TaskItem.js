@@ -7,7 +7,7 @@ function TaskItem(props) {
         <BouncyCheckbox 
         style = {styles.taskItem}
         size={25}
-        text={props.text + " - " + props.date}
+        text={props.text + " - " + props.startDate + " - " + props.dueDate}
         fillColor= "red"
         unFillColor="#fff"
         //onPress={(isChecked) => {}}

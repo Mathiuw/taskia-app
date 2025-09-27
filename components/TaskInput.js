@@ -8,49 +8,29 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";;
+
 import {Picker} from '@react-native-picker/picker';
 
+import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 
 
 function TaskInput(props) {
   // Tasks states
-  const [taskName, setTaskName] = useState("");
-  const [dueDate, setDueDate] = useState(new Date());
-  const [priority, setPriority] = useState("");
+  const [taskName, setTaskName] = useState("")
+  const [steps, setSteps] = useState([])
+  const [startDate, setStartDate] = useState(new Date)
+  const [dueDate, setDueDate] = useState(new Date)
+  const [priority, setPriority] = useState("")
+  const [tags, setTags] = useState([])
 
-  // Date picker states
-  const [selectedDate, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const toggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
-  };
-
-  const confirmIOSDate = () => {
-    setDueDate(selectedDate.toDateString());
-    toggleDatePicker();
-  };
-
-  const onChange = ({ type }, selectedDate) => {
-    if (type == "set") {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-
-      if (Platform.OS === "android") {
-        toggleDatePicker();
-        setDueDate(currentDate.toDateString());
-      }
-    } else {
-      toggleDatePicker();
-    }
-  };
-
-  function AddGoalHandler() {
-    props.onAddGoal(taskName, dueDate, priority);
+  function AddTaskHandler() {
+    props.onAddGoal(taskName, startDate.toDateString(), dueDate.toDateString(), priority);
     setTaskName("");
-    setDueDate(new Date());
+    setSteps([])
+    setDueDate(new Date())
+    setStartDate(new Date())
+    // reset tags
   }
 
   return (
@@ -64,49 +44,10 @@ function TaskInput(props) {
           onChangeText={setTaskName}
           value={taskName}
         />
+        <Text style={styles.nameText}>Data de Inicio</Text>
+        <TaskDatePicker placeholder="Insira a data de inicio" onDateConfirm={setStartDate}/>
         <Text style={styles.nameText}>Data de Conclusao</Text>
-        {!showDatePicker && (
-          <Pressable on onPress={toggleDatePicker}>
-            <TextInput
-              style={styles.textInput}
-              placeholder="insira a data de conclusao"
-              placeholderTextColor={"#0088ffff"}
-              //onChangeText={setDate}
-              value={dueDate}
-              editable={false}
-              onPressIn={toggleDatePicker}
-            />
-          </Pressable>
-        )}
-        {showDatePicker && (
-          <DateTimePicker
-            mode="date"
-            value={selectedDate}
-            display="spinner"
-            onChange={onChange}
-            style={styles.datePicker}
-            themeVariant="light"
-          />
-        )}
-        {showDatePicker && Platform.OS === "ios" && (
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <TouchableOpacity
-              style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
-              onPress={toggleDatePicker}
-            >
-              <Text style={styles.pickerButtomText}>Cancelar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.pickerButtom}
-              onPress={confirmIOSDate}
-            >
-              <Text style={styles.pickerButtomText}>Confirmar</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <TaskDatePicker placeholder="Insira a data de conclusao" onDateConfirm={setDueDate} />
         <Text style={styles.nameText}>Prioridade</Text>
         <View style={styles.priorityInput}>
           <Picker selectedValue={priority}
@@ -115,7 +56,7 @@ function TaskInput(props) {
           >
             <Picker.Item label="Baixa" value="baixa" />
             <Picker.Item label="Media" value="media" />
-            <Picker.Item label="Alta" value="alta"/>
+            <Picker.Item label="Alta" value="alta" />
           </Picker>
         </View>
 
@@ -129,7 +70,7 @@ function TaskInput(props) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.pickerButtom}
-            onPress={AddGoalHandler}
+            onPress={AddTaskHandler}
           >
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>

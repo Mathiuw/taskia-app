@@ -11,15 +11,16 @@ const TaskScreen = () => {
   const [showModal, setShowModal] = useState(false)
   const [tasks, setTasks] = useState([])
 
-  function AddTaskHandler(taskName, taskDate, taskPriority) {
-    if (taskName == "" || taskDate == "" || taskPriority == "") {
-      return;
+  function AddTaskHandler(taskName, startDate, dueDate, taskPriority) {
+    if (taskName == "") {
+      return
     }
 
-    setTasks((currentCourseGoals) => [
-      ...currentCourseGoals,
-      { key: Math.random().toString(), text: taskName, date: taskDate, priority: taskPriority },
-    ]);
+    setTasks((currentTasks) => {
+      const newTask = { key: Math.random().toString(), text: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
+      // add new task to tasks array state
+      return [...currentTasks,  newTask]
+    })
 
     setShowModal(false)
   }
@@ -39,7 +40,8 @@ const TaskScreen = () => {
           return (
             <TaskItem
               text={itemData.item.text}
-              date={itemData.item.date}
+              startDate={itemData.item.startDate}
+              dueDate={itemData.item.dueDate}
               priority={itemData.item.priority}
               id={itemData.item.key}
               onDeleteItem={DeleteTaskHandler}
