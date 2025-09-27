@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import styles from "../styles";
 
-const GEMINI_API_KEY = "AIzaSyD8wMhMut9pAJTn7I2DCG374y61AL4Ae50";
+const GEMINI_API_KEY = "AIzaSyCV-zcPQxr7dtoUpiKaPR-s1JZWZTWKfOA";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const GeminiChat = () => {
@@ -43,19 +43,25 @@ const GeminiChat = () => {
   }, []);
 
   const sendMessage = async () => {
-    setLoading(true);
-    const userMessage = { text: userInput, user: true };
-    setMessages([...messages, userMessage]);
+    if (userMessage == "") return
+
+    setLoading(true)
+    const userMessage = { key: Math.random().toString(), text: userInput, user: true }
+    setMessages([...messages, userMessage])
+    setUserInput("")
+
+    //const testPrompt = "Defina inteligencia artificial para min"
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: userMessage.text,
+      contents: userInput,
     });
-    console.log(response.text);
-    setMessages([...messages, { text: response.text, user: false }]);
+    console.log(response.text)
 
-    setUserInput("");
-    setLoading(false);
+    setMessages([...messages, { key: Math.random().toString(), text: response.text, user: false }])
+
+    setUserInput("")
+    setLoading(false)
   };
 
   const renderMessage = ({ item }) => {
@@ -63,7 +69,7 @@ const GeminiChat = () => {
       <View key={item.text} style={{ marginVertical: 10 }}>
         <Text>{item.text}</Text>
       </View>
-    );
+    )
   };
 
   return (
@@ -73,7 +79,6 @@ const GeminiChat = () => {
           style={{ flex: 1 }}
           data={messages}
           renderItem={renderMessage}
-          keyExtractor={(item) => item.text}
         />
       </View>
       <View style={{ flex: 1 }}>
