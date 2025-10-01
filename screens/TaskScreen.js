@@ -7,20 +7,24 @@ import TaskInput from "../components/TaskInput";
 
 import styles from "../styles";
 
-const TaskScreen = () => {
+const TaskScreen = (props) => {
   const [showModal, setShowModal] = useState(false)
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState(props.tasks)
 
   function AddTaskHandler(taskName, startDate, dueDate, taskPriority) {
     if (taskName == "") {
       return
     }
 
-    setTasks((currentTasks) => {
-      const newTask = { key: Math.random().toString(), text: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
-      // add new task to tasks array state
-      return [...currentTasks,  newTask]
-    })
+    const newTask = { key: Math.random().toString(), text: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
+
+    // setTasks((currentTasks) => {
+    //   // add new task to tasks array state
+    //   return [...currentTasks,  newTask]
+    // })
+
+    props.onTaskUpdate(newTask)
+    setTasks(props.tasks)
 
     setShowModal(false)
   }

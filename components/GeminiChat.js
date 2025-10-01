@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Markdown from "react-native-markdown-display";
 
 import styles from "../styles";
 
@@ -67,7 +68,7 @@ const GeminiChat = () => {
   const renderMessage = ({ item }) => {
     return (
       <View key={item.text} style={{ marginVertical: 10 }}>
-        <Text>{item.text}</Text>
+        <Markdown>{item.text}</Markdown>
       </View>
     )
   };
