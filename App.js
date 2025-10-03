@@ -4,11 +4,11 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useState } from "react";
 
 // Screens import
-import LoginScreen from "./screens/LoginScreen";
 import GeminiChat from "./components/GeminiChat";
 import TaskScreen from "./screens/TaskScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import NoteScreen from "./screens/NotesScreen";
+import LoginStartScreen from "./screens/LoginScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -53,7 +53,7 @@ export default function App() {
           initialParams={{ tasks: tasks }}
         />
         <Drawer.Screen name="Notas" component={NoteScreen} />
-        <Drawer.Screen name="Usuario" component={LoginScreen} />
+        <Drawer.Screen name="Usuario" component={LoginStartScreen} />
       </Drawer.Navigator>
     );
   };
