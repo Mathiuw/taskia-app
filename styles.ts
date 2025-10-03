@@ -9,10 +9,11 @@ const styles = StyleSheet.create({
 
   aiChatInputText: {
     borderWidth: 2,
+    height: 48,
     borderColor: "#0088ffff",
     borderRadius: 50,
     paddingVertical: 8,
-    paddingHorizontal: 7,
+    paddingHorizontal: 20,
     marginHorizontal: 5,
   },
 
@@ -48,11 +49,21 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
 
-  messageContainer: {
-    borderColor: "#0088ffff",
-    borderWidth: 2,
+  iaMessageContainer: {
+    backgroundColor: "#0088ffff",
     borderRadius: 15,
     marginVertical: 10,
+    width: '50%',
+    padding: 5,
+  },
+
+  userMessageContainer: {
+    backgroundColor: "#ffffffff",
+    alignSelf: "flex-end",
+    borderRadius: 15,
+    marginVertical: 10,
+    width: '50%',
+    padding: 5,
   },
 
   messageText: {

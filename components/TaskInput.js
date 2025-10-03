@@ -25,7 +25,7 @@ function TaskInput(props) {
   const [tags, setTags] = useState([])
 
   function AddTaskHandler() {
-    props.onAddGoal(taskName, startDate.toDateString(), dueDate.toDateString(), priority);
+    props.onAddGoal(taskName, startDate, dueDate, priority);
     setTaskName("");
     setSteps([])
     setDueDate(new Date())

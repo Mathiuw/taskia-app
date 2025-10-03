@@ -15,6 +15,19 @@ import styles from "../styles";
 const GEMINI_API_KEY = "AIzaSyCV-zcPQxr7dtoUpiKaPR-s1JZWZTWKfOA";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
+const renderMessage = ({ item }) => {
+  return (
+    <View
+      key={item.text}
+      style={
+        item.user ? styles.userMessageContainer : styles.iaMessageContainer
+      }
+    >
+      <Markdown>{item.text}</Markdown>
+    </View>
+  );
+};
+
 const GeminiChat = () => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
@@ -22,12 +35,11 @@ const GeminiChat = () => {
 
   useEffect(() => {
     const startChat = async () => {
-      return
       setLoading(true);
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
-        contents: "Explain how AI works in a few words",
+        contents: "Olá",
       });
       console.log(response.text);
 
@@ -38,18 +50,22 @@ const GeminiChat = () => {
         },
       ]);
 
-      setLoading(false)
+      setLoading(false);
     };
-    startChat()
+    startChat();
   }, []);
 
   const sendMessage = async () => {
-    if (userMessage == "") return
+    if (userMessage == "") return;
 
-    setLoading(true)
-    const userMessage = { key: Math.random().toString(), text: userInput, user: true }
-    setMessages([...messages, userMessage])
-    setUserInput("")
+    setLoading(true);
+    const userMessage = {
+      key: Math.random().toString(),
+      text: userInput,
+      user: true,
+    };
+    setMessages([...messages, userMessage]);
+    setUserInput("");
 
     //const testPrompt = "Defina inteligencia artificial para min"
 
@@ -57,20 +73,15 @@ const GeminiChat = () => {
       model: "gemini-2.5-flash",
       contents: userInput,
     });
-    console.log(response.text)
+    console.log(response.text);
 
-    setMessages([...messages, { key: Math.random().toString(), text: response.text, user: false }])
+    setMessages([
+      ...messages,
+      { key: Math.random().toString(), text: response.text, user: false },
+    ]);
 
-    setUserInput("")
-    setLoading(false)
-  };
-
-  const renderMessage = ({ item }) => {
-    return (
-      <View key={item.text} style={{ marginVertical: 10 }}>
-        <Markdown>{item.text}</Markdown>
-      </View>
-    )
+    setUserInput("");
+    setLoading(false);
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, route } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, Text, TouchableOpacity } from "react-native";
 
@@ -7,24 +7,27 @@ import TaskInput from "../components/TaskInput";
 
 import styles from "../styles";
 
-const TaskScreen = (props) => {
+const TaskScreen = ({ navigation, route}) => {
+  const { tasks, onTaskUpdate } = route.params
+
   const [showModal, setShowModal] = useState(false)
-  const [tasks, setTasks] = useState(props.tasks)
 
   function AddTaskHandler(taskName, startDate, dueDate, taskPriority) {
     if (taskName == "") {
       return
     }
 
-    const newTask = { key: Math.random().toString(), text: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
+    const newTask = { key: Math.random().toString(), title: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
 
     // setTasks((currentTasks) => {
     //   // add new task to tasks array state
     //   return [...currentTasks,  newTask]
     // })
 
-    props.onTaskUpdate(newTask)
-    setTasks(props.tasks)
+    //const newTasks = [...tasks, newTask ]
+    //navigation.replaceParams({tasks : newTasks})
+
+    onTaskUpdate(newTask)
 
     setShowModal(false)
   }
@@ -43,7 +46,7 @@ const TaskScreen = (props) => {
         renderItem={(itemData) => {
           return (
             <TaskItem
-              text={itemData.item.text}
+              title={itemData.item.title}
               startDate={itemData.item.startDate}
               dueDate={itemData.item.dueDate}
               priority={itemData.item.priority}

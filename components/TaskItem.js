@@ -1,18 +1,31 @@
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import styles from "../styles";
+import { FlatList, View } from "react-native";
 
-function TaskItem(props) {
+function stepItem(itemData) {
     return (
-        <BouncyCheckbox 
-        style = {styles.taskItem}
+        <BouncyCheckbox size={25} text={itemData.item.title}/>
+    )
+}
+
+function TaskItem({ title, steps, startDate, dueDate, priority }) {
+  return (
+    <View>
+      <BouncyCheckbox
+        style={styles.taskItem}
         size={25}
-        text={props.text + " - " + props.startDate + " - " + props.dueDate}
-        fillColor= "red"
+        text={title + " - " + startDate + " - " + dueDate}
+        fillColor= {priority === "alta" ? "red" : priority === "media" ? "orange" : "green"}
         unFillColor="#fff"
         //onPress={(isChecked) => {}}
-        />
-    );
-};
+      />
+      <FlatList 
+        data={steps}
+        renderItem={stepItem}
+      />
+    </View>
+  );
+}
 
-export default TaskItem;
+export default TaskItem
