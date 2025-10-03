@@ -51,19 +51,22 @@ const styles = StyleSheet.create({
 
   iaMessageContainer: {
     backgroundColor: "#0088ffff",
+    alignSelf: "flex-start",
     borderRadius: 15,
-    marginVertical: 10,
-    width: '50%',
+    marginVertical: 15,
+    maxWidth: '80%',
     padding: 5,
+    paddingHorizontal: 10,
   },
 
   userMessageContainer: {
     backgroundColor: "#ffffffff",
     alignSelf: "flex-end",
     borderRadius: 15,
-    marginVertical: 10,
-    width: '50%',
+    marginVertical: 15,
+    maxWidth: '80%',
     padding: 5,
+    paddingHorizontal: 10,
   },
 
   messageText: {

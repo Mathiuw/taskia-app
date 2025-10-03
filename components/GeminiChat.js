@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Markdown from "react-native-markdown-display";
+import * as Speech from "expo-speech";
 
 import styles from "../styles";
 
@@ -43,8 +44,12 @@ const GeminiChat = () => {
       });
       console.log(response.text);
 
+      // TTS speak
+      Speech.speak(response.text)
+
       setMessages([
         {
+          key: Math.random(),
           text: response.text,
           user: false,
         },
@@ -55,32 +60,40 @@ const GeminiChat = () => {
     startChat();
   }, []);
 
+  function addMessage(text, user){
+    if (userMessage == "" || userMessage == " ") return
+
+    const userMessage = {
+      key: Math.random(),
+      text: text,
+      user: user,
+    };
+
+    setMessages([...messages, userMessage]);
+  }
+
   const sendMessage = async () => {
-    if (userMessage == "") return;
+    
+    // Add user message to messages
+    addMessage(userInput, true)
 
     setLoading(true);
-    const userMessage = {
-      key: Math.random().toString(),
-      text: userInput,
-      user: true,
-    };
-    setMessages([...messages, userMessage]);
-    setUserInput("");
 
-    //const testPrompt = "Defina inteligencia artificial para min"
+    const prompt = userInput
+    setUserInput("")
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: userInput,
+      contents: prompt,
     });
-    console.log(response.text);
+    console.log(response.text)
 
-    setMessages([
-      ...messages,
-      { key: Math.random().toString(), text: response.text, user: false },
-    ]);
+    // TTS speak
+    Speech.speak(response.text)
 
-    setUserInput("");
+    // Add IA message to messages
+    addMessage(response.text, false)
+
     setLoading(false);
   };
 
@@ -95,7 +108,6 @@ const GeminiChat = () => {
       </View>
       <View style={{ flex: 1 }}>
         <TextInput
-          placeholder="Descreva sua rotina"
           placeholderTextColor={"#0088ffff"}
           onChangeText={setUserInput}
           onSubmitEditing={sendMessage}
