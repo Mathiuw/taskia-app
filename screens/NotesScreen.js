@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, TouchableOpacity, Text } from "react-native";
+import { FlatList, TouchableOpacity, Text, Alert } from "react-native";
 import { useState } from "react";
 
 import NoteInput from "../components/NoteInput";
@@ -12,19 +12,27 @@ const NoteScreen = () => {
   const [notes, setNotes] = useState([]);
 
   function AddNote(enteredNoteTitle, enteredNoteText) {
-    if (enteredNoteTitle === "" || enteredNoteText === "") {
-      return;
-    }
+    if (enteredNoteTitle == "") return
 
     setNotes((currentNotes) => [
       ...currentNotes,
-      { key: Math.random().toString(), title: enteredNoteTitle, text: enteredNoteText },
+      { key: Math.random(), title: enteredNoteTitle, text: enteredNoteText },
     ]);
 
     setShowModal(false);
   }
 
-  function DeleteGoalHandler(id) {
+  const createTwoButtonAlert = (id) =>
+    Alert.alert('Deletar Nota', 'Voce deseja deletar esta nota?', [
+      {
+        text: 'Cancel',
+        onPress: console.log('Cancel Pressed'),
+      },
+      // {text: 'OK', onPress: DeleteNote(id)},
+      {text: 'OK', onPress: () => {DeleteNote(id)}},
+    ]);
+
+  function DeleteNote(id) {
     console.log("Deleted ", id);
     setNotes((currentCourseGoals) => {
       return currentCourseGoals.filter((goal) => goal.key !== id);
@@ -41,7 +49,7 @@ const NoteScreen = () => {
               id={itemData.item.key}
               title={itemData.item.title}
               text={itemData.item.text}
-              onDeleteItem={DeleteGoalHandler}
+              onDeleteItem={createTwoButtonAlert}
             />
           );
         }}
