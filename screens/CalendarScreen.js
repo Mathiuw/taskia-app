@@ -1,11 +1,12 @@
 import { View } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
 import CalendarComponent from "../components/Calendar";
 import TaskList from "../components/TaskList";
+import { GlobalContext } from "../components/GlobalContext";
 
-const CalendarScreen = ({ navigation, route}) => {
-  const { tasks } = route.params
+const CalendarScreen = () => {
+  const { tasks } = useContext(GlobalContext)
 
   return (
     <View style={{ flex: 1 }}>

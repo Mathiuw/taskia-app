@@ -1,46 +1,47 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, TouchableOpacity, Text, Alert } from "react-native";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import NoteInput from "../components/NoteInput";
 import NoteItem from "../components/NoteItem";
 
 import styles from "../styles";
+import { GlobalContext } from "../components/GlobalContext";
 
-const NoteScreen = () => {
-  const [showModal, setShowModal] = useState(false);
-  const [notes, setNotes] = useState([]);
+const Stack = createNativeStackNavigator()
 
-  function AddNote(enteredNoteTitle, enteredNoteText) {
-    if (enteredNoteTitle == "") return
+const NotesStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Lista Notas"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Lista Notas" component={NoteScreen} />
+      <Stack.Screen name="Criar Nota" component={NoteInput} />
+    </Stack.Navigator>
+  );
+};
 
-    setNotes((currentNotes) => [
-      ...currentNotes,
-      { key: Math.random(), title: enteredNoteTitle, text: enteredNoteText },
-    ]);
-
-    setShowModal(false);
-  }
+const NoteScreen = ({ navigation }) => {
+  const { notes, DeleteNote } = useContext(GlobalContext);
 
   const createTwoButtonAlert = (id) =>
-    Alert.alert('Deletar Nota', 'Voce deseja deletar esta nota?', [
+    Alert.alert("Deletar Nota", "Voce deseja deletar esta nota?", [
       {
-        text: 'Cancel',
-        onPress: console.log('Cancel Pressed'),
+        text: "Cancel",
+        onPress: console.log("Cancel Pressed"),
       },
-      // {text: 'OK', onPress: DeleteNote(id)},
-      {text: 'OK', onPress: () => {DeleteNote(id)}},
+      {
+        text: "OK",
+        onPress: () => {
+          DeleteNote(id);
+        },
+      },
     ]);
 
-  function DeleteNote(id) {
-    console.log("Deleted ", id);
-    setNotes((currentCourseGoals) => {
-      return currentCourseGoals.filter((goal) => goal.key !== id);
-    });
-  }
-
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <FlatList
         data={notes}
         renderItem={(itemData) => {
@@ -54,16 +55,16 @@ const NoteScreen = () => {
           );
         }}
       />
-      <TouchableOpacity style={styles.addBottomButtom} onPress={()=> {setShowModal(true)}}>
-        <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Nota</Text>
+      <TouchableOpacity
+        style={styles.addBottomButtom}
+        onPress={() => {navigation.navigate("Criar Nota")}}
+      >
+        <Text style={[styles.buttomText, { fontSize: 18 }]}>
+          Adicionar Nota
+        </Text>
       </TouchableOpacity>
-      <NoteInput
-        visible={showModal}
-        onAddNote={AddNote}
-        onCancel={()=> {setShowModal(false)}}
-      />
     </SafeAreaView>
   );
-}
+};
 
-export default NoteScreen
+export default NotesStack;

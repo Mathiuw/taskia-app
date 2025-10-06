@@ -1,21 +1,24 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   View,
   Text,
   TextInput,
-  Modal,
   TouchableOpacity,
   useColorScheme,
   FlatList,
 } from "react-native";
-
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
-
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { GlobalContext } from "./GlobalContext";
 
-function TaskInput(props) {
+function TaskInput({ navigation }) {
+  const { AddTask } = useContext(GlobalContext);
+
+  const scheme = useColorScheme(); 
+
   // Tasks states
   const [taskName, setTaskName] = useState("");
   const [steps, setSteps] = useState([]);
@@ -24,29 +27,31 @@ function TaskInput(props) {
   const [priority, setPriority] = useState("");
   const [tags, setTags] = useState([]);
 
+  // Input states
   const [tagInput, setTagInput] = useState("")
 
+  function addTag() {
+    setTags([...tags, { key: Math.random(), title: tagInput}])
+    setTagInput("")
+  }
+
   function AddTaskHandler() {
-    props.onAddGoal(taskName, startDate, dueDate, priority);
+    AddTask({title: taskName, steps: steps, startDate: startDate, dueDate: dueDate, priority: priority, tags: tags});
     setTaskName("");
     setSteps([]);
     setDueDate(new Date());
     setStartDate(new Date());
-    // reset tags
+    setTags([])
+    navigation.goBack()
   }
 
-  const stepItem = (itemData) => {
+  const stepItem = ({ item }) => {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TextInput style={{alignSelf: "flex-start"}}
-          defaultValue= {itemData.item.title}
-          onValueChange={(value) => {
-            const newSteps = [...steps]
-            newSteps[itemData.index] = { title: value}
-            setSteps(newSteps)
-          }}
+          defaultValue= {item.title}
         />
-        <TouchableOpacity onPress={RemoveStep.bind(itemData.item.title)} >
+        <TouchableOpacity>
           <Ionicons name="remove-circle-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -70,22 +75,8 @@ function TaskInput(props) {
     setSteps(newSteps)
   }
 
-  function addTag() {
-    setTags([...tags, { key: Math.random(), title: tagInput}])
-    setTagInput("")
-  }
-
-  const scheme = useColorScheme();
-
   return (
-    <Modal visible={props.visible} animationType="slide">
-      <View
-        style={
-          scheme === "dark"
-            ? styles.inputModalContainerDark
-            : styles.inputModalContainerLight
-        }
-      >
+    <SafeAreaView style={styles.inputModalContainer}>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -158,7 +149,6 @@ function TaskInput(props) {
         />
           <TextInput
           style={styles.textInput}
-          autoFocus = {true}
           placeholder="Nome da tag"
           value={tagInput}
           onChangeText={setTagInput}
@@ -168,7 +158,7 @@ function TaskInput(props) {
         <View style={styles.buttomContainer}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
-            onPress={props.onCancel}
+            onPress={() => {navigation.goBack()}}
           >
             <Text style={styles.pickerButtomText}>Cancelar</Text>
           </TouchableOpacity>
@@ -179,8 +169,7 @@ function TaskInput(props) {
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>
         </View>
-      </View>
-    </Modal>
+    </SafeAreaView>
   );
 }
 

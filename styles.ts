@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     height: 48,
     borderColor: "#0088ffff",
+    color: "#0088ffff",
     borderRadius: 50,
     paddingVertical: 8,
     paddingHorizontal: 20,
@@ -74,18 +75,8 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
 
-  inputModalContainerLight: {
+  inputModalContainer: {
     flex: 1,
-    backgroundColor: "#fff",
-    padding: 16,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginBottom: 24,
-  },
-
-  inputModalContainerDark: {
-    flex: 1,
-    backgroundColor: "#000000ff",
     padding: 16,
     justifyContent: "flex-start",
     alignItems: "center",

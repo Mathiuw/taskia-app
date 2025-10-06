@@ -1,49 +1,47 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TouchableOpacity } from "react-native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import TaskInput from "../components/TaskInput";
+import { GlobalContext } from "../components/GlobalContext";
 import TaskList from "../components/TaskList";
+import CreateTask from "../components/TaskInput";
 
 import styles from "../styles";
+import TaskInput from "../components/TaskInput";
 
-const TaskScreen = ({ navigation, route}) => {
-  const { tasks, onTaskUpdate } = route.params
+const Stack = createNativeStackNavigator();
 
-  const [showModal, setShowModal] = useState(false)
-
-  function AddTaskHandler(taskName, startDate, dueDate, taskPriority) {
-    if (taskName == "") {
-      return
-    }
-
-    const newTask = { key: Math.random().toString(), title: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
-
-    onTaskUpdate(newTask)
-
-    setShowModal(false)
-  }
-
-  function DeleteTaskHandler(id) {
-    console.log("Deleted ", id);
-    setTasks((currentCourseGoals) => {
-      return currentCourseGoals.filter((goal) => goal.key !== id);
-    });
-  }
+const TaskScreen = ({ navigation }) => {
+  const { tasks } = useContext(GlobalContext);
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <TaskList tasks={tasks} />
-      <TouchableOpacity style={styles.addBottomButtom} onPress={() => {setShowModal(true)}}>
-        <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Tarefa</Text>
+      <TouchableOpacity
+        style={styles.addBottomButtom}
+        onPress={() => {
+          navigation.navigate("Criar Tarefa");
+        }}
+      >
+        <Text style={[styles.buttomText, { fontSize: 18 }]}>
+          Adicionar Tarefa
+        </Text>
       </TouchableOpacity>
-      <TaskInput
-        visible={showModal}
-        onAddGoal={AddTaskHandler}
-        onCancel={() => {setShowModal(false)}}
-      />
     </SafeAreaView>
   );
-}
+};
 
-export default TaskScreen
+const LoginStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Lista Tarefas"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="Lista Tarefas" component={TaskScreen} />
+      <Stack.Screen name="Criar Tarefa" component={TaskInput} />
+    </Stack.Navigator>
+  );
+};
+
+export default LoginStack;
