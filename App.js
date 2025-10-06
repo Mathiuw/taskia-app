@@ -47,8 +47,6 @@ export default function App() {
     console.log(tasks);
   };
 
-  
-
   const AppDrawer = () => {
     return (
       <Drawer.Navigator initialRouteName="IA">

@@ -13,6 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function TaskInput(props) {
   // Tasks states
@@ -33,13 +34,30 @@ function TaskInput(props) {
   }
 
   const stepItem = (itemData) => {
-    return <TextInput value={itemData.item.title} onValueChange={(value) => {
-      steps[itemData.index].item.title = value
-    }} />;
+    return (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TextInput style={{alignSelf: "flex-start"}}
+          value={itemData.item.title}
+          onValueChange={(value) => {
+            const newSteps = [...steps]
+            newSteps[itemData.index] = { title: value}
+            setSteps(newSteps)
+          }}
+        />
+        <TouchableOpacity onPress={RemoveStep.bind(itemData.item.title)} >
+          <Ionicons name="remove-circle-outline" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+    );
   };
 
-  function AddStep(newStep) {
+  function AddStep() {
     setSteps([...steps, { title: "Nova etapa" }]);
+  }
+
+  function RemoveStep(title) {
+    const newSteps = steps.filter((step) => step.title !== title)
+    setSteps(newSteps)
   }
 
   const scheme = useColorScheme();
@@ -71,13 +89,12 @@ function TaskInput(props) {
           Etapas
         </Text>
         <FlatList
-          style={{flexGrow: 0}}
+          style={{ flexGrow: 0, flex: 1 }}
           data={steps}
           renderItem={stepItem}
-          ListEmptyComponent={<Text>Não tem etapas</Text>}
         />
-        <TouchableOpacity onPress={AddStep}>
-          <Text>Adicionar Etapa</Text>
+        <TouchableOpacity onPress={AddStep}  >
+          <Text style={{color: '#0088ffff', borderBottomWidth: 2, borderBottomColor: '#0088ffff'}}>Adicionar Etapa</Text>
         </TouchableOpacity>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
