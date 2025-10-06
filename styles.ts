@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
 
-  inputModalContainer: {
+  inputModalContainerLight: {
     flex: 1,
     backgroundColor: "#fff",
     padding: 16,
@@ -83,11 +83,28 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 
-  nameText: {
+  inputModalContainerDark: {
+    flex: 1,
+    backgroundColor: "#000000ff",
+    padding: 16,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+
+  nameTextLight: {
     fontSize: 20,
     alignSelf: "flex-start",
     marginHorizontal: 50,
     marginTop: 15,
+  },
+
+  nameTextDark: {
+    fontSize: 20,
+    alignSelf: "flex-start",
+    marginHorizontal: 50,
+    marginTop: 15,
+    color: '#fff'
   },
 
   textInput: {
@@ -148,7 +165,6 @@ const styles = StyleSheet.create({
     margin: 8,
     padding: 8,
     borderRadius: 6,
-    //backgroundColor: "#0088ffff",
     color: "white",
     overflow: "hidden",
   },

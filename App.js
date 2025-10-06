@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useState } from "react";
 
@@ -9,28 +9,33 @@ import TaskScreen from "./screens/TaskScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import NoteScreen from "./screens/NotesScreen";
 import LoginStartScreen from "./screens/LoginScreen";
+import { useColorScheme } from "react-native";
 
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  const scheme = useColorScheme()
+  console.log(scheme)
+
   const [tasks, setTasks] = useState([
     {
       id: Math.random(),
-      title: "test task 1",
+      title: "Test task 1",
       startDate: new Date(),
       dueDate: new Date(),
-      priority: "media"
+      priority: "media",
+      steps: [{title : 'step 1'}, {title : 'step 2'}, {title : 'step 3'}]
     },
     {
       id: Math.random(),
-      title: "test task 2",
+      title: "Test task 2",
       startDate: new Date(),
       dueDate: new Date(),
       priority: "baixa"
     },
     {
       id: Math.random(),
-      title: "test task 3",
+      title: "Test task 3",
       startDate: new Date(),
       dueDate: new Date(),
       priority: "alta"
@@ -41,6 +46,8 @@ export default function App() {
     setTasks([...tasks, newTask]);
     console.log(tasks);
   };
+
+  
 
   const AppDrawer = () => {
     return (
@@ -62,7 +69,7 @@ export default function App() {
     <>
       <StatusBar style="auto" />
 
-      <NavigationContainer>
+      <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AppDrawer />
       </NavigationContainer>
     </>

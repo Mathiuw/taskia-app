@@ -1,9 +1,9 @@
-import { useState, route } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FlatList, Text, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
-import TaskItem from "../components/TaskItem";
 import TaskInput from "../components/TaskInput";
+import TaskList from "../components/TaskList";
 
 import styles from "../styles";
 
@@ -19,14 +19,6 @@ const TaskScreen = ({ navigation, route}) => {
 
     const newTask = { key: Math.random().toString(), title: taskName, startDate: startDate, dueDate: dueDate, priority: taskPriority }
 
-    // setTasks((currentTasks) => {
-    //   // add new task to tasks array state
-    //   return [...currentTasks,  newTask]
-    // })
-
-    //const newTasks = [...tasks, newTask ]
-    //navigation.replaceParams({tasks : newTasks})
-
     onTaskUpdate(newTask)
 
     setShowModal(false)
@@ -41,21 +33,7 @@ const TaskScreen = ({ navigation, route}) => {
 
   return (
     <SafeAreaView style={{flex:1}}>
-      <FlatList
-        data={tasks}
-        renderItem={(itemData) => {
-          return (
-            <TaskItem
-              title={itemData.item.title}
-              startDate={itemData.item.startDate}
-              dueDate={itemData.item.dueDate}
-              priority={itemData.item.priority}
-              id={itemData.item.key}
-              onDeleteItem={DeleteTaskHandler}
-            />
-          );
-        }}
-      />
+      <TaskList tasks={tasks} />
       <TouchableOpacity style={styles.addBottomButtom} onPress={() => {setShowModal(true)}}>
         <Text style={[styles.buttomText, {fontSize: 18}]}>Adicionar Tarefa</Text>
       </TouchableOpacity>

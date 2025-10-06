@@ -4,55 +4,109 @@ import {
   Text,
   TextInput,
   Modal,
-  Pressable,
-  Platform,
   TouchableOpacity,
+  useColorScheme,
+  FlatList,
 } from "react-native";
 
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 
-
 function TaskInput(props) {
   // Tasks states
-  const [taskName, setTaskName] = useState("")
-  const [steps, setSteps] = useState([])
-  const [startDate, setStartDate] = useState(new Date)
-  const [dueDate, setDueDate] = useState(new Date)
-  const [priority, setPriority] = useState("")
-  const [tags, setTags] = useState([])
+  const [taskName, setTaskName] = useState("");
+  const [steps, setSteps] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [dueDate, setDueDate] = useState(new Date());
+  const [priority, setPriority] = useState("");
+  const [tags, setTags] = useState([]);
 
   function AddTaskHandler() {
     props.onAddGoal(taskName, startDate, dueDate, priority);
     setTaskName("");
-    setSteps([])
-    setDueDate(new Date())
-    setStartDate(new Date())
+    setSteps([]);
+    setDueDate(new Date());
+    setStartDate(new Date());
     // reset tags
   }
 
+  const stepItem = (itemData) => {
+    return <TextInput value={itemData.item.title} onValueChange={(value) => {
+      steps[itemData.index].item.title = value
+    }} />;
+  };
+
+  function AddStep(newStep) {
+    setSteps([...steps, { title: "Nova etapa" }]);
+  }
+
+  const scheme = useColorScheme();
+
   return (
     <Modal visible={props.visible} animationType="slide">
-      <View style={styles.inputModalContainer}>
-        <Text style={styles.nameText}>Nome da Tarefa</Text>
+      <View
+        style={
+          scheme === "dark"
+            ? styles.inputModalContainerDark
+            : styles.inputModalContainerLight
+        }
+      >
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Nome
+        </Text>
         <TextInput
           style={styles.textInput}
-          placeholder="insira o nome da tarefa"
+          placeholder="Nome da tarefa"
           placeholderTextColor={"#0088ffff"}
           onChangeText={setTaskName}
           value={taskName}
         />
-        <Text style={styles.nameText}>Data de Inicio</Text>
-        <TaskDatePicker placeholder="Insira a data de inicio" onDateConfirm={setStartDate}/>
-        <Text style={styles.nameText}>Data de Conclusao</Text>
-        <TaskDatePicker placeholder="Insira a data de conclusao" onDateConfirm={setDueDate} />
-        <Text style={styles.nameText}>Prioridade</Text>
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Etapas
+        </Text>
+        <FlatList
+          style={{flexGrow: 0}}
+          data={steps}
+          renderItem={stepItem}
+          ListEmptyComponent={<Text>Não tem etapas</Text>}
+        />
+        <TouchableOpacity onPress={AddStep}>
+          <Text>Adicionar Etapa</Text>
+        </TouchableOpacity>
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Data de Inicio
+        </Text>
+        <TaskDatePicker
+          placeholder="Insira a data de inicio"
+          onDateConfirm={setStartDate}
+        />
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Data de Conclusao
+        </Text>
+        <TaskDatePicker
+          placeholder="Insira a data de conclusao"
+          onDateConfirm={setDueDate}
+        />
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Prioridade
+        </Text>
         <View style={styles.priorityInput}>
-          <Picker selectedValue={priority}
+          <Picker
+            selectedValue={priority}
             onValueChange={setPriority}
-            style={{color: "#0088ffff"}}
+            style={{ color: "#0088ffff" }}
           >
             <Picker.Item label="Baixa" value="baixa" />
             <Picker.Item label="Media" value="media" />
@@ -60,7 +114,11 @@ function TaskInput(props) {
           </Picker>
         </View>
 
-        <Text style={styles.nameText}>Tags</Text>
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Tags
+        </Text>
         <View style={styles.buttomContainer}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}

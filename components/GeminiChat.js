@@ -45,7 +45,7 @@ const GeminiChat = () => {
       console.log(response.text);
 
       // TTS speak
-      Speech.speak(response.text)
+      Speech.speak(response.text, { language: 'pt'})
 
       setMessages([
         {
@@ -89,7 +89,7 @@ const GeminiChat = () => {
     console.log(response.text)
 
     // TTS speak
-    Speech.speak(response.text)
+    Speech.speak(response.text, { language: 'pt'})
 
     // Add IA message to messages
     addMessage(response.text, false)
