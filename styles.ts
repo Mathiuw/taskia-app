@@ -168,6 +168,13 @@ const styles = StyleSheet.create({
     color: "white",
     overflow: "hidden",
   },
+
+  tagContainer: {
+    backgroundColor: "#0088ffff",
+    borderRadius: 4,
+    padding: 4,
+    marginRight: 5,
+  },
 });
 
 export default styles;

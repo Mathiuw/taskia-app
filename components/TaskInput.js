@@ -24,6 +24,8 @@ function TaskInput(props) {
   const [priority, setPriority] = useState("");
   const [tags, setTags] = useState([]);
 
+  const [tagInput, setTagInput] = useState("")
+
   function AddTaskHandler() {
     props.onAddGoal(taskName, startDate, dueDate, priority);
     setTaskName("");
@@ -37,7 +39,7 @@ function TaskInput(props) {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TextInput style={{alignSelf: "flex-start"}}
-          value={itemData.item.title}
+          defaultValue= {itemData.item.title}
           onValueChange={(value) => {
             const newSteps = [...steps]
             newSteps[itemData.index] = { title: value}
@@ -51,13 +53,26 @@ function TaskInput(props) {
     );
   };
 
+  const tagItem = (itemData) => {
+    return (
+      <View style={styles.tagContainer}>
+        <Text style={styles.pickerButtomText}>{itemData.item.title}</Text>
+      </View>
+    )
+  }
+
   function AddStep() {
-    setSteps([...steps, { title: "Nova etapa" }]);
+    setSteps([...steps, { key: Math.random(), title: "Nova etapa" }]);
   }
 
   function RemoveStep(title) {
     const newSteps = steps.filter((step) => step.title !== title)
     setSteps(newSteps)
+  }
+
+  function addTag() {
+    setTags([...tags, { key: Math.random(), title: tagInput}])
+    setTagInput("")
   }
 
   const scheme = useColorScheme();
@@ -89,7 +104,7 @@ function TaskInput(props) {
           Etapas
         </Text>
         <FlatList
-          style={{ flexGrow: 0, flex: 1 }}
+          style={{ flexGrow: 0}}
           data={steps}
           renderItem={stepItem}
         />
@@ -136,6 +151,20 @@ function TaskInput(props) {
         >
           Tags
         </Text>
+        <FlatList style={{flexGrow: 0}} 
+        data={tags}
+        renderItem={tagItem}
+        horizontal={true}
+        />
+          <TextInput
+          style={styles.textInput}
+          autoFocus = {true}
+          placeholder="Nome da tag"
+          value={tagInput}
+          onChangeText={setTagInput}
+          placeholderTextColor={"#0088ffff"}
+          onSubmitEditing={addTag}
+        />
         <View style={styles.buttomContainer}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
