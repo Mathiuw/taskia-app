@@ -45,7 +45,7 @@ const GeminiChat = () => {
       console.log(response.text);
 
       // TTS speak
-      Speech.speak(response.text, { language: 'pt'})
+      Speech.speak(response.text, { language: "pt" });
 
       setMessages([
         {
@@ -60,39 +60,40 @@ const GeminiChat = () => {
     startChat();
   }, []);
 
-  function addMessage(text, user){
-    if (userMessage == "" || userMessage == " ") return
+  function addMessage(text, user) {
+    if (!text || text.trim() === "") return;
 
-    const userMessage = {
-      key: Math.random(),
-      text: text,
-      user: user,
-    };
-
-    setMessages([...messages, userMessage]);
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      {
+        key: Math.random(),
+        text: text,
+        user: user,
+      },
+    ]);
+    console.log(messages);
   }
 
   const sendMessage = async () => {
-    
     // Add user message to messages
-    addMessage(userInput, true)
+    addMessage(userInput, true);
 
     setLoading(true);
 
-    const prompt = userInput
-    setUserInput("")
+    const prompt = userInput;
+    setUserInput("");
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
     });
-    console.log(response.text)
+    console.log(response.text);
 
     // TTS speak
-    Speech.speak(response.text, { language: 'pt'})
+    Speech.speak(response.text, { language: "pt" });
 
     // Add IA message to messages
-    addMessage(response.text, false)
+    addMessage(response.text, false);
 
     setLoading(false);
   };
