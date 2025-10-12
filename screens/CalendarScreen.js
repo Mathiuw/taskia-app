@@ -6,13 +6,13 @@ import TaskList from "../components/TaskList";
 import { GlobalContext } from "../components/GlobalContext";
 
 const CalendarScreen = () => {
-  const { tasks } = useContext(GlobalContext)
+  const { getTarefa } = useContext(GlobalContext);
 
   return (
     <View style={{ flex: 1 }}>
       <CalendarComponent />
       <View style={{ flex: 1 }}>
-      <TaskList tasks={tasks} />
+      <TaskList tasks={getTarefa} />
       </View>
     </View>
   );

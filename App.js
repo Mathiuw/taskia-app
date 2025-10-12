@@ -5,7 +5,6 @@ import {
   NavigationContainer,
 } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { useState } from "react";
 
 // Screens import
 import GeminiChat from "./components/GeminiChat";
@@ -17,6 +16,8 @@ import { useColorScheme } from "react-native";
 import { GlobalProvider } from "./components/GlobalContext";
 
 const Drawer = createDrawerNavigator();
+
+
 
 export default function App() {
   const scheme = useColorScheme();

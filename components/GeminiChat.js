@@ -166,7 +166,7 @@ const GeminiChat = () => {
         {loading && (
           <ActivityIndicator
             size={"small"}
-            color={"black"}
+            color={"#0088ffff"}
             style={{ margin: 10 }}
           />
         )}

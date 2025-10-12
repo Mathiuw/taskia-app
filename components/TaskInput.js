@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useCallback } from "react";
 import {
   View,
   Text,
@@ -13,9 +13,10 @@ import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { GlobalContext } from "./GlobalContext";
+import { useFocusEffect } from "@react-navigation/core";
 
 function TaskInput({ navigation }) {
-  const { AddTask } = useContext(GlobalContext);
+  const { setTarefa, getTags, setTag } = useContext(GlobalContext);
 
   const scheme = useColorScheme(); 
 
@@ -29,14 +30,16 @@ function TaskInput({ navigation }) {
 
   // Input states
   const [tagInput, setTagInput] = useState("")
+  const [submitTag, setSubmitTag] = useState("")
 
   function addTag() {
     setTags([...tags, { key: Math.random(), title: tagInput}])
     setTagInput("")
   }
 
-  function AddTaskHandler() {
-    AddTask({title: taskName, steps: steps, startDate: startDate, dueDate: dueDate, priority: priority, tags: tags});
+  async function AddTaskHandler() {
+    //AddTask({title: taskName, steps: steps, startDate: startDate, dueDate: dueDate, priority: priority, tags: tags});
+    await setTarefa(taskName, startDate, dueDate, priority, tags);
     setTaskName("");
     setSteps([]);
     setDueDate(new Date());
@@ -58,10 +61,10 @@ function TaskInput({ navigation }) {
     );
   };
 
-  const tagItem = (itemData) => {
+  const tagItem = ({item}) => {
     return (
       <View style={styles.tagContainer}>
-        <Text style={styles.pickerButtomText}>{itemData.item.title}</Text>
+        <Text style={styles.pickerButtomText}>{item.descricao}</Text>
       </View>
     )
   }
@@ -74,6 +77,31 @@ function TaskInput({ navigation }) {
     const newSteps = steps.filter((step) => step.title !== title)
     setSteps(newSteps)
   }
+
+useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          const response = await getTags();
+
+          if (isActive) {
+            setTags(response);
+          }
+        } catch (e) {
+          console.error("Error focus effect", e);
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+
+    }, [submitTag])
+  );
 
   return (
     <SafeAreaView style={styles.inputModalContainer}>
@@ -131,9 +159,9 @@ function TaskInput({ navigation }) {
             onValueChange={setPriority}
             style={{ color: "#0088ffff" }}
           >
-            <Picker.Item label="Baixa" value="baixa" />
-            <Picker.Item label="Media" value="media" />
-            <Picker.Item label="Alta" value="alta" />
+            <Picker.Item label="Baixa" value={0} />
+            <Picker.Item label="Media" value={1} />
+            <Picker.Item label="Alta" value={2} />
           </Picker>
         </View>
 
@@ -153,7 +181,11 @@ function TaskInput({ navigation }) {
           value={tagInput}
           onChangeText={setTagInput}
           placeholderTextColor={"#0088ffff"}
-          onSubmitEditing={addTag}
+          onSubmitEditing={async ()=> {
+            await setTag(tagInput)
+            setSubmitTag(tagInput)
+            setTagInput("");
+          }}
         />
         <View style={styles.buttomContainer}>
           <TouchableOpacity

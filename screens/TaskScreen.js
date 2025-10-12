@@ -1,11 +1,8 @@
-import { useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { GlobalContext } from "../components/GlobalContext";
 import TaskList from "../components/TaskList";
-import CreateTask from "../components/TaskInput";
 
 import styles from "../styles";
 import TaskInput from "../components/TaskInput";
@@ -13,11 +10,10 @@ import TaskInput from "../components/TaskInput";
 const Stack = createNativeStackNavigator();
 
 const TaskScreen = ({ navigation }) => {
-  const { tasks } = useContext(GlobalContext);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TaskList tasks={tasks} />
+      <TaskList />
       <TouchableOpacity
         style={styles.addBottomButtom}
         onPress={() => {

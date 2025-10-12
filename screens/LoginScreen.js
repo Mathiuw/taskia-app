@@ -3,8 +3,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ChangePassword from "./ChangePassword";
 import CreateAccount from "./CreateAccountScreen";
+import { useState, useContext } from "react";
+
+import { GlobalContext } from "../components/GlobalContext";
 
 const Stack = createNativeStackNavigator()
+
 
 const LoginStack = () => {
     return (
@@ -17,13 +21,18 @@ const LoginStack = () => {
 }
 
 const LoginScreen = ({ navigation }) => {
+  const { login } = useContext(GlobalContext)
+
+  const[emailInput, setEmailInput] = useState("")
+  const[passwordInput, setPasswordInput] = useState("")
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <Text>Login de Usuario</Text>
       <Text>E-Mail</Text>
-      <TextInput style={styles.loginTextInput} placeholder="email" />
+      <TextInput style={styles.loginTextInput} value={emailInput} autoCapitalize="none" autoComplete="email" onChangeText={setEmailInput} placeholder="email" />
       <Text>Senha</Text>
-      <TextInput style={styles.loginTextInput} placeholder="senha" />
+      <TextInput style={styles.loginTextInput} value={[passwordInput]} autoCapitalize="none" onChangeText={setPasswordInput} placeholder="senha" />
       <View style={{flexDirection:"row", justifyContent:"center", }}>
         <TouchableOpacity style={{margin: 10}} onPress={() => {navigation.navigate("Criar Conta")}}>
             <Text>Criar Conta</Text>
@@ -32,7 +41,9 @@ const LoginScreen = ({ navigation }) => {
             <Text>Esqueci Minha Senha</Text>
         </TouchableOpacity>
       </View>
-      <Button title="Login"/>
+      <Button title="Login" onPress={() => {
+        login(emailInput, passwordInput)
+      }}/>
     </SafeAreaView>
   );
 };
