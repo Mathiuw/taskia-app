@@ -42,7 +42,7 @@ const CreateAccount = () => {
           >
             <Picker.Item label="Masculino" value="M" />
             <Picker.Item label="Feminino" value="F" />
-            <Picker.Item label="Prefiro Nao Informar" value="NA" />
+            <Picker.Item label="Não Binario" value="NB" />
           </Picker>
       </View>
       <Text>E-Mail</Text>

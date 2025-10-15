@@ -1,5 +1,6 @@
 import { Children, createContext, useState } from "react";
 import PocketBase from "pocketbase";
+import * as Notifications from 'expo-notifications'
 export const GlobalContext = createContext();
 
 const database = new PocketBase(
@@ -34,6 +35,19 @@ export const GlobalProvider = ({ children }) => {
       priority: "alta",
     },
   ]);
+
+  const scheduleNotification = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Alerta de Tarefa',
+        body: 'Voce tem tarefas pendentes para hoje',
+        data: { username: 'Demo'}
+      },
+      trigger: {
+        seconds: 2
+      }
+    })
+  }
 
   const AddTask = ({ title, steps, startDate, dueDate, priority, tags }) => {
     if (title === "") {
