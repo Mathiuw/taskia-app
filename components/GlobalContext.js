@@ -7,6 +7,17 @@ const database = new PocketBase(
   "https://pocketbasetcc-production.up.railway.app"
 );
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }
+  }
+})
+
 export const GlobalProvider = ({ children }) => {
   // Login Database state and functions
   const [currentUser, setCurrentUser] = useState();
@@ -45,7 +56,7 @@ export const GlobalProvider = ({ children }) => {
       },
       trigger: {
         seconds: 2
-      }
+      } 
     })
   }
 
