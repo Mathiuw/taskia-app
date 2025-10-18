@@ -16,6 +16,40 @@ import styles from "../styles";
 const GEMINI_API_KEY = "AIzaSyCV-zcPQxr7dtoUpiKaPR-s1JZWZTWKfOA";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
+const createTaskFunctionDeclaration = {
+  name: "create_task",
+  description:
+    "Cria uma tarefa com data de criacao e data de conculusao, com etapas, prioridade e tags",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      taskName: {
+        type: Type.ARRAY,
+        items: { type: Type.STRING },
+        description: "Nome da tarefa",
+      },
+      startDate: {
+        type: Type.STRING,
+        description: 'Data do inicio da tarefa (e.g., "2024-07-29")',
+      },
+      dueDate: {
+        type: Type.STRING,
+        description: 'Data do fim da tarefa (e.g., "2024-07-29")',
+      },
+      steps: {
+        type: Type.ARRAY,
+        description: "Etapas da tarefa",
+      },
+      priority: {
+        type: Type.STRING,
+        description:
+          "A prioridade da tarefa, podendo ser: alta, media ou baixa",
+      },
+    },
+    required: ["taskName", "startDate", "dueDate", "priority"],
+  },
+};
+
 const scheduleMeetingFunctionDeclaration = {
   name: "schedule_meeting",
   description:
@@ -73,7 +107,10 @@ const GeminiChat = () => {
         config: {
           tools: [
             {
-              functionDeclarations: [scheduleMeetingFunctionDeclaration],
+              functionDeclarations: [
+                scheduleMeetingFunctionDeclaration,
+                createTaskFunctionDeclaration,
+              ],
             },
           ],
         },
@@ -134,7 +171,31 @@ const GeminiChat = () => {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
+      config: {
+        tools: [
+          {
+            functionDeclarations: [
+              scheduleMeetingFunctionDeclaration,
+              createTaskFunctionDeclaration,
+            ],
+          },
+        ],
+      },
     });
+    console.log(response.text);
+
+    // Check for function calls in the response
+    if (response.functionCalls && response.functionCalls.length > 0) {
+      const functionCall = response.functionCalls[0]; // Assuming one function call
+      console.log(`Function to call: ${functionCall.name}`);
+      console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
+      // In a real app, you would call your actual function here:
+      // const result = await scheduleMeeting(functionCall.args);
+    } else {
+      console.log("No function call found in the response.");
+      console.log(response.text);
+    }
+
     console.log(response.text);
 
     // TTS speak

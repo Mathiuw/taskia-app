@@ -2,6 +2,7 @@ import { Children, createContext, useState } from "react";
 import PocketBase from "pocketbase";
 import * as Notifications from 'expo-notifications'
 export const GlobalContext = createContext();
+import { useEffect } from "react";
 
 const database = new PocketBase(
   "https://pocketbasetcc-production.up.railway.app"
@@ -146,7 +147,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function login(email, password) {
     if (typeof currentUser !== "undefined") {
-      console.error("You already are logged on! current user: ", currentUser);
+      console.error("You already are logged on! current user: ", currentUser.record.nome);
       return;
     }
 
@@ -347,6 +348,104 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+async function getAnotacoes(id, idUsuario = currentUser.record.id) {
+    if (typeof id !== "undefined") {
+        try {
+            const record = await database.collection('anotacoes').getList(1, 1, {
+                filter: `id = "${id}" && idUsuario = "${idUsuario}"`
+            });
+            return record.items[0];
+        } catch (error) {
+            console.log("getAnotacoes/anotacoesId", error);
+            return [];
+        }
+    } else if (typeof idUsuario !== "undefined") {
+        try {
+            const records = await database.collection('anotacoes').getFullList({
+                filter: `idUsuario = "${idUsuario}"`
+            });
+            return records;
+        } catch (error) {
+            console.log("getAnotacoes/anotacoesIdUsuario", error);
+            return [];
+        }
+    } else {
+        try {
+            const records = await database.collection('anotacoes').getFullList();
+            return records;
+        } catch (error) {
+            console.log("getAnotacoes", error);
+            return [];
+        }
+    }
+}
+
+async function setAnotacoes(nomeAnotacao, descricao) {
+    const maxId = await database.collection('anotacoes').getList(1, 1, {
+        sort: '-id'
+    });
+    let newId;
+    if (typeof maxId.items[0] == "undefined") {
+        newId = 1;
+    } else {
+        newId = parseInt(maxId.items[0].id) + 1;
+    }
+    try {
+        const existingAnotacao = await database.collection('anotacoes').getList(1, 1, {
+            filter: `idUsuario = "${currentUser.record.id}" && nomeAnotacao = "${nomeAnotacao}"`
+        });
+        if (existingAnotacao.items.length > 0) {
+            console.log("Anotação já existente");
+            return false;
+        }
+    } catch (error) {
+        console.log("setAnotacoes/anotacoesNomeAnotacao", error);
+    }
+    const data = {
+        "id": newId,
+        "idUsuario": currentUser.record.id,
+        "nomeAnotacao": nomeAnotacao,
+        "descricao": descricao
+    };
+    console.log(data)
+    try {
+        const record = await database.collection('anotacoes').create(data);
+        return record;
+    } catch (error) {
+        console.log("setAnotacoes", error);
+        return false;
+    }
+}
+
+async function delAnotacoes(id, idUsuario = currentUser.record.id) {
+
+    if (typeof id == "undefined") {
+        return false;
+    }
+    try {
+        const record = await database.collection('anotacoes').getList(1, 1, {
+            filter: `id = "${id}" && idUsuario = "${idUsuario}"`
+        });
+
+        if (record.items.length == 0) {
+            return false;
+        }
+        await database.collection('anotacoes').delete(id)
+        return true;
+    } catch (error) {
+        console.log("delAnotacoes", error)
+        return false;
+    }
+}
+
+ useEffect(() => {
+    const demoAccountLogin = async () => {
+      await login("mateus.martins@uscsonline.com.br", "12345678")
+
+    };
+    demoAccountLogin();
+  }, []);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -366,6 +465,9 @@ export const GlobalProvider = ({ children }) => {
         login,
         getTags,
         setTag,
+        getAnotacoes,
+        setAnotacoes,
+        delAnotacoes,
       }}
     >
       {children}

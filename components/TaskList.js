@@ -35,18 +35,6 @@ const TaskList = () => {
     }, [])
   );
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getTarefa();
-  //       setTasks(response);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // });
-
   return (
     <FlatList
       data={tasks}

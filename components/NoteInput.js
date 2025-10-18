@@ -12,15 +12,16 @@ import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
 
 function NoteInput({ navigation }) {
-  const { AddNote } = useContext(GlobalContext);
+  const { AddNote, setAnotacoes, } = useContext(GlobalContext);
 
   const [noteName, setNoteName] = useState("");
   const [noteContent, setNoteContent] = useState("");
 
   const scheme = useColorScheme();
 
-  function AddNoteHandler() {
-    AddNote(noteName, noteContent);
+  async function  AddNoteHandler() {
+    //AddNote(noteName, noteContent);
+    await setAnotacoes(noteName, noteContent)
     setNoteName("");
     setNoteContent("");
     navigation.goBack();

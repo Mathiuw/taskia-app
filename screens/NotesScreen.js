@@ -1,7 +1,8 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList, TouchableOpacity, Text, Alert } from "react-native";
-import { useContext, useState } from "react";
+import { useContext, useState, useCallback } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useFocusEffect } from "@react-navigation/core";
 
 import NoteInput from "../components/NoteInput";
 import NoteItem from "../components/NoteItem";
@@ -24,7 +25,10 @@ const NotesStack = () => {
 };
 
 const NoteScreen = ({ navigation }) => {
-  const { notes, DeleteNote } = useContext(GlobalContext);
+  const { delAnotacoes, getAnotacoes } = useContext(GlobalContext);
+
+  const [notes, setNotes] = useState([])
+  const [submitNote, setSubmitNote] = useState("")
 
   const createTwoButtonAlert = (id) =>
     Alert.alert("Deletar Nota", "Voce deseja deletar esta nota?", [
@@ -34,11 +38,38 @@ const NoteScreen = ({ navigation }) => {
       },
       {
         text: "OK",
-        onPress: () => {
-          DeleteNote(id);
+        onPress: async () => {
+          await delAnotacoes(id);
+          setSubmitNote(Math.random())
         },
       },
     ]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          const response = await getAnotacoes();
+
+          if (isActive) {
+            setNotes(response);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+
+    }, [submitNote])
+  );
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -47,9 +78,9 @@ const NoteScreen = ({ navigation }) => {
         renderItem={(itemData) => {
           return (
             <NoteItem
-              id={itemData.item.key}
-              title={itemData.item.title}
-              text={itemData.item.text}
+              id={itemData.item.id}
+              title={itemData.item.nomeAnotacao}
+              text={itemData.item.descricao}
               onDeleteItem={createTwoButtonAlert}
             />
           );
