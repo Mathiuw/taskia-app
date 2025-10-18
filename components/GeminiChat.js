@@ -13,7 +13,7 @@ import * as Speech from "expo-speech";
 
 import styles from "../styles";
 
-const GEMINI_API_KEY = "AIzaSyCV-zcPQxr7dtoUpiKaPR-s1JZWZTWKfOA";
+const GEMINI_API_KEY = "AIzaSyDU4T0Fyps3YcA1ZCHCBZVEu6T1cykf9pM";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
 const createTaskFunctionDeclaration = {
@@ -38,6 +38,7 @@ const createTaskFunctionDeclaration = {
       },
       steps: {
         type: Type.ARRAY,
+        items: { stepName: Type.STRING, isDone: Type.BOOLEAN },
         description: "Etapas da tarefa",
       },
       priority: {
@@ -99,48 +100,49 @@ const GeminiChat = () => {
 
   useEffect(() => {
     const startChat = async () => {
-      setLoading(true);
+      // setLoading(true);
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: "Olá",
-        config: {
-          tools: [
-            {
-              functionDeclarations: [
-                scheduleMeetingFunctionDeclaration,
-                createTaskFunctionDeclaration,
-              ],
-            },
-          ],
-        },
-      });
-      console.log(response.text);
+      // const response = await ai.models.generateContent({
+      //   model: "gemini-2.5-flash",
+      //   contents: "Olá",
+      //   config: {
+      //     tools: [
+      //       {
+      //         functionDeclarations: [
+      //           scheduleMeetingFunctionDeclaration,
+      //           createTaskFunctionDeclaration,
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // });
+      // console.log(response.text);
 
-      // Check for function calls in the response
-      if (response.functionCalls && response.functionCalls.length > 0) {
-        const functionCall = response.functionCalls[0]; // Assuming one function call
-        console.log(`Function to call: ${functionCall.name}`);
-        console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-        // In a real app, you would call your actual function here:
-        // const result = await scheduleMeeting(functionCall.args);
-      } else {
-        console.log("No function call found in the response.");
-        console.log(response.text);
-      }
+      // // Check for function calls in the response
+      // if (response.functionCalls && response.functionCalls.length > 0) {
+      //   const functionCall = response.functionCalls[0]; // Assuming one function call
+      //   console.log(`Function to call: ${functionCall.name}`);
+      //   console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
+      //   // In a real app, you would call your actual function here:
+      //   // const result = await scheduleMeeting(functionCall.args);
+      // } else {
+      //   console.log("No function call found in the response.");
+      //   console.log(response.text);
+      // }
 
-      // TTS speak
-      Speech.speak(response.text, { language: "pt" });
+      // // TTS speak
+      // Speech.speak(response.text, { language: "pt" });
 
-      setMessages([
-        {
-          key: Math.random(),
-          text: response.text,
-          user: false,
-        },
-      ]);
+      // setMessages([
+      //   {
+      //     key: Math.random(),
+      //     text: response.text,
+      //     user: false,
+      //   },
+      // ]);
 
-      setLoading(false);
+      // setLoading(false);
+      await receiveAIMessage("Olá");
     };
     startChat();
   }, []);
@@ -159,52 +161,57 @@ const GeminiChat = () => {
     console.log(messages);
   }
 
+  const receiveAIMessage = async (prompt) => {
+    setLoading(true);
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt,
+        config: {
+          systemInstruction:
+            "Você é uma assistente pessoal, para estudantes universitários neurodivergentes, com foco em pessoas com transtorno de déficit de atenção e hiperatividade (TDAH). Você deve agir de maneira gentil e amigável durante as solicitações do usuário, encorajando-o e oferecendo suporte para completar suas tarefas, de modo sucinto, bem explicado, direto e leve de se compreender, evitando palavras vagas e/ou de duplo sentido, utilizando de táticas como: textos, resumos e tópicos pequenos, textos coloridos e emojis para melhorar o feedback visual do usuário, ao ler suas respostas.",
+          tools: [
+            {
+              functionDeclarations: [
+                scheduleMeetingFunctionDeclaration,
+                //createTaskFunctionDeclaration,
+              ],
+            },
+          ],
+        },
+      });
+
+      console.log(response.text);
+
+      // Check for function calls in the response
+      if (response.functionCalls && response.functionCalls.length > 0) {
+        const functionCall = response.functionCalls[0]; // Assuming one function call
+        console.log(`Function to call: ${functionCall.name}`);
+        console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
+        // In a real app, you would call your actual function here:
+        // const result = await scheduleMeeting(functionCall.args);
+      } else {
+        console.log("No function call found in the response.");
+      }
+
+      // TTS speak
+      Speech.speak(response.text, { language: "pt" });
+
+      // Add IA message to messages
+      addMessage(response.text, false);
+    } catch (error) {
+      console.error("Gemini chat input error,", error);
+    }
+
+    setLoading(false);
+  };
+
   const sendMessage = async () => {
     // Add user message to messages
     addMessage(userInput, true);
-
-    setLoading(true);
-
     const prompt = userInput;
     setUserInput("");
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        tools: [
-          {
-            functionDeclarations: [
-              scheduleMeetingFunctionDeclaration,
-              createTaskFunctionDeclaration,
-            ],
-          },
-        ],
-      },
-    });
-    console.log(response.text);
-
-    // Check for function calls in the response
-    if (response.functionCalls && response.functionCalls.length > 0) {
-      const functionCall = response.functionCalls[0]; // Assuming one function call
-      console.log(`Function to call: ${functionCall.name}`);
-      console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-      // In a real app, you would call your actual function here:
-      // const result = await scheduleMeeting(functionCall.args);
-    } else {
-      console.log("No function call found in the response.");
-      console.log(response.text);
-    }
-
-    console.log(response.text);
-
-    // TTS speak
-    Speech.speak(response.text, { language: "pt" });
-
-    // Add IA message to messages
-    addMessage(response.text, false);
-
-    setLoading(false);
+    await receiveAIMessage(prompt);
   };
 
   return (
