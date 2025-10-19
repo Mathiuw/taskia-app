@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   useColorScheme,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
@@ -16,7 +17,7 @@ import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
 function TaskInput({ navigation }) {
-  const { setTarefa, getTags, setTag } = useContext(GlobalContext);
+  const { setTarefa, getTags, setTag, setSubtarefa } = useContext(GlobalContext);
 
   const scheme = useColorScheme(); 
 
@@ -29,8 +30,12 @@ function TaskInput({ navigation }) {
   const [tags, setTags] = useState([]);
 
   // Input states
+  // Tags
   const [tagInput, setTagInput] = useState("")
   const [submitTag, setSubmitTag] = useState("")
+
+  // Steps
+  const [stepInput, setStepInput] = useState("")
 
   function addTag() {
     setTags([...tags, { key: Math.random(), title: tagInput}])
@@ -39,7 +44,7 @@ function TaskInput({ navigation }) {
 
   async function AddTaskHandler() {
     //AddTask({title: taskName, steps: steps, startDate: startDate, dueDate: dueDate, priority: priority, tags: tags});
-    await setTarefa(taskName, startDate, dueDate, priority, tags);
+    await setTarefa(taskName, startDate, dueDate, steps, priority, tags);
     setTaskName("");
     setSteps([]);
     setDueDate(new Date());
@@ -50,12 +55,12 @@ function TaskInput({ navigation }) {
 
   const stepItem = ({ item }) => {
     return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextInput style={{alignSelf: "flex-start"}}
+      <View style={{ flexDirection: "row", alignItems: "center",  }}>
+        <TextInput style={{alignSelf: "flex-start", color: '#0088ffff'}}
           defaultValue= {item.title}
         />
         <TouchableOpacity>
-          <Ionicons name="remove-circle-outline" size={24} color="black" />
+          <Ionicons name="remove-circle-outline" size={24} color="red" />
         </TouchableOpacity>
       </View>
     );
@@ -69,8 +74,8 @@ function TaskInput({ navigation }) {
     )
   }
 
-  function AddStep() {
-    setSteps([...steps, { key: Math.random(), title: "Nova etapa" }]);
+  function AddStep(title) {
+    setSteps([...steps, { key: Math.random(), title: title }]);
   }
 
   function RemoveStep(title) {
@@ -105,6 +110,7 @@ useFocusEffect(
 
   return (
     <SafeAreaView style={styles.inputModalContainer}>
+      <ScrollView>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -126,10 +132,24 @@ useFocusEffect(
           style={{ flexGrow: 0}}
           data={steps}
           renderItem={stepItem}
+          scrollEnabled={false}
+          ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
-        <TouchableOpacity onPress={AddStep}  >
+        {/* <TouchableOpacity onPress={AddStep}  >
           <Text style={{color: '#0088ffff', borderBottomWidth: 2, borderBottomColor: '#0088ffff'}}>Adicionar Etapa</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+          <TextInput
+          style={styles.textInput}
+          placeholder="Nome da etapa"
+          value={stepInput}
+          onChangeText={setStepInput}
+          placeholderTextColor={"#0088ffff"}
+          onSubmitEditing={()=> {
+            AddStep(stepInput)
+            setStepInput("")
+          }}
+        />
+        
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -174,6 +194,8 @@ useFocusEffect(
         data={tags}
         renderItem={tagItem}
         horizontal={true}
+        scrollEnabled={false}
+        ListEmptyComponent={<Text>*Sem tags ainda</Text>}
         />
           <TextInput
           style={styles.textInput}
@@ -201,6 +223,8 @@ useFocusEffect(
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>
         </View>
+      </ScrollView>
+
     </SafeAreaView>
   );
 }

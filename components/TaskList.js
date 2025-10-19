@@ -46,7 +46,7 @@ const TaskList = () => {
             startDate={item.dataInicio}
             dueDate={item.dataConclusao}
             priority={item.prioridade}
-            steps={item.subTarefa}
+            steps={item.steps}
             completed={item.concluida}
           />
         );

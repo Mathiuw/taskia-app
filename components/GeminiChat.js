@@ -194,8 +194,12 @@ const GeminiChat = () => {
         console.log("No function call found in the response.");
       }
 
+      const audioResponse = response.text.replace(
+        /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g,
+        '');
+
       // TTS speak
-      Speech.speak(response.text, { language: "pt" });
+      Speech.speak(audioResponse, { language: "pt" });
 
       // Add IA message to messages
       addMessage(response.text, false);

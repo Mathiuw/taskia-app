@@ -7,16 +7,18 @@ import { FlatList, View, useColorScheme } from "react-native";
 
 function TaskItem({ id, title, steps, startDate, dueDate, priority, completed }) {
   const scheme = useColorScheme();
-  const { updateTarefa } = useContext(GlobalContext)
+  const { updateTarefa, updateSubtarefa } = useContext(GlobalContext)
 
   function stepItem(itemData) {
     return (
       <BouncyCheckbox
         size={25}
-        text={itemData.item.title}
+        text={itemData.item.nomeSubtarefa}
         fillColor="#909090ff"
         unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
         style={[styles.taskItem, { marginVertical: 2 }]}
+        onPress={(isChecked) => {updateSubtarefa(itemData.item.id, isChecked)}}
+        isChecked={itemData.item.concluido}
       />
     );
   }

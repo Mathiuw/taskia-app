@@ -77,10 +77,7 @@ const styles = StyleSheet.create({
 
   inputModalContainer: {
     flex: 1,
-    padding: 16,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginBottom: 24,
+    alignItems:"center"
   },
 
   nameTextLight: {
