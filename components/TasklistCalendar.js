@@ -5,36 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { GlobalContext } from "./GlobalContext";
 import { Text } from "react-native";
 
-const TaskList = () => {
-  const { getTarefa } = useContext(GlobalContext);
-
-  const [tasks, setTasks] = useState([]);
-
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-
-      const fetchUser = async () => {
-        try {
-          const response = await getTarefa();
-
-          if (isActive) {
-            setTasks(response);
-          }
-        } catch (e) {
-          console.error("Error focus effect");
-        }
-      };
-
-      fetchUser();
-
-      return () => {
-        isActive = false;
-      };
-
-    }, [])
-  );
-
+const TaskListCalendar = ({tasks}) => {
   return (
     <FlatList
       data={tasks}
@@ -59,4 +30,4 @@ const TaskList = () => {
   );
 };
 
-export default TaskList;
+export default TaskListCalendar;

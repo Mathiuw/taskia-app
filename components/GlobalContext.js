@@ -230,13 +230,14 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function getTarefa(
+    dataConclusao,
     id,
-    idUsuario = currentUser.record.id,
-    dataConclusao
+    idUsuario = currentUser.record.id
   ) {
     console.log("isValid:", database.authStore.isValid);
     console.log("auth model:", database.authStore.record);
     console.log("auth token:", database.authStore.token);
+    console.log(dataConclusao);
 
     if (typeof id !== "undefined") {
       try {
@@ -248,27 +249,28 @@ export const GlobalProvider = ({ children }) => {
         console.log("getTarefa/tarefaId", error);
         return [];
       }
-    } else if (typeof idUsuario !== "undefined") {
-      try {
-        console.log(idUsuario);
-        const records = await database.collection("tarefa").getFullList({
-          filter: `idUsuario = "${idUsuario}"`,
-        });
+    } else if (typeof dataConclusao !== "undefined") {
+      console.log(dataConclusao);
+      const start = new Date(`${dataConclusao.dateString} 00:00:00.000`)
+        .toISOString()
+        .replace("T", " ");
 
+      console.log(start);
+      const end = new Date(`${dataConclusao.dateString} 23:59:59.999`)
+        .toISOString()
+        .replace("T", " ");
+      console.log(end);
+      try {
+        const recordsByDate = await database.collection("tarefa").getFullList({
+          filter: `idUsuario = "${idUsuario}" && dataConclusao >= "${start}" && dataConclusao <= "${end}"`,
+        });
         const recordsWithSteps = [];
 
-        // await records.forEach(async element => {
-        //   const steps = await getSubtarefa(element.id)
-        //   const newRecord = element
-        //   newRecord.steps = steps.items
-        //   recordsWithSteps = [...recordsWithSteps, newRecord]
-        // });
-
-        for (const element of records) {
+        for (const element of recordsByDate) {
           const steps = await getSubtarefa(element.id);
-          console.log(steps)
+          console.log(steps);
           const newRecord = { ...element, steps: steps };
-          console.log(newRecord.steps)
+          console.log(newRecord.steps);
           recordsWithSteps.push(newRecord);
         }
 
@@ -278,14 +280,27 @@ export const GlobalProvider = ({ children }) => {
         console.log("getTarefa/tarefaIdUser", error);
         return [];
       }
-    } else if (typeof DataConclusao !== "undefined") {
+    } else if (typeof idUsuario !== "undefined") {
       try {
-        const recordsByDate = await database.collection("tarefa").getFullList({
-          filter: `idUsuario = "${idUsuario}" & dataConclusao = "${dataConclusao}"`,
+        console.log(idUsuario);
+        const records = await database.collection("tarefa").getFullList({
+          filter: `idUsuario = "${idUsuario}"`,
         });
-        return recordsByDate.items;
+
+        const recordsWithSteps = [];
+
+        for (const element of records) {
+          const steps = await getSubtarefa(element.id);
+          console.log(steps);
+          const newRecord = { ...element, steps: steps };
+          console.log(newRecord.steps);
+          recordsWithSteps.push(newRecord);
+        }
+
+        console.log(recordsWithSteps);
+        return recordsWithSteps;
       } catch (error) {
-        console.log("getTarefa/dataConclusao", error);
+        console.log("getTarefa/tarefaIdUser", error);
         return [];
       }
     } else {
@@ -498,8 +513,8 @@ export const GlobalProvider = ({ children }) => {
         const recordsByTarefa = await database
           .collection("subtarefa")
           .getFullList({
-                filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`
-            });
+            filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`,
+          });
         return recordsByTarefa;
       } catch (error) {
         console.log("getSubtarefa/subtarefaIdTarefa", error);
