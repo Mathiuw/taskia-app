@@ -135,9 +135,6 @@ useFocusEffect(
           scrollEnabled={false}
           ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
-        {/* <TouchableOpacity onPress={AddStep}  >
-          <Text style={{color: '#0088ffff', borderBottomWidth: 2, borderBottomColor: '#0088ffff'}}>Adicionar Etapa</Text>
-        </TouchableOpacity> */}
           <TextInput
           style={styles.textInput}
           placeholder="Nome da etapa"

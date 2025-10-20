@@ -38,7 +38,20 @@ const createTaskFunctionDeclaration = {
       },
       steps: {
         type: Type.ARRAY,
-        items: { stepName: Type.STRING, isDone: Type.BOOLEAN },
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            stepName: {
+              type: Type.STRING,
+              description: "Nome da etapa",
+            },
+            isDone: {
+              type: Type.BOOLEAN,
+              description: "Status de conclusão da etapa",
+            },
+          },
+          required: ["stepName", "isDone"],
+        },
         description: "Etapas da tarefa",
       },
       priority: {
@@ -100,48 +113,6 @@ const GeminiChat = () => {
 
   useEffect(() => {
     const startChat = async () => {
-      // setLoading(true);
-
-      // const response = await ai.models.generateContent({
-      //   model: "gemini-2.5-flash",
-      //   contents: "Olá",
-      //   config: {
-      //     tools: [
-      //       {
-      //         functionDeclarations: [
-      //           scheduleMeetingFunctionDeclaration,
-      //           createTaskFunctionDeclaration,
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // });
-      // console.log(response.text);
-
-      // // Check for function calls in the response
-      // if (response.functionCalls && response.functionCalls.length > 0) {
-      //   const functionCall = response.functionCalls[0]; // Assuming one function call
-      //   console.log(`Function to call: ${functionCall.name}`);
-      //   console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-      //   // In a real app, you would call your actual function here:
-      //   // const result = await scheduleMeeting(functionCall.args);
-      // } else {
-      //   console.log("No function call found in the response.");
-      //   console.log(response.text);
-      // }
-
-      // // TTS speak
-      // Speech.speak(response.text, { language: "pt" });
-
-      // setMessages([
-      //   {
-      //     key: Math.random(),
-      //     text: response.text,
-      //     user: false,
-      //   },
-      // ]);
-
-      // setLoading(false);
       await receiveAIMessage("Olá");
     };
     startChat();
@@ -173,8 +144,8 @@ const GeminiChat = () => {
           tools: [
             {
               functionDeclarations: [
-                scheduleMeetingFunctionDeclaration,
-                //createTaskFunctionDeclaration,
+                //scheduleMeetingFunctionDeclaration,
+                createTaskFunctionDeclaration,
               ],
             },
           ],
@@ -196,7 +167,8 @@ const GeminiChat = () => {
 
       const audioResponse = response.text.replace(
         /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g,
-        '');
+        ""
+      );
 
       // TTS speak
       Speech.speak(audioResponse, { language: "pt" });
