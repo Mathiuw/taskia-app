@@ -48,6 +48,7 @@ const TaskList = () => {
             priority={item.prioridade}
             steps={item.steps}
             completed={item.concluida}
+            idTag={item.idTag}
           />
         );
       }}

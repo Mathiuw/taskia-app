@@ -3,11 +3,11 @@ import { useContext } from "react";
 
 import { GlobalContext } from "./GlobalContext";
 import styles from "../styles";
-import { FlatList, View, useColorScheme } from "react-native";
+import { FlatList, View, Text, useColorScheme } from "react-native";
 
-function TaskItem({ id, title, steps, startDate, dueDate, priority, completed }) {
+function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, idTag }) {
   const scheme = useColorScheme();
-  const { updateTarefa, updateSubtarefa } = useContext(GlobalContext)
+  const { updateTarefa, updateSubtarefa, getTags } = useContext(GlobalContext)
 
   function stepItem(itemData) {
     return (
@@ -23,23 +23,28 @@ function TaskItem({ id, title, steps, startDate, dueDate, priority, completed })
     );
   }
 
+  // Tag item component
+  const TagItem = ({ item }) => {
+    return (
+      <View style={styles.tagContainer}>
+          <Text style={styles.pickerButtomText}>{item.descricao}</Text>
+      </View>
+    );
+  };
+
   return (
     <View>
-      <BouncyCheckbox
-        style={styles.taskItem}
-        size={25}
-        text={
-          title +
-          " - " + startDate
-          //startDate.toLocaleDateString("en-GB") +
-          + " - " + dueDate
-          //dueDate.toLocaleDateString("en-GB")
-        }
-        fillColor={priority === 2 ? "red" : priority === 1 ? "orange" : "green"}
-        unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
-        onPress={(isChecked) => {updateTarefa(id, isChecked)}}
-        isChecked={completed}
-      />
+      <View>
+        <BouncyCheckbox
+          style={styles.taskItem}
+          size={25}
+          text={title + " - " + startDate + " -> " + dueDate}
+          fillColor={priority === 2 ? "red" : priority === 1 ? "orange" : "green"}
+          unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
+          onPress={(isChecked) => {updateTarefa(id, isChecked)}}
+          isChecked={completed}
+        />
+      </View>
       <FlatList
         style={{ marginStart: 30 }}
         data={steps}

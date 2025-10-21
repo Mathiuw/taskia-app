@@ -18,83 +18,92 @@ import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
 function TaskInput({ navigation }) {
-  const { setTarefa, getTags, setTag, scheduleNotification } = useContext(GlobalContext);
+  const { setTarefa, getTags, setTag, scheduleNotification } =
+    useContext(GlobalContext);
 
-  const scheme = useColorScheme(); 
+  const scheme = useColorScheme();
 
-  // Tasks states
+  // Task input states
   const [taskName, setTaskName] = useState("");
   const [steps, setSteps] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [dueDate, setDueDate] = useState(new Date());
   const [priority, setPriority] = useState("");
+  const [selectedTag, setSelectedTag] = useState();
+
+  // Tags list
   const [tags, setTags] = useState([]);
 
   // Input states
-  // Tags
-  const [tagInput, setTagInput] = useState("")
-  const [submitTag, setSubmitTag] = useState("")
+  // Tag
+  const [tagInput, setTagInput] = useState("");
+  const [submitTag, setSubmitTag] = useState("");
 
   // Steps
-  const [stepInput, setStepInput] = useState("")
+  const [stepInput, setStepInput] = useState("");
 
   // Notifications
-  const [shouldScheduleNotification, setShouldScheduleNotification] = useState(true)
+  const [shouldScheduleNotification, setShouldScheduleNotification] =
+    useState(true);
 
-  const toggleSwitch = () => setShouldScheduleNotification((previousState) => !previousState);
-
-  function addTag() {
-    setTags([...tags, { key: Math.random(), title: tagInput}])
-    setTagInput("")
-  }
+  const toggleSwitch = () =>
+    setShouldScheduleNotification((previousState) => !previousState);
 
   async function AddTaskHandler() {
-    //AddTask({title: taskName, steps: steps, startDate: startDate, dueDate: dueDate, priority: priority, tags: tags});
-    await setTarefa(taskName, startDate, dueDate, steps, priority, tags);
+    await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag);
     setTaskName("");
     setSteps([]);
     setDueDate(new Date());
     setStartDate(new Date());
-    setTags([])
+    setTags([]);
 
     if (shouldScheduleNotification === true) {
-      await scheduleNotification(dueDate) 
+      await scheduleNotification(dueDate);
     }
 
-    navigation.goBack()
+    navigation.goBack();
   }
 
+  // Step item component
   const stepItem = ({ item }) => {
     return (
-      <View style={{ flexDirection: "row", alignItems: "center",  }}>
-        <TextInput style={{alignSelf: "flex-start", color: '#0088ffff'}}
-          defaultValue= {item.title}
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TextInput
+          style={{ alignSelf: "flex-start", color: "#0088ffff" }}
+          defaultValue={item.title}
         />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            RemoveStep(item.title);
+          }}
+        >
           <Ionicons name="remove-circle-outline" size={24} color="red" />
         </TouchableOpacity>
       </View>
     );
   };
 
-  const tagItem = ({item}) => {
-    return (
-      <View style={styles.tagContainer}>
-        <Text style={styles.pickerButtomText}>{item.descricao}</Text>
-      </View>
-    )
-  }
-
   function AddStep(title) {
     setSteps([...steps, { key: Math.random(), title: title }]);
   }
 
   function RemoveStep(title) {
-    const newSteps = steps.filter((step) => step.title !== title)
-    setSteps(newSteps)
+    const newSteps = steps.filter((step) => step.title !== title);
+    setSteps(newSteps);
   }
 
-useFocusEffect(
+  // Tag item component
+  const TagItem = ({ item }) => {
+    return (
+      <View style={styles.tagContainer}>
+        <TouchableOpacity onPress={() => {setSelectedTag(item)}}>
+          <Text style={styles.pickerButtomText}>{item.descricao}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  useFocusEffect(
     useCallback(() => {
       let isActive = true;
 
@@ -115,7 +124,6 @@ useFocusEffect(
       return () => {
         isActive = false;
       };
-
     }, [submitTag])
   );
 
@@ -140,24 +148,24 @@ useFocusEffect(
           Etapas
         </Text>
         <FlatList
-          style={{ flexGrow: 0}}
+          style={{ flexGrow: 0 }}
           data={steps}
           renderItem={stepItem}
           scrollEnabled={false}
           ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
-          <TextInput
+        <TextInput
           style={styles.textInput}
           placeholder="Nome da etapa"
           value={stepInput}
           onChangeText={setStepInput}
           placeholderTextColor={"#0088ffff"}
-          onSubmitEditing={()=> {
-            AddStep(stepInput)
-            setStepInput("")
+          onSubmitEditing={() => {
+            AddStep(stepInput);
+            setStepInput("");
           }}
         />
-        
+
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -176,12 +184,14 @@ useFocusEffect(
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
         />
-        <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text
-            style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+            style={
+              scheme === "dark" ? styles.nameTextDark : styles.nameTextLight
+            }
           >
             Lembretes
-          </Text>        
+          </Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={shouldScheduleNotification ? "#0088ffff" : "#f4f3f4"}
@@ -190,7 +200,7 @@ useFocusEffect(
             value={shouldScheduleNotification}
           />
         </View>
-        
+
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -213,29 +223,37 @@ useFocusEffect(
         >
           Tags
         </Text>
-        <FlatList style={{flexGrow: 0}} 
-        data={tags}
-        renderItem={tagItem}
-        horizontal={true}
-        scrollEnabled={false}
-        ListEmptyComponent={<Text>*Sem tags ainda</Text>}
+        <FlatList
+          style={{ flexGrow: 0 }}
+          data={tags}
+          renderItem={TagItem}
+          horizontal={true}
+          scrollEnabled={false}
+          ListEmptyComponent={<Text>*Sem tags criadas</Text>}
         />
-          <TextInput
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Tag selecionada: {selectedTag?.descricao}
+        </Text>
+        <TextInput
           style={styles.textInput}
           placeholder="Nome da tag"
           value={tagInput}
           onChangeText={setTagInput}
           placeholderTextColor={"#0088ffff"}
-          onSubmitEditing={async ()=> {
-            await setTag(tagInput)
-            setSubmitTag(tagInput)
+          onSubmitEditing={async () => {
+            await setTag(tagInput);
+            setSubmitTag(tagInput);
             setTagInput("");
           }}
         />
         <View style={styles.buttomContainer}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
-            onPress={() => {navigation.goBack()}}
+            onPress={() => {
+              navigation.goBack();
+            }}
           >
             <Text style={styles.pickerButtomText}>Cancelar</Text>
           </TouchableOpacity>
@@ -247,7 +265,6 @@ useFocusEffect(
           </TouchableOpacity>
         </View>
       </ScrollView>
-
     </SafeAreaView>
   );
 }
