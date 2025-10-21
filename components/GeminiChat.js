@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
 import {
   View,
@@ -12,20 +12,22 @@ import Markdown from "react-native-markdown-display";
 import * as Speech from "expo-speech";
 
 import styles from "../styles";
+import { GlobalContext } from "./GlobalContext";
 
 const GEMINI_API_KEY = "AIzaSyDU4T0Fyps3YcA1ZCHCBZVEu6T1cykf9pM";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
+
+
 const createTaskFunctionDeclaration = {
   name: "create_task",
   description:
-    "Cria uma tarefa com data de criacao e data de conculusao, com etapas, prioridade e tags",
+    "Cria uma tarefa com data de inicio e data de conculusao, com etapas, prioridade e tags",
   parameters: {
     type: Type.OBJECT,
     properties: {
       taskName: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
+        type: Type.STRING,
         description: "Nome da tarefa",
       },
       startDate: {
@@ -41,55 +43,22 @@ const createTaskFunctionDeclaration = {
         items: {
           type: Type.OBJECT,
           properties: {
-            stepName: {
+            title: {
               type: Type.STRING,
               description: "Nome da etapa",
             },
-            isDone: {
-              type: Type.BOOLEAN,
-              description: "Status de conclusão da etapa",
-            },
           },
-          required: ["stepName", "isDone"],
+          required: ["title"],
         },
         description: "Etapas da tarefa",
       },
       priority: {
-        type: Type.STRING,
+        type: Type.INTEGER,
         description:
-          "A prioridade da tarefa, podendo ser: alta, media ou baixa",
+          "A prioridade da tarefa, podendo ser: alta, media ou baixa, sendo alta = 2, media = 1 e baixa = 0",
       },
     },
-    required: ["taskName", "startDate", "dueDate", "priority"],
-  },
-};
-
-const scheduleMeetingFunctionDeclaration = {
-  name: "schedule_meeting",
-  description:
-    "Schedules a meeting with specified attendees at a given time and date.",
-  parameters: {
-    type: Type.OBJECT,
-    properties: {
-      attendees: {
-        type: Type.ARRAY,
-        items: { type: Type.STRING },
-        description: "List of people attending the meeting.",
-      },
-      date: {
-        type: Type.STRING,
-        description: 'Date of the meeting (e.g., "2024-07-29")',
-      },
-      time: {
-        type: Type.STRING,
-        description: 'Time of the meeting (e.g., "15:00")',
-      },
-      topic: {
-        type: Type.STRING,
-        description: "The subject or topic of the meeting.",
-      },
-    },
-    required: ["attendees", "date", "time", "topic"],
+    required: ["taskName", "dueDate", "priority"]
   },
 };
 
@@ -111,6 +80,9 @@ const GeminiChat = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { setTarefa } = useContext(GlobalContext)
+
+  
   useEffect(() => {
     const startChat = async () => {
       await receiveAIMessage("Olá");
@@ -140,11 +112,23 @@ const GeminiChat = () => {
         contents: prompt,
         config: {
           systemInstruction:
-            "Você é uma assistente pessoal, para estudantes universitários neurodivergentes, com foco em pessoas com transtorno de déficit de atenção e hiperatividade (TDAH). Você deve agir de maneira gentil e amigável durante as solicitações do usuário, encorajando-o e oferecendo suporte para completar suas tarefas, de modo sucinto, bem explicado, direto e leve de se compreender, evitando palavras vagas e/ou de duplo sentido, utilizando de táticas como: textos, resumos e tópicos pequenos, textos coloridos e emojis para melhorar o feedback visual do usuário, ao ler suas respostas.",
+            "Você é uma assistente pessoal do genero feminino, para estudantes universitários neurodivergentes, com foco em pessoas com transtorno de déficit de atenção e hiperatividade (TDAH). \
+            Você deve agir de maneira gentil e amigável durante as solicitações do usuário, encorajando-o e oferecendo suporte para completar suas tarefas, de modo sucinto, bem explicado,\
+            direto e leve de se compreender, evitando palavras vagas e/ou de duplo sentido, utilizando de táticas como: textos, resumos e tópicos pequenos,\
+            textos coloridos e emojis para melhorar o feedback visual do usuário, ao ler suas respostas,\ Seu idioma padrão de comunicação é apenas Português do Brasil. Será fornecido através de um questionário realizado pelo usuário, antes de interagir com você (a assistente pessoal), os demais comportamentos do usuário, as possíveis variações do transtorno de déficit de atenção e hiperatividade (TDAH) que o usuário pode possuir,\
+            assim como o meio pelo qual o usuário percebe e compartimentaliza as informações passadas a ele (canal de comunicação auditivo, visual e cinestésico),\
+            você deve adaptar seus métodos e atendimento, com base nestas informações transmitidas pelo questionário, para melhor auxiliar o usuário em suas solicitações. Quando definido o canal de comunicação do usuário,\
+            tenha em mente os exemplos abaixo para ter como base em seu atendimento: o usuário com canal predominantemente auditivo aprende a receita do bolo mesmo que seja por telefone,\
+            explicando no ponto de ônibus. O usuário com canal predominantemente visual aprende a fazer o bolo vendo alguém fazendo o bolo e vendo o bolo pronto. Já o usuário com canal predominantemente cinestésico aprende,\
+            literalmente “botando a mão na massa”, ou seja, ele aprende a fazer o bolo, fazendo o bolo junto com outra pessoa ou sozinho, passo a passo e sentindo o cheiro do bolo. Você vai organizar as tarefas, atividades e compromissos relacionados a vida universitária do usuário da maneira mais eficiente possível, de modo que o usuário consiga concluir todas as suas tarefas, atividades e compromissos sem ficar sobrecarregado. Usando como base,\
+            informações fornecidas pelo usuário tanto do questionário, como tipo de neurodivergencia, demais comportamentos e suas dificuldades em determinadas tarefas, atividades e compromissos.\
+            Quanto informações fornecidas pelo usuário fora do questionário, por meio de citações pelo usuário, comentários e/ou informações inerentes as tarefas,\
+            atividades e compromissos que o usuário quiser organizar, são elas: Data de Inicio e/ou Conclusão, prioridade, tipo da tarefa, atividade e/ou compromisso. Sempre que responder a solicitação do usuário referente a realização de uma atividade,\
+            denote especificamente o tempo dedicado, em horas ou minutos, para realizar tais atividades, e pausas caso a atividade necessite.\
+            Claro usando como base o método utilizado e as demais características da(s) atividade(s)." ,
           tools: [
             {
               functionDeclarations: [
-                //scheduleMeetingFunctionDeclaration,
                 createTaskFunctionDeclaration,
               ],
             },
@@ -161,6 +145,9 @@ const GeminiChat = () => {
         console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
         // In a real app, you would call your actual function here:
         // const result = await scheduleMeeting(functionCall.args);
+
+        await setTarefa(functionCall.args.taskName, functionCall.args.startDate, functionCall.args.dueDate, functionCall.args.steps, functionCall.args.priority)
+
       } else {
         console.log("No function call found in the response.");
       }

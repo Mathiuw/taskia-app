@@ -23,31 +23,6 @@ export const GlobalProvider = ({ children }) => {
   // Login Database state and functions
   const [currentUser, setCurrentUser] = useState();
 
-  const [tasks, setTasks] = useState([
-    {
-      id: Math.random(),
-      title: "Test task 1",
-      startDate: new Date(),
-      dueDate: new Date(),
-      priority: "media",
-      steps: [{ title: "step 1" }, { title: "step 2" }, { title: "step 3" }],
-    },
-    {
-      id: Math.random(),
-      title: "Test task 2",
-      startDate: new Date(),
-      dueDate: new Date(),
-      priority: "baixa",
-    },
-    {
-      id: Math.random(),
-      title: "Test task 3",
-      startDate: new Date(),
-      dueDate: new Date(),
-      priority: "alta",
-    },
-  ]);
-
   const scheduleNotification = () => {
     Notifications.scheduleNotificationAsync({
       content: {
@@ -58,50 +33,6 @@ export const GlobalProvider = ({ children }) => {
       trigger: {
         seconds: 2,
       },
-    });
-  };
-
-  const AddTask = ({ title, steps, startDate, dueDate, priority, tags }) => {
-    if (title === "") {
-      console.error("Task has no title");
-      return;
-    }
-
-    const newTask = {
-      key: Math.random().toString(),
-      title: title,
-      steps: steps,
-      startDate: startDate,
-      dueDate: dueDate,
-      priority: priority,
-      tags: tags,
-    };
-
-    setTasks([...tasks, newTask]);
-  };
-
-  const DeleteTask = (id) => {
-    console.log("Deleted ", id);
-    setTasks((currentCourseGoals) => {
-      return currentCourseGoals.filter((goal) => goal.key !== id);
-    });
-  };
-
-  const [notes, setNotes] = useState([]);
-
-  const AddNote = (enteredNoteTitle, enteredNoteText) => {
-    if (enteredNoteTitle == "") return;
-
-    setNotes((currentNotes) => [
-      ...currentNotes,
-      { key: Math.random(), title: enteredNoteTitle, text: enteredNoteText },
-    ]);
-  };
-
-  const DeleteNote = (id) => {
-    console.log("Deleted ", id);
-    setNotes((currentCourseGoals) => {
-      return currentCourseGoals.filter((goal) => goal.key !== id);
     });
   };
 
@@ -116,7 +47,7 @@ export const GlobalProvider = ({ children }) => {
   ) {
     try {
       const maxId = await database.collection("usuario").getList(1, 1, {
-        sort: "-id",
+        sort: "-dataDeCriacao",
       });
 
       let newId;
@@ -189,7 +120,7 @@ export const GlobalProvider = ({ children }) => {
     tags
   ) {
     const maxId = await database.collection("tarefa").getList(1, 1, {
-      sort: "-id",
+      sort: "-dataDeCriacao",
     });
     let newId;
     if (maxId.items.length == 0) {
@@ -371,7 +302,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function setTag(descricao) {
     const maxId = await database.collection("tags").getList(1, 1, {
-      sort: "-id",
+      sort: "-dataDeCriacao",
     });
     let newId;
     if (typeof maxId.items[0] == "undefined") {
@@ -440,7 +371,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function setAnotacoes(nomeAnotacao, descricao) {
     const maxId = await database.collection("anotacoes").getList(1, 1, {
-      sort: "-id",
+      sort: "-dataDeCriacao",
     });
     let newId;
     if (typeof maxId.items[0] == "undefined") {
@@ -543,7 +474,7 @@ export const GlobalProvider = ({ children }) => {
 
   async function setSubtarefa(nomeSubtarefa, idTarefa) {
     const maxId = await database.collection("subtarefa").getList(1, 1, {
-      sort: "-id",
+      sort: "-dataDeCriacao",
     });
     let newId;
     if (maxId.items.length == 0) {
@@ -580,17 +511,9 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
-        tasks,
-        setTasks,
-        AddTask,
-        DeleteTask,
         getTarefa,
         setTarefa,
         updateTarefa,
-        notes,
-        setNotes,
-        AddNote,
-        DeleteNote,
         currentUser,
         criarLogin,
         login,

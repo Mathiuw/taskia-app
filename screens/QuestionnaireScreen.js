@@ -51,7 +51,7 @@ const QuestionnaireScreen = ({navigation}) => {
                     <QuestionnairePicker index={1} />
                 <Text style={[localStyles.text]}>1.3- Falo bastante sozinho;</Text>
                     <QuestionnairePicker index={2} />
-                <Text style={[localStyles.text]}>1.4- onverso com meu cão, gato, anjo da guarda, estátua, foto, etc;</Text>
+                <Text style={[localStyles.text]}>1.4- converso com meu cão, gato, anjo da guarda, estátua, foto, etc;</Text>
                     <QuestionnairePicker index={3} />
                 <Text style={[localStyles.text]}>1.5- Eu presto bastante atenção ao que os outros dizem;</Text>
                     <QuestionnairePicker index={4} />
@@ -135,6 +135,7 @@ const localStyles = StyleSheet.create({
     text: {
         color: "#0088ffff",
         fontSize: 18,
+        marginTop: 20,
     },
     title: {
         fontWeight: "bold",

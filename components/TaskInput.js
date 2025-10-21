@@ -17,7 +17,7 @@ import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
 function TaskInput({ navigation }) {
-  const { setTarefa, getTags, setTag, setSubtarefa } = useContext(GlobalContext);
+  const { setTarefa, getTags, setTag } = useContext(GlobalContext);
 
   const scheme = useColorScheme(); 
 

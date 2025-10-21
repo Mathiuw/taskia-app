@@ -5,8 +5,10 @@ import {
   NavigationContainer,
 } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useColorScheme } from "react-native";
-import { GlobalProvider } from "./components/GlobalContext";
+import { GlobalProvider, GlobalContext } from "./components/GlobalContext";
+import { useContext } from "react";
 
 // Screens import
 import GeminiChat from "./components/GeminiChat";
@@ -16,8 +18,36 @@ import NoteScreen from "./screens/NotesScreen";
 import LoginStartScreen from "./screens/LoginScreen";
 import QuestionnaireScreen from "./screens/QuestionnaireScreen";
 import HelpScreen from "./screens/HelpScreen";
+import SettingsScreen from "./screens/SettingsScreen";
+
+const RootStack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
+
+const DrawerScreen = () => {
+  return(
+        <Drawer.Navigator initialRouteName="IA" screenOptions={{drawerType:"back"}}>
+          <Drawer.Screen name="IA" component={GeminiChat} />
+          <Drawer.Screen name="Tarefas" component={TaskScreen} />
+          <Drawer.Screen name="Calendario" component={CalendarScreen} />
+          <Drawer.Screen name="Notas" component={NoteScreen} />
+          <Drawer.Screen name="Questionario" component={QuestionnaireScreen} />
+          <Drawer.Screen name="Configuracoes" component={SettingsScreen} />
+          <Drawer.Screen name="Ajuda" component={HelpScreen} />
+        </Drawer.Navigator>
+  )
+}
+
+const StartAppScreen = () => {
+  const { currentUser } = useContext(GlobalContext)
+
+  return (
+        <RootStack.Navigator initialRouteName={currentUser !== 'undefined' ? "Drawer" : "User"} screenOptions={{headerShown: false}}>
+          <RootStack.Screen name="Drawer" component={DrawerScreen} />
+          <RootStack.Screen name="User" component={LoginStartScreen} />
+        </RootStack.Navigator>
+  )
+}
 
 export default function App() {
   const scheme = useColorScheme();
@@ -27,15 +57,7 @@ export default function App() {
       <StatusBar style="auto" />
 
       <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Drawer.Navigator initialRouteName="IA">
-          <Drawer.Screen name="IA" component={GeminiChat} />
-          <Drawer.Screen name="Tarefas" component={TaskScreen} />
-          <Drawer.Screen name="Calendario" component={CalendarScreen} />
-          <Drawer.Screen name="Notas" component={NoteScreen} />
-          <Drawer.Screen name="Questionario" component={QuestionnaireScreen} />
-          <Drawer.Screen name="Ajuda" component={HelpScreen} />
-          <Drawer.Screen name="Usuario" component={LoginStartScreen} />
-        </Drawer.Navigator>
+        <StartAppScreen />
       </NavigationContainer>
     </GlobalProvider>
   );
