@@ -16,7 +16,6 @@ import TaskScreen from "./screens/TaskScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import NoteScreen from "./screens/NotesScreen";
 import LoginStartScreen from "./screens/LoginScreen";
-import QuestionnaireScreen from "./screens/QuestionnaireScreen";
 import HelpScreen from "./screens/HelpScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 
