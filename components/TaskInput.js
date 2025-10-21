@@ -7,6 +7,7 @@ import {
   useColorScheme,
   FlatList,
   ScrollView,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
@@ -175,18 +176,21 @@ useFocusEffect(
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
         />
-        <Text
-          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
-        >
-          Lembretes
-        </Text>        
-        <Switch
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={aiVoice ? "#f5dd4b" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={toggleSwitch}
-          value={shouldScheduleNotification}
-        />
+        <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+          <Text
+            style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+          >
+            Lembretes
+          </Text>        
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={shouldScheduleNotification ? "#0088ffff" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={shouldScheduleNotification}
+          />
+        </View>
+        
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >

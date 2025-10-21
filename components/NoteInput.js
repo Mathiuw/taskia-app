@@ -28,7 +28,7 @@ function NoteInput({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.inputModalContainer}>
+    <SafeAreaView style={[styles.inputModalContainer, {paddingHorizontal: 10}]}>
       <Text
         style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
       >

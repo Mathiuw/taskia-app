@@ -152,20 +152,26 @@ const GeminiChat = () => {
         console.log("No function call found in the response.");
       }
 
-      const audioResponse = response.text.replace(
-        /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g,
-        ""
-      );
+      // TTS speak if enbaled
+      if (aiVoice == true) {
 
-      // TTS speak
-      if (aiVoice === true) {
+        // Remove emotes from text
+        const audioResponse = response.text.replace(
+          /([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF][\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g,
+          ""
+        );
+
+        // Call TTs api
         Speech.speak(audioResponse, { language: "pt" });
       }
 
       // Add IA message to messages
       addMessage(response.text, false);
     } catch (error) {
+
       console.error("Gemini chat input error,", error);
+      addMessage(error.toString(), false);
+      setLoading(false);
     }
 
     setLoading(false);
