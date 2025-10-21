@@ -31,7 +31,6 @@ const DrawerScreen = () => {
           <Drawer.Screen name="Tarefas" component={TaskScreen} />
           <Drawer.Screen name="Calendario" component={CalendarScreen} />
           <Drawer.Screen name="Notas" component={NoteScreen} />
-          <Drawer.Screen name="Questionario" component={QuestionnaireScreen} />
           <Drawer.Screen name="Configuracoes" component={SettingsScreen} />
           <Drawer.Screen name="Ajuda" component={HelpScreen} />
         </Drawer.Navigator>

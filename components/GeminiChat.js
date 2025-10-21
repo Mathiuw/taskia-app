@@ -17,8 +17,6 @@ import { GlobalContext } from "./GlobalContext";
 const GEMINI_API_KEY = "AIzaSyDU4T0Fyps3YcA1ZCHCBZVEu6T1cykf9pM";
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-
-
 const createTaskFunctionDeclaration = {
   name: "create_task",
   description:
@@ -58,7 +56,7 @@ const createTaskFunctionDeclaration = {
           "A prioridade da tarefa, podendo ser: alta, media ou baixa, sendo alta = 2, media = 1 e baixa = 0",
       },
     },
-    required: ["taskName", "dueDate", "priority"]
+    required: ["taskName", "dueDate", "priority"],
   },
 };
 
@@ -80,9 +78,8 @@ const GeminiChat = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { setTarefa } = useContext(GlobalContext)
+  const { setTarefa, aiVoice } = useContext(GlobalContext);
 
-  
   useEffect(() => {
     const startChat = async () => {
       await receiveAIMessage("Olá");
@@ -115,7 +112,7 @@ const GeminiChat = () => {
             "Você é uma assistente pessoal do genero feminino, para estudantes universitários neurodivergentes, com foco em pessoas com transtorno de déficit de atenção e hiperatividade (TDAH). \
             Você deve agir de maneira gentil e amigável durante as solicitações do usuário, encorajando-o e oferecendo suporte para completar suas tarefas, de modo sucinto, bem explicado,\
             direto e leve de se compreender, evitando palavras vagas e/ou de duplo sentido, utilizando de táticas como: textos, resumos e tópicos pequenos,\
-            textos coloridos e emojis para melhorar o feedback visual do usuário, ao ler suas respostas,\ Seu idioma padrão de comunicação é apenas Português do Brasil. Será fornecido através de um questionário realizado pelo usuário, antes de interagir com você (a assistente pessoal), os demais comportamentos do usuário, as possíveis variações do transtorno de déficit de atenção e hiperatividade (TDAH) que o usuário pode possuir,\
+            textos coloridos e emojis para melhorar o feedback visual do usuário, ao ler suas respostas, Seu idioma padrão de comunicação é apenas Português do Brasil. Será fornecido através de um questionário realizado pelo usuário, antes de interagir com você (a assistente pessoal), os demais comportamentos do usuário, as possíveis variações do transtorno de déficit de atenção e hiperatividade (TDAH) que o usuário pode possuir,\
             assim como o meio pelo qual o usuário percebe e compartimentaliza as informações passadas a ele (canal de comunicação auditivo, visual e cinestésico),\
             você deve adaptar seus métodos e atendimento, com base nestas informações transmitidas pelo questionário, para melhor auxiliar o usuário em suas solicitações. Quando definido o canal de comunicação do usuário,\
             tenha em mente os exemplos abaixo para ter como base em seu atendimento: o usuário com canal predominantemente auditivo aprende a receita do bolo mesmo que seja por telefone,\
@@ -125,12 +122,10 @@ const GeminiChat = () => {
             Quanto informações fornecidas pelo usuário fora do questionário, por meio de citações pelo usuário, comentários e/ou informações inerentes as tarefas,\
             atividades e compromissos que o usuário quiser organizar, são elas: Data de Inicio e/ou Conclusão, prioridade, tipo da tarefa, atividade e/ou compromisso. Sempre que responder a solicitação do usuário referente a realização de uma atividade,\
             denote especificamente o tempo dedicado, em horas ou minutos, para realizar tais atividades, e pausas caso a atividade necessite.\
-            Claro usando como base o método utilizado e as demais características da(s) atividade(s)." ,
+            Claro usando como base o método utilizado e as demais características da(s) atividade(s).",
           tools: [
             {
-              functionDeclarations: [
-                createTaskFunctionDeclaration,
-              ],
+              functionDeclarations: [createTaskFunctionDeclaration],
             },
           ],
         },
@@ -146,8 +141,13 @@ const GeminiChat = () => {
         // In a real app, you would call your actual function here:
         // const result = await scheduleMeeting(functionCall.args);
 
-        await setTarefa(functionCall.args.taskName, functionCall.args.startDate, functionCall.args.dueDate, functionCall.args.steps, functionCall.args.priority)
-
+        await setTarefa(
+          functionCall.args.taskName,
+          functionCall.args.startDate,
+          functionCall.args.dueDate,
+          functionCall.args.steps,
+          functionCall.args.priority
+        );
       } else {
         console.log("No function call found in the response.");
       }
@@ -158,7 +158,9 @@ const GeminiChat = () => {
       );
 
       // TTS speak
-      Speech.speak(audioResponse, { language: "pt" });
+      if (aiVoice === true) {
+        Speech.speak(audioResponse, { language: "pt" });
+      }
 
       // Add IA message to messages
       addMessage(response.text, false);

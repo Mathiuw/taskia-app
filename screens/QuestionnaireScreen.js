@@ -32,6 +32,7 @@ const QuestionnaireScreen = ({navigation}) => {
 
     const submitQuestionnaire = () => {
         console.log(answers)
+        navigation.goBack()
     }
 
     return (

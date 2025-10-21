@@ -20,18 +20,20 @@ Notifications.setNotificationHandler({
 });
 
 export const GlobalProvider = ({ children }) => {
+  // App Settings
+  const [aiVoice,setAIVoice] = useState(true)
+
   // Login Database state and functions
   const [currentUser, setCurrentUser] = useState();
 
-  const scheduleNotification = () => {
+  const scheduleNotification = (date) => {
     Notifications.scheduleNotificationAsync({
       content: {
         title: "Alerta de Tarefa",
         body: "Voce tem tarefas pendentes para hoje",
-        data: { username: "Demo" },
       },
       trigger: {
-        seconds: 2,
+        date: date
       },
     });
   };
@@ -525,6 +527,9 @@ export const GlobalProvider = ({ children }) => {
         getSubtarefa,
         setSubtarefa,
         updateSubtarefa,
+        aiVoice,
+        setAIVoice,
+        scheduleNotification
       }}
     >
       {children}

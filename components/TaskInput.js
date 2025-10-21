@@ -17,7 +17,7 @@ import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
 function TaskInput({ navigation }) {
-  const { setTarefa, getTags, setTag } = useContext(GlobalContext);
+  const { setTarefa, getTags, setTag, scheduleNotification } = useContext(GlobalContext);
 
   const scheme = useColorScheme(); 
 
@@ -37,6 +37,11 @@ function TaskInput({ navigation }) {
   // Steps
   const [stepInput, setStepInput] = useState("")
 
+  // Notifications
+  const [shouldScheduleNotification, setShouldScheduleNotification] = useState(true)
+
+  const toggleSwitch = () => setShouldScheduleNotification((previousState) => !previousState);
+
   function addTag() {
     setTags([...tags, { key: Math.random(), title: tagInput}])
     setTagInput("")
@@ -50,6 +55,11 @@ function TaskInput({ navigation }) {
     setDueDate(new Date());
     setStartDate(new Date());
     setTags([])
+
+    if (shouldScheduleNotification === true) {
+      await scheduleNotification(dueDate) 
+    }
+
     navigation.goBack()
   }
 
@@ -164,6 +174,18 @@ useFocusEffect(
         <TaskDatePicker
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
+        />
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Lembretes
+        </Text>        
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={aiVoice ? "#f5dd4b" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={shouldScheduleNotification}
         />
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
