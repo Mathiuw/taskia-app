@@ -36,6 +36,7 @@ const localStyles = StyleSheet.create({
     helpScreenView: {
         flex: 1,
         paddingTop: 6,
+        marginHorizontal: 10,
     },
 
     title: {
