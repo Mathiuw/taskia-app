@@ -21,7 +21,7 @@ const SettingsOptionsScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{flexDirection:"row",alignItems:"center", justifyContent:"space-between", marginHorizontal: 20}}>
-        <Text style={{fontSize: 16}}>Voz da IA</Text>
+        <Text style={{fontSize: 16, color: "#0088ffff"}}>Voz da IA</Text>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={aiVoice ? "#0088ffff" : "#f4f3f4"}

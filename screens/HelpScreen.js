@@ -6,7 +6,7 @@ const HelpScreen = () => {
         <SafeAreaView style={localStyles.helpScreenView}>
             <ScrollView>
                 <Text style={[localStyles.text, localStyles.title]}>1. Qual o propósito do aplicativo?</Text>
-                <Text style={[localStyles.text, {marginBottom: 20}]}>R: O propósito do app Taskia é de auxiliar universitários com TDAH a otimizar suas rotinas e maximizar suas experiência na fase mais marcante de suas vidas.</Text>
+                <Text style={[localStyles.text, {}]}>R: O propósito do app Taskia é de auxiliar universitários com TDAH a otimizar suas rotinas e maximizar suas experiência na fase mais marcante de suas vidas.</Text>
 
                 <Text style={[localStyles.text, localStyles.title]}>2. Posso conversar com a IA sobre qualquer assunto?</Text>
                 <Text style={[localStyles.text, {marginBottom: 20}]}>R: Não, a IA foi direcionada para responder questões apenas de cunho acadêmico</Text>
@@ -18,7 +18,7 @@ const HelpScreen = () => {
                 <Text style={[localStyles.text, {marginBottom: 20}]}>R: O sistema possui uma limitação de 7 tags para que não haja um excesso denteo da organização. Lembre-se, quando mais simples, melhor irá funcionar</Text>
 
                 <Text style={[localStyles.text, localStyles.title]}>5. Acredito que o questionário está com meu perfil cognitivo errado, posso refazer?</Text>
-                <Text style={[localStyles.text, {marginBottom: 20}]}>R: Sim, acesse as configurações e entre na aba “Questionário”, lá você poderá refazer o teste e definir um novo perfil cognitivo.</Text>
+                <Text style={[localStyles.text, {marginBottom: 20}]}>R: Sim, acesse as configurações e entre na aba “Refazer Questionário”, lá você poderá refazer o teste e definir um novo perfil cognitivo.</Text>
 
                 <Text style={[localStyles.text, localStyles.title]}>6. Não entendi muito bem algumas coisas sobre o app. Posso rever o tutorial?</Text>
                 <Text style={[localStyles.text, {marginBottom: 20}]}>R: Sim, acesse as configurações e entre na aba “Tutorial”. Nessa área será possível realizar novamente o Tutorial. </Text>
