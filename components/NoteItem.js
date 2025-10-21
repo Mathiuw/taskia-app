@@ -7,7 +7,7 @@ function NoteItem(props) {
         style={({pressed}) => pressed && styles.pressedItem}
         onPress={props.onDeleteItem.bind(this, props.id)}>
             <View style={styles.goalItem} >
-                <Text>{props.title}</Text>
+                <Text style={styles.noteTitle}>{props.title}</Text>
                 <Text>{props.text}</Text>
             </View>
         </Pressable>
@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     },
 
     noteTitle: {
-        marginBottom: 16,
+        marginBottom: 6,
+        fontWeight: "bold",
     },
 
     pressedItem: 

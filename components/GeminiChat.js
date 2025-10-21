@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, createRef, useRef } from "react";
 import { GoogleGenAI, Type } from "@google/genai";
 import {
   View,
@@ -80,6 +80,8 @@ const GeminiChat = () => {
 
   const { setTarefa, aiVoice } = useContext(GlobalContext);
 
+  const flatListRef = useRef()
+
   useEffect(() => {
     const startChat = async () => {
       await receiveAIMessage("Olá");
@@ -99,6 +101,7 @@ const GeminiChat = () => {
       },
     ]);
     console.log(messages);
+    flatListRef.current.scrollToEnd();
   }
 
   const receiveAIMessage = async (prompt) => {
@@ -189,6 +192,7 @@ const GeminiChat = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 10, marginBottom: 5, marginHorizontal: 7 }}>
         <FlatList
+          ref={flatListRef} 
           style={{ flex: 1 }}
           data={messages}
           renderItem={renderMessage}

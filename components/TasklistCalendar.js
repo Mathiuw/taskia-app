@@ -24,7 +24,7 @@ const TaskListCalendar = ({tasks}) => {
       }}
       keyExtractor={(item) => item.id.toString()}
       ListEmptyComponent={() => {
-        return <Text>Nenhuma tarefa criada.</Text>;
+        return <Text style={{flex: 1, color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Nenhuma tarefa :)</Text>;
       }}
     />
   );

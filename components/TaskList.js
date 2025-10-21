@@ -1,6 +1,6 @@
 import { FlatList } from "react-native";
 import TaskItem from "./TaskItem";
-import { useEffect, useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { GlobalContext } from "./GlobalContext";
 import { Text } from "react-native";
@@ -53,7 +53,7 @@ const TaskList = () => {
       }}
       keyExtractor={(item) => item.id.toString()}
       ListEmptyComponent={() => {
-        return <Text>Nenhuma tarefa criada.</Text>;
+        return <Text style={{flex: 1, color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Nenhuma tarefa :)</Text>;
       }}
     />
   );
