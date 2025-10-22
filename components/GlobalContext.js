@@ -79,7 +79,7 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function login(email, password) {
-    if (typeof currentUser !== "undefined") {
+    if (currentUser) {
       console.error(
         "You already are logged on! current user: ",
         currentUser.record.nome
@@ -97,6 +97,7 @@ export const GlobalProvider = ({ children }) => {
       console.log("auth token:", database.authStore.token);
 
       setCurrentUser(authData);
+      return authData
     } catch (error) {
       try {
         const authAdmin = await database
@@ -146,10 +147,6 @@ export const GlobalProvider = ({ children }) => {
 
     try {
       const record = await database.collection("tarefa").create(data);
-
-      // subTarefas.forEach(async (element) => {
-      //   await setSubtarefa(element.title, data.id);
-      // });
 
       for (const element of subTarefas) {
         await setSubtarefa(element.title, data.id);
@@ -517,6 +514,7 @@ export const GlobalProvider = ({ children }) => {
         setTarefa,
         updateTarefa,
         currentUser,
+        setCurrentUser,
         criarLogin,
         login,
         getTags,
