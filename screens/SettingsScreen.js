@@ -67,11 +67,24 @@ const SettingsOptionsScreen = ({ navigation }) => {
           <Text style={[styles.pickerButtomText]}>Sair</Text>
         </TouchableOpacity>
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={{ fontSize: 16, color: "#0088ffff" }}>Tutorial</Text>
+        <TouchableOpacity style={styles.pickerButtom} onPress={() => {navigation.navigate("Tutorial")}}>
+          <Text style={styles.pickerButtomText}>Rever Tutorial</Text>
+        </TouchableOpacity>        
+      </View>      
     </SafeAreaView>
   );
 };
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = () => {
   return (
     <SettingsStack.Navigator
       initialRouteName="Options"

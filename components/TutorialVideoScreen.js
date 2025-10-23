@@ -26,7 +26,7 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
       <VideoView 
         player={player}
         style={styles.video}
-        allowsFullscreen
+        allowsFullscreen={false}
       />
       <TouchableOpacity 
         style={styles.skipButton} 
