@@ -6,7 +6,7 @@ import styles from "../styles";
 import { FlatList, View, Text, useColorScheme } from "react-native";
 import { sleep } from "./sleep";
 
-function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, idTag }) {
+function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, idTag, updateState }) {
   const scheme = useColorScheme();
   const { updateTarefa, updateSubtarefa, delTarefa, getTags } = useContext(GlobalContext)
 
@@ -46,8 +46,9 @@ function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, i
             updateTarefa(id, isChecked)
             if (isChecked === true) {
               console.log("Deleting task id: " + id)
-              await sleep(500)
-              delTarefa(id)
+              //await sleep(500)
+              await delTarefa(id)
+              updateState(Math.random())
             }
           }}
           isChecked={completed}

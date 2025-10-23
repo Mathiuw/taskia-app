@@ -142,8 +142,7 @@ export const GlobalProvider = ({ children }) => {
       concluida: false,
     };
 
-    console.log(data);
-    console.log(data.idTag);
+    console.log("Tarefa criada: ", data);
 
     try {
       const record = await database.collection("tarefa").create(data);

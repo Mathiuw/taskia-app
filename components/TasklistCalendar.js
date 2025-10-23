@@ -2,7 +2,7 @@ import { FlatList } from "react-native";
 import TaskItem from "./TaskItem";
 import { Text } from "react-native";
 
-const TaskListCalendar = ({tasks}) => {
+const TaskListCalendar = ({tasks, updateState}) => {
   return (
     <FlatList
       data={tasks}
@@ -17,6 +17,7 @@ const TaskListCalendar = ({tasks}) => {
             steps={item.steps}
             completed={item.concluida}
             idTag={item.idTag}
+            updateState={updateState}
           />
         );
       }}

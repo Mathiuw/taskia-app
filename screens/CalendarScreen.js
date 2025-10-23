@@ -18,6 +18,8 @@ const CalendarScreen = () => {
 
   const { getTarefa } = useContext(GlobalContext);
   const [day, setDay] = useState();
+  const [submitUpdate, setSubmitUpdate] = useState("");
+
   const scheme = useColorScheme();
 
   useFocusEffect(
@@ -27,12 +29,11 @@ const CalendarScreen = () => {
       };
 
       fetchUser();
-    }, [day])
+    }, [day, submitUpdate])
   );
 
   return (
     <View style={{ flex: 1 }}>
-      {/* <CalendarComponent /> */}
       <View>
         <Calendar
           style={styles.calendar}
@@ -41,10 +42,9 @@ const CalendarScreen = () => {
           onDayPress={setDay}
           markedDates={day && { [day.dateString]: { selected: true } }}
         />
-        {/* <Text style={styles.selected}>Data selecionada: {day?.dateString}</Text> */}
       </View>
       <View style={{ flex: 1 }}>
-        <TaskListCalendar tasks={tasks} />
+        <TaskListCalendar tasks={tasks} updateState={setSubmitUpdate} />
       </View>
     </View>
   );

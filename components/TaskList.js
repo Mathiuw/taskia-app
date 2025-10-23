@@ -9,6 +9,7 @@ const TaskList = () => {
   const { getTarefa } = useContext(GlobalContext);
 
   const [tasks, setTasks] = useState([]);
+  const [taskSubmitted, setTaskSubmitted] = useState("");
 
   useFocusEffect(
     useCallback(() => {
@@ -22,7 +23,7 @@ const TaskList = () => {
             setTasks(response);
           }
         } catch (e) {
-          console.error("Error focus effect");
+          console.error("Error focus effect: ", e);
         }
       };
 
@@ -32,7 +33,7 @@ const TaskList = () => {
         isActive = false;
       };
 
-    }, [])
+    }, [taskSubmitted])
   );
 
   return (
@@ -49,6 +50,7 @@ const TaskList = () => {
             steps={item.steps}
             completed={item.concluida}
             idTag={item.idTag}
+            updateState={setTaskSubmitted}
           />
         );
       }}
