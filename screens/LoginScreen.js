@@ -39,15 +39,20 @@ const LoginScreen = ({ navigation }) => {
 
   useEffect(()=> {
     if (typeof currentUser !== 'undefined') {
-      navigation.navigate("Drawer")
+      if (currentUser.record.tutorialFeito === false) {
+        navigation.navigate("FirstQuestions")
+      }
+      else {
+        navigation.navigate("Drawer")
+      }
     }
   }, [currentUser])
 
   const tryLogin = async () => {
     const user = await login(emailInput, passwordInput);
-    console.log(user);
+    console.log("User: ", user);
 
-    if (user) {
+    if (typeof user !== "undefined") {
       navigation.navigate("Drawer");
     } else {
       console.error("Login Failed");

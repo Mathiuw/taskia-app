@@ -18,11 +18,12 @@ import NoteScreen from "./screens/NotesScreen";
 import LoginStartScreen from "./screens/LoginScreen";
 import HelpScreen from "./screens/HelpScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import TutorialVideoScreen from "./components/TutorialVideoScreen";
+import FisrtQuestionnaireScreen from "./screens/FirstQuestionnaireScreen";
 
 const RootStack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
-
 const DrawerScreen = () => {
   return(
         <Drawer.Navigator initialRouteName="IA" screenOptions={{drawerType:"back"}}>
@@ -43,6 +44,8 @@ const StartAppScreen = () => {
         <RootStack.Navigator initialRouteName={typeof currentUser !== 'undefined' ? "Drawer" : "User"} screenOptions={{headerShown: false}}>
           <RootStack.Screen name="Drawer" component={DrawerScreen} />
           <RootStack.Screen name="User" component={LoginStartScreen} />
+          <RootStack.Screen name="FirstQuestions" component={FisrtQuestionnaireScreen} />
+          <RootStack.Screen name="Tutorial" component={TutorialVideoScreen} />
         </RootStack.Navigator>
   )
 }
