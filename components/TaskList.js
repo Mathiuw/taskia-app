@@ -5,7 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { GlobalContext } from "./GlobalContext";
 import { Text } from "react-native";
 
-const TaskList = () => {
+const TaskList = ({onTaskLongPress}) => {
   const { getTarefa } = useContext(GlobalContext);
 
   const [tasks, setTasks] = useState([]);
@@ -51,6 +51,7 @@ const TaskList = () => {
             completed={item.concluida}
             idTag={item.idTag}
             updateState={setTaskSubmitted}
+            onTaskLongPress={onTaskLongPress}
           />
         );
       }}

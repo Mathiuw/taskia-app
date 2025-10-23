@@ -254,6 +254,27 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updateTarefaCompleta(
+    id, 
+    descricao,
+    dataInicio,
+    dataConclusao,
+    prioridade,
+    tags) {
+    const data = {
+      descricao: descricao,
+      dataInicio: dataInicio,
+      dataConclusao: dataConclusao,
+      prioridade: prioridade,
+      idTag: tags,
+    };
+    try {
+      await database.collection("tarefa").update(id, data);
+    } catch (error) {
+      console.log("updateTarefa", error);
+    }
+  }
+
   async function updateAnotacao(id, nomeAnotacao, descricao) {
     const data = {
       nomeAnotacao: nomeAnotacao,
@@ -600,6 +621,7 @@ export const GlobalProvider = ({ children }) => {
         getTarefa,
         setTarefa,
         updateTarefa,
+        updateTarefaCompleta,
         delTarefa,
         setCurrentUser,
         criarLogin,

@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,6 @@ import {
   useColorScheme,
   FlatList,
   ScrollView,
-  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
@@ -17,9 +16,11 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
-function TaskEdit({ navigation }) {
-  const { setTarefa, getTags, setTag, scheduleNotification } =
-    useContext(GlobalContext);
+function TaskEdit({ navigation, route }) {
+
+  const { taskId } = route.params;
+
+  const { getTags, setTag, getTarefa, updateTarefaCompleta } = useContext(GlobalContext);
 
   const scheme = useColorScheme();
 
@@ -39,58 +40,36 @@ function TaskEdit({ navigation }) {
   const [tagInput, setTagInput] = useState("");
   const [submitTag, setSubmitTag] = useState("");
 
-  // Steps
-  const [stepInput, setStepInput] = useState("");
-
-  // Notifications
-  const [shouldScheduleNotification, setShouldScheduleNotification] =
-    useState(true);
-
-  const toggleSwitch = () =>
-    setShouldScheduleNotification((previousState) => !previousState);
-
-  async function AddTaskHandler() {
-    await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag);
+  async function UpdateTask() {
+    //await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag);
+    await updateTarefaCompleta(
+      taskId,
+      taskName, 
+      startDate,
+      dueDate,
+      priority,
+      selectedTag
+    );
     setTaskName("");
-    setSteps([]);
     setDueDate(new Date());
     setStartDate(new Date());
     setTags([]);
 
-    if (shouldScheduleNotification === true) {
-      await scheduleNotification(dueDate);
-    }
-
     navigation.goBack();
   }
 
-  // Step item component
-  const stepItem = ({ item }) => {
-    return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextInput
-          style={{ alignSelf: "flex-start", color: "#0088ffff" }}
-          defaultValue={item.title}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            RemoveStep(item.title);
-          }}
-        >
-          <Ionicons name="remove-circle-outline" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
-  function AddStep(title) {
-    setSteps([...steps, { key: Math.random(), title: title }]);
-  }
-
-  function RemoveStep(title) {
-    const newSteps = steps.filter((step) => step.title !== title);
-    setSteps(newSteps);
-  }
+  useEffect(() => {
+    // Fetch task details using taskId and populate states
+    async function fetchTaskDetails() {
+      const taskDetails = await getTarefa(undefined, taskId);
+      setTaskName(taskDetails.descricao);
+      setStartDate(taskDetails.dataInicio);  
+      setDueDate(taskDetails.dataConclusao);
+      setPriority(taskDetails.prioridade);
+      setSelectedTag(taskDetails.idTag);
+    }
+    fetchTaskDetails();
+  }, [taskId]);
 
   // Tag item component
   const TagItem = ({ item }) => {
@@ -103,6 +82,7 @@ function TaskEdit({ navigation }) {
     );
   };
 
+  // Get tags on focus
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -133,6 +113,11 @@ function TaskEdit({ navigation }) {
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
+          Editar Tarefa
+        </Text>        
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
           Nome
         </Text>
         <TextInput
@@ -142,30 +127,6 @@ function TaskEdit({ navigation }) {
           onChangeText={setTaskName}
           value={taskName}
         />
-        <Text
-          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
-        >
-          Etapas
-        </Text>
-        <FlatList
-          style={{ flexGrow: 0 }}
-          data={steps}
-          renderItem={stepItem}
-          scrollEnabled={false}
-          ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
-        />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Nome da etapa"
-          value={stepInput}
-          onChangeText={setStepInput}
-          placeholderTextColor={"#0088ffff"}
-          onSubmitEditing={() => {
-            AddStep(stepInput);
-            setStepInput("");
-          }}
-        />
-
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -184,23 +145,6 @@ function TaskEdit({ navigation }) {
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
         />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text
-            style={
-              scheme === "dark" ? styles.nameTextDark : styles.nameTextLight
-            }
-          >
-            Lembretes
-          </Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={shouldScheduleNotification ? "#0088ffff" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={shouldScheduleNotification}
-          />
-        </View>
-
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -259,7 +203,7 @@ function TaskEdit({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.pickerButtom}
-            onPress={AddTaskHandler}
+            onPress={UpdateTask}
           >
             <Text style={styles.pickerButtomText}>Aplicar</Text>
           </TouchableOpacity>

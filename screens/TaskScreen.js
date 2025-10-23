@@ -12,9 +12,14 @@ const Stack = createNativeStackNavigator();
 
 const TaskScreen = ({ navigation }) => {
 
+  const onTaskLongPress = (id) => {
+    console.log(`Task long-pressed: id=${id}`);
+    navigation.navigate("Editar Tarefa", { taskId: id });
+  }
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TaskList />
+      <TaskList onTaskLongPress={onTaskLongPress} />
       <TouchableOpacity
         style={styles.addBottomButtom}
         onPress={() => {
