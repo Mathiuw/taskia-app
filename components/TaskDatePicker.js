@@ -4,18 +4,18 @@ import DateTimePicker from "@react-native-community/datetimepicker";;
 
 import styles from "../styles";
 
-const TaskDatePicker = (props) => {
+const TaskDatePicker = ({placeholder, onDateConfirm, value}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePickerModal, setShowDatePickerModal] = useState(false);
 
   const onChange = ({ type }, selectedDate) => {
     if (type == "set") {
-      const currentDate = selectedDate
-      setSelectedDate(currentDate)
+      // const currentDate = selectedDate
+      // setSelectedDate(currentDate)
 
       if (Platform.OS === "android") {
         togglDatePickerModal();
-        props.onDateConfirm(currentDate.toDateString())
+        onDateConfirm(selectedDate);
         console.log(selectedDate)
       }
     } else {
@@ -27,10 +27,17 @@ const TaskDatePicker = (props) => {
     setShowDatePickerModal(!showDatePickerModal);
   };
 
-  const confirmIOSDate = () => {
-    props.onDateConfirm(selectedDate.toDateString());
-    togglDatePickerModal();
-  };
+  // const confirmIOSDate = (date) => {
+  //   onDateConfirm(date);
+  //   togglDatePickerModal();
+  // };
+
+  const formatDateBR = (value) => {
+    if (!value) return '';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value; // fallback to original if invalid
+    return d.toLocaleDateString('pt-BR');
+  }
 
   return (
     <>
@@ -38,9 +45,9 @@ const TaskDatePicker = (props) => {
         <Pressable on onPress={togglDatePickerModal}>
           <TextInput
             style={styles.textInput}
-            placeholder={props.placeholder}
+            placeholder={placeholder}
             placeholderTextColor={"#0088ffff"}
-            value={selectedDate.toDateString()}
+            value={formatDateBR(value)}
             editable={false}
             onPressIn={togglDatePickerModal}
           />
@@ -49,14 +56,14 @@ const TaskDatePicker = (props) => {
       {showDatePickerModal && (
         <DateTimePicker
           mode="date"
-          value={selectedDate}
+          value={value}
           display="spinner"
           onChange={onChange}
           style={styles.datePicker}
           themeVariant="light"
         />
       )}
-      {showDatePickerModal && Platform.OS === "ios" && (
+      {/* {showDatePickerModal && Platform.OS === "ios" && (
         <View style={{ flex: 1, flexDirection: "row"}}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
@@ -72,7 +79,7 @@ const TaskDatePicker = (props) => {
             <Text style={styles.pickerButtomText}>Confirmar</Text>
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
     </>
   );
 };

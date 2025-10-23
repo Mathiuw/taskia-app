@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
@@ -13,6 +13,24 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
     player.staysActiveInBackground= false;
     player.play()
   })
+
+  // cleanup: pause/unload the player when the screen unmounts
+  useEffect(() => {
+    return () => {
+      try {
+        // stop or pause playback and unload resources if available
+        if (player) {
+          if (typeof player.pause === 'function') player.pause();
+          if (typeof player.stop === 'function') player.stop();
+          if (typeof player.unload === 'function') player.unload();
+          if (typeof player.unloadAsync === 'function') player.unloadAsync();
+        }
+      } catch (e) {
+        // ignore cleanup errors
+        // console.log('player cleanup error', e);
+      }
+    };
+  }, [player]);
 
   return (
     <View style={styles.container}>
@@ -30,7 +48,17 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
       />
       <TouchableOpacity 
         style={styles.skipButton} 
-        onPress={() => {navigation.navigate("Drawer")}}
+        onPress={() => {
+          try {
+            if (player) {
+              if (typeof player.pause === 'function') player.pause();
+              if (typeof player.stop === 'function') player.stop();
+              if (typeof player.unload === 'function') player.unload();
+              if (typeof player.unloadAsync === 'function') player.unloadAsync();
+            }
+          } catch (e) {}
+          navigation.navigate("Drawer");
+        }}
         activeOpacity={0.8}
       >
         <Text style={styles.skipText}>Ir para o App</Text>

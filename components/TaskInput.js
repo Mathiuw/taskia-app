@@ -174,6 +174,7 @@ function TaskInput({ navigation }) {
         <TaskDatePicker
           placeholder="Insira a data de inicio"
           onDateConfirm={setStartDate}
+          value={startDate}
         />
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
@@ -183,6 +184,7 @@ function TaskInput({ navigation }) {
         <TaskDatePicker
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
+          value={dueDate}
         />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text

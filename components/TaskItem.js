@@ -22,6 +22,14 @@ function TaskItem({
   const { updateTarefa, updateSubtarefa, delTarefa, getTags } = useContext(GlobalContext);
   const longPressRef = useRef(false);
 
+  // format date to Brazilian format DD/MM/YYYY
+  const formatDateBR = (value) => {
+    if (!value) return '';
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return value; // fallback to original if invalid
+    return d.toLocaleDateString('pt-BR');
+  }
+
   function stepItem(itemData) {
     return (
       <BouncyCheckbox
@@ -53,7 +61,7 @@ function TaskItem({
         <BouncyCheckbox
           style={styles.taskItem}
           size={25}
-          text={title + " - " + startDate + " -> " + dueDate}
+          text={title + " - " + formatDateBR(startDate) + "  -->  " + formatDateBR(dueDate)}
           fillColor={
             priority === 2 ? "red" : priority === 1 ? "orange" : "green"
           }
@@ -73,9 +81,9 @@ function TaskItem({
           }}
           isChecked={completed}
           onLongPress={() => {
-            longPressRef.current = true;
-            console.log("Long pressed task id: " + id);
-            onTaskLongPress?.(id);
+              longPressRef.current = true;
+              console.log("Long pressed task id: " + id);
+              if (typeof onTaskLongPress === 'function') onTaskLongPress(id);
           }}
         />
       </View>

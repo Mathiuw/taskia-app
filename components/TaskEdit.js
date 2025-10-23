@@ -12,7 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 
@@ -63,8 +62,8 @@ function TaskEdit({ navigation, route }) {
     async function fetchTaskDetails() {
       const taskDetails = await getTarefa(undefined, taskId);
       setTaskName(taskDetails.descricao);
-      setStartDate(taskDetails.dataInicio);  
-      setDueDate(taskDetails.dataConclusao);
+      setStartDate(new Date(taskDetails.dataInicio));  
+      setDueDate(new Date(taskDetails.dataConclusao));
       setPriority(taskDetails.prioridade);
       setSelectedTag(taskDetails.idTag);
     }
@@ -135,6 +134,7 @@ function TaskEdit({ navigation, route }) {
         <TaskDatePicker
           placeholder="Insira a data de inicio"
           onDateConfirm={setStartDate}
+          value={startDate}
         />
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
@@ -144,6 +144,7 @@ function TaskEdit({ navigation, route }) {
         <TaskDatePicker
           placeholder="Insira a data de conclusao"
           onDateConfirm={setDueDate}
+          value={dueDate}
         />
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
