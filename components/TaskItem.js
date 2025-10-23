@@ -4,10 +4,11 @@ import { useContext } from "react";
 import { GlobalContext } from "./GlobalContext";
 import styles from "../styles";
 import { FlatList, View, Text, useColorScheme } from "react-native";
+import { sleep } from "./sleep";
 
 function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, idTag }) {
   const scheme = useColorScheme();
-  const { updateTarefa, updateSubtarefa, getTags } = useContext(GlobalContext)
+  const { updateTarefa, updateSubtarefa, delTarefa, getTags } = useContext(GlobalContext)
 
   function stepItem(itemData) {
     return (
@@ -41,7 +42,13 @@ function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, i
           text={title + " - " + startDate + " -> " + dueDate}
           fillColor={priority === 2 ? "red" : priority === 1 ? "orange" : "green"}
           unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
-          onPress={(isChecked) => {updateTarefa(id, isChecked)}}
+          onPress={async (isChecked) => {
+            updateTarefa(id, isChecked)
+            if (isChecked === true) {
+              await sleep(1000)
+              delTarefa(id)
+            }
+          }}
           isChecked={completed}
         />
       </View>

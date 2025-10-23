@@ -125,7 +125,8 @@ const GeminiChat = () => {
             Quanto informações fornecidas pelo usuário fora do questionário, por meio de citações pelo usuário, comentários e/ou informações inerentes as tarefas,\
             atividades e compromissos que o usuário quiser organizar, são elas: Data de Inicio e/ou Conclusão, prioridade, tipo da tarefa, atividade e/ou compromisso. Sempre que responder a solicitação do usuário referente a realização de uma atividade,\
             denote especificamente o tempo dedicado, em horas ou minutos, para realizar tais atividades, e pausas caso a atividade necessite.\
-            Claro usando como base o método utilizado e as demais características da(s) atividade(s).",
+            Claro usando como base o método utilizado e as demais características da(s) atividade(s)\
+            . Voce não tera nome proprio e não podera atribuir um nome para si mesma",
           tools: [
             {
               functionDeclarations: [createTaskFunctionDeclaration],

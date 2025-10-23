@@ -21,7 +21,7 @@ Notifications.setNotificationHandler({
 
 export const GlobalProvider = ({ children }) => {
   // App Settings
-  const [aiVoice,setAIVoice] = useState(true)
+  const [aiVoice, setAIVoice] = useState(true);
 
   // Login Database state and functions
   const [currentUser, setCurrentUser] = useState();
@@ -33,7 +33,7 @@ export const GlobalProvider = ({ children }) => {
         body: "Voce tem tarefas pendentes para hoje",
       },
       trigger: {
-        date: date
+        date: date,
       },
     });
   };
@@ -97,7 +97,7 @@ export const GlobalProvider = ({ children }) => {
       console.log("auth token:", database.authStore.token);
 
       setCurrentUser(authData);
-      return authData
+      return authData;
     } catch (error) {
       try {
         const authAdmin = await database
@@ -252,6 +252,58 @@ export const GlobalProvider = ({ children }) => {
       await database.collection("tarefa").update(id, data);
     } catch (error) {
       console.log("updateTarefa", error);
+    }
+  }
+
+  async function delTarefa(idTarefa, idUsuario = currentUser.record.id) {
+    if (typeof idTarefa == "undefined") {
+      return false;
+    }
+    try {
+      const record = await database.collection("tarefa").getList(1, 1, {
+        filter: `id = "${idTarefa}" && idUsuario = "${idUsuario}"`,
+      });
+      if (record.items.length == 0) {
+        return false;
+      }
+
+      try {
+        const lembretes = await database.collection("lembrete").getFullList({
+          filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`,
+        });
+        if (Array.isArray(lembretes)) {
+          for (let i = 0; i < lembretes.length; i++) {
+            await database.collection("lembrete").delete(lembretes[i].id);
+          }
+        } else {
+          console.log("jfkldsjfskl");
+          await database.collection("lembrete").delete(lembretes.id);
+        }
+      } catch (error) {
+        console.log("delTarefa/lembrete", error);
+      }
+
+      try {
+        const subtarefas = await database.collection("subtarefa").getFullList({
+          filter: `idUsuario = "${idUsuario}" && idTarefa = "${idTarefa}"`,
+        });
+
+        if (Array.isArray(subtarefas)) {
+          for (let i = 0; i < subtarefas.length; i++) {
+            await database.collection("subtarefa").delete(subtarefas[i].id);
+          }
+        } else {
+          await database.collection("subtarefa").delete(subtarefas.id);
+        }
+      } catch (error) {
+        console.log("delTarefa/subtarefa", error);
+      }
+
+      await database.collection("tarefa").delete(idTarefa);
+      return true;
+    } catch (error) {
+      console.log("delTarefa", error);
+      return false;
     }
   }
 
@@ -500,19 +552,21 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function updtUsuario(tipoNeurodivergencia){
+  async function updtUsuario(tipoNeurodivergencia) {
     const data = {
-      "tipoNeurodivergencia": tipoNeurodivergencia
+      tipoNeurodivergencia: tipoNeurodivergencia,
     };
-    
+
     try {
-      await database.collection('usuario').update(currentUser.record.id, data);
-    } catch (error){
-      console.log('updtUsuario/usuario', error);
+      await database.collection("usuario").update(currentUser.record.id, data);
+    } catch (error) {
+      console.log("updtUsuario/usuario", error);
       try {
-        await database.collection('_superusers').update(currentUser.record.id, data);
-      } catch (error){
-        console.log('updtUsuario/administrador', error);
+        await database
+          .collection("_superusers")
+          .update(currentUser.record.id, data);
+      } catch (error) {
+        console.log("updtUsuario/administrador", error);
       }
     }
   }
@@ -528,10 +582,11 @@ export const GlobalProvider = ({ children }) => {
   return (
     <GlobalContext.Provider
       value={{
+        currentUser,
         getTarefa,
         setTarefa,
         updateTarefa,
-        currentUser,
+        delTarefa,
         setCurrentUser,
         criarLogin,
         login,
@@ -546,7 +601,7 @@ export const GlobalProvider = ({ children }) => {
         updateSubtarefa,
         aiVoice,
         setAIVoice,
-        scheduleNotification
+        scheduleNotification,
       }}
     >
       {children}
