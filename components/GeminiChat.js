@@ -6,6 +6,10 @@ import {
   FlatList,
   TextInput,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Markdown from "react-native-markdown-display";
@@ -103,6 +107,30 @@ const GeminiChat = () => {
       try { Speech.stop(); } catch (e) {}
     }
   }, [isFocused]);
+
+  // scroll to end when keyboard opens so latest messages are visible
+  useEffect(() => {
+    const onKeyboardShow = () => {
+      setTimeout(() => {
+        try {
+          if (flatListRef.current) {
+            if (typeof flatListRef.current.scrollToEnd === 'function') {
+              flatListRef.current.scrollToEnd({ animated: true });
+            } else if (typeof flatListRef.current.scrollToOffset === 'function') {
+              flatListRef.current.scrollToOffset({ offset: 999999, animated: true });
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+      }, 50);
+    };
+
+    const sub = Keyboard.addListener('keyboardDidShow', onKeyboardShow);
+    return () => {
+      try { sub.remove(); } catch (e) {}
+    };
+  }, []);
 
   function addMessage(text, user) {
     if (!text || text.trim() === "") return;
@@ -205,32 +233,45 @@ const GeminiChat = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 10, marginBottom: 5, marginHorizontal: 7 }}>
-        <FlatList
-          ref={flatListRef} 
-          style={{ flex: 1 }}
-          data={messages}
-          renderItem={renderMessage}
-        />
-      </View>
-      <View style={{ flex: 1 }}>
-        <TextInput
-          placeholderTextColor={"#0088ffff"}
-          onChangeText={setUserInput}
-          onSubmitEditing={sendMessage}
-          value={userInput}
-          style={styles.aiChatInputText}
-        />
-        {loading && (
-          <ActivityIndicator
-            size={"small"}
-            color={"#0088ffff"}
-            style={{ margin: 10 }}
-          />
-        )}
-      </View>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior="padding"
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 80}
+    >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={{ flex: 10, marginBottom: 5, marginHorizontal: 7 }}>
+            <FlatList
+              ref={flatListRef}
+              style={{ flex: 1 }}
+              data={messages}
+              renderItem={renderMessage}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{ flexGrow: 1 }}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <TextInput
+              placeholderTextColor={"#0088ffff"}
+              onChangeText={setUserInput}
+              onSubmitEditing={sendMessage}
+              value={userInput}
+              style={styles.aiChatInputText}
+              returnKeyType="send"
+              blurOnSubmit={false}
+            />
+            {loading && (
+              <ActivityIndicator
+                size={"small"}
+                color={"#0088ffff"}
+                style={{ margin: 10 }}
+              />
+            )}
+          </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
