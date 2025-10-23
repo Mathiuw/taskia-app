@@ -44,13 +44,12 @@ const SettingsOptionsScreen = ({ navigation }) => {
       </View>
       <View
         style={{
-          flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           marginHorizontal: 20,
         }}
       >
-        <Text style={{ fontSize: 16, color: "#0088ffff"}}> Questionario </Text>
+        <Text style={{ fontSize: 16, color: "#0088ffff"}}>{"Estilo Aprendizado: " + currentUser.record.tipoNeurodivergencia} </Text>
         <TouchableOpacity style={styles.pickerButtom} onPress={redoQuestions}>
           <Text style={styles.pickerButtomText}>Refazer Questionario</Text>
         </TouchableOpacity>        

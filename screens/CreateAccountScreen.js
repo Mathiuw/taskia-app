@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,7 +13,7 @@ import { GlobalContext } from "../components/GlobalContext";
 import TaskDatePicker from "../components/TaskDatePicker";
 import styles from "../styles";
 
-const CreateAccount = () => {
+const CreateAccountScreen = () => {
   const { criarLogin } = useContext(GlobalContext);
 
   const [inputUser, setInputUser] = useState("");
@@ -127,4 +126,4 @@ const localStyles = StyleSheet.create({
   },
 });
 
-export default CreateAccount;
+export default CreateAccountScreen;

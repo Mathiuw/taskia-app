@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ChangePassword from "./ChangePassword";
-import CreateAccount from "./CreateAccountScreen";
+import CreateAccountScreen from "./CreateAccountScreen";
 import { useState, useContext, useEffect } from "react";
 
 import { GlobalContext } from "../components/GlobalContext";
@@ -25,7 +25,7 @@ const LoginStack = () => {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="Criar Conta" component={CreateAccount} />
+      <Stack.Screen name="Criar Conta" component={CreateAccountScreen} />
       <Stack.Screen name="Mudar Senha" component={ChangePassword} />
     </Stack.Navigator>
   );

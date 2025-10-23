@@ -45,7 +45,8 @@ function TaskItem({ id, title, steps, startDate, dueDate, priority, completed, i
           onPress={async (isChecked) => {
             updateTarefa(id, isChecked)
             if (isChecked === true) {
-              await sleep(1000)
+              //await sleep(1000)
+              console.log("Deleting task id: " + id)
               delTarefa(id)
             }
           }}

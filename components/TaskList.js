@@ -54,7 +54,7 @@ const TaskList = () => {
       }}
       keyExtractor={(item) => item.id.toString()}
       ListEmptyComponent={() => {
-        return <Text style={{flex: 1, color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Nenhuma tarefa :)</Text>;
+        return <Text style={{flex: 1, fontSize:18, color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Nenhuma tarefa :)</Text>;
       }}
     />
   );

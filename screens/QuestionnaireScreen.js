@@ -2,11 +2,48 @@ import { useState } from "react"
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Picker } from "@react-native-picker/picker"
+import { useContext } from "react"
+import { GlobalContext } from "../components/GlobalContext"
 
 import styles from "../styles"
 
 const QuestionnaireScreen = ({navigation}) => {
+    const {updtUsuario} = useContext(GlobalContext)
+
     const [answers, setAnswers] = useState(new Array(30).fill(1))
+
+    const calculateResult = () => {
+        let auditory = 0
+        let visual = 0
+        let kinesthetic = 0
+
+        for (let i = 0; i < answers.length; i++) {
+            if (i < 10) {
+                auditory += answers[i]
+            } else if (i < 20) {
+                visual += answers[i]
+            } else {
+                kinesthetic += answers[i]
+            }
+        }
+
+        if (auditory >= visual && auditory >= kinesthetic) {
+            return "Auditivo"
+        }
+        if (visual >= auditory && visual >= kinesthetic) {
+            return "Visual"
+        }
+        return "Cinestesico"
+    }
+
+    const submitQuestionnaire = async () => {
+        console.log(answers)
+        const result = calculateResult()
+        console.log("Result: " + result)
+        //await updtUsuario({estiloAprendizagem: result)
+        await updtUsuario(result)
+        navigation.goBack()
+    }
 
     const QuestionnairePicker = ({index}) => {
         return (
@@ -30,10 +67,7 @@ const QuestionnaireScreen = ({navigation}) => {
         )
     }
 
-    const submitQuestionnaire = () => {
-        console.log(answers)
-        navigation.goBack()
-    }
+
 
     return (
         <SafeAreaView style={localStyles.questionnaireView}>
@@ -96,7 +130,7 @@ const QuestionnaireScreen = ({navigation}) => {
                     <QuestionnairePicker index={20} />
                 <Text style={[localStyles.text]}>3.2- Gosto de estar ao ar livre, solto, caminhar em liberdade;</Text>
                     <QuestionnairePicker index={21} />
-                <Text style={[localStyles.text]}>3.3- Tenho boa coordenação motora para fazer muitas coisas;</Text>\
+                <Text style={[localStyles.text]}>3.3- Tenho boa coordenação motora para fazer muitas coisas;</Text>
                     <QuestionnairePicker index={22} />
                 <Text style={[localStyles.text]}>3.4- Toco nas pessoas quando estou conversando com elas;</Text>
                     <QuestionnairePicker index={23} />
@@ -110,7 +144,7 @@ const QuestionnaireScreen = ({navigation}) => {
                     <QuestionnairePicker index={27} />
                 <Text style={[localStyles.text]}>3.9- Posso dizer muito de uma pessoa simplesmente pelo modo com que ela aperta minhas mãos;</Text>
                     <QuestionnairePicker index={28} />
-                <Text style={[localStyles.text]}>3.10- 3Prefiro aprender as coisas na prática ao invés de ficar apenas na teoria.</Text>
+                <Text style={[localStyles.text]}>3.10- Prefiro aprender as coisas na prática ao invés de ficar apenas na teoria.</Text>
                     <QuestionnairePicker index={29} />
                 
                 <View style={localStyles.submitView}>

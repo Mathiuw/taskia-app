@@ -267,21 +267,24 @@ export const GlobalProvider = ({ children }) => {
         return false;
       }
 
-      try {
-        const lembretes = await database.collection("lembrete").getFullList({
-          filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`,
-        });
-        if (Array.isArray(lembretes)) {
-          for (let i = 0; i < lembretes.length; i++) {
-            await database.collection("lembrete").delete(lembretes[i].id);
-          }
-        } else {
-          console.log("jfkldsjfskl");
-          await database.collection("lembrete").delete(lembretes.id);
-        }
-      } catch (error) {
-        console.log("delTarefa/lembrete", error);
-      }
+      // try {
+      //   // const lembretes = await database.collection("lembrete").getFullList({
+      //   //   filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`,
+      //   // });
+      //   // if (Array.isArray(lembretes)) {
+      //   //   for (let i = 0; i < lembretes.length; i++) {
+      //   //     await database.collection("lembrete").delete(lembretes[i].id);
+      //   //   }
+      //   // } else {
+      //   //   console.log("jfkldsjfskl");
+      //   //   await database.collection("lembrete").delete(lembretes.id);
+      //   // }
+
+
+
+      // } catch (error) {
+      //   console.log("delTarefa/lembrete", error);
+      // }
 
       try {
         const subtarefas = await database.collection("subtarefa").getFullList({
