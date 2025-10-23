@@ -32,21 +32,24 @@ const LoginStack = () => {
 };
 
 const LoginScreen = ({ navigation }) => {
-  const { login, currentUser } = useContext(GlobalContext);
+  const { login, currentUser,getTutorialFeito } = useContext(GlobalContext);
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
-  useEffect(()=> {
-    if (typeof currentUser !== 'undefined') {
-      if (currentUser.record.tutorialFeito === false) {
-        navigation.navigate("FirstQuestions")
+  useEffect(() => {
+    const checkTutorial = async () => {
+      if (typeof currentUser !== 'undefined') {
+        const tutorialFeito = await getTutorialFeito();
+        if (tutorialFeito === false) {
+          navigation.navigate("FirstQuestions");
+        } else {
+          navigation.navigate("Drawer");
+        }
       }
-      else {
-        navigation.navigate("Drawer")
-      }
-    }
-  }, [currentUser])
+    };
+    checkTutorial();
+  }, [currentUser]);
 
   const tryLogin = async () => {
     const user = await login(emailInput, passwordInput);

@@ -41,7 +41,7 @@ const StartAppScreen = () => {
   const { currentUser } = useContext(GlobalContext)
 
   return (
-        <RootStack.Navigator initialRouteName={typeof currentUser !== 'undefined' ? "Drawer" : "User"} screenOptions={{headerShown: false}}>
+        <RootStack.Navigator initialRouteName={"User"} screenOptions={{headerShown: false}}>
           <RootStack.Screen name="Drawer" component={DrawerScreen} />
           <RootStack.Screen name="User" component={LoginStartScreen} />
           <RootStack.Screen name="FirstQuestions" component={FisrtQuestionnaireScreen} />

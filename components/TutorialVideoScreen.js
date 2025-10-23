@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Text } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
+
+import { GlobalContext } from './GlobalContext';
 
 // video file lives in the project's top-level `assets` folder
 const videoSource = require("../assets/AjudAI-Tutorial.mp4")
 
 const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
+  const {updtTutorialFeito} = useContext(GlobalContext);
+
   const player = useVideoPlayer(videoSource, (player) => {
     player.loop= true;
     player.volume= 0;
@@ -48,7 +52,7 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
       />
       <TouchableOpacity 
         style={styles.skipButton} 
-        onPress={() => {
+        onPress={async () => {
           try {
             if (player) {
               if (typeof player.pause === 'function') player.pause();
@@ -57,6 +61,7 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
               if (typeof player.unloadAsync === 'function') player.unloadAsync();
             }
           } catch (e) {}
+          await updtTutorialFeito(true)
           navigation.navigate("Drawer");
         }}
         activeOpacity={0.8}

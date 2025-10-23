@@ -130,14 +130,6 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function login(email, password) {
-    if (currentUser) {
-      console.error(
-        "You already are logged on! current user: ",
-        currentUser.record.nome
-      );
-      return;
-    }
-
     try {
       const authData = await database
         .collection("usuario")
@@ -683,6 +675,38 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updtTutorialFeito(tutorialFeito) {
+    const data = {
+      tutorialFeito: tutorialFeito,
+    };
+
+    try {
+      await database.collection("usuario").update(currentUser.record.id, data);
+    } catch (error) {
+      console.log("updtUsuario/usuario", error);
+      try {
+        await database
+          .collection("_superusers")
+          .update(currentUser.record.id, data);
+      } catch (error) {
+        console.log("updtUsuario/administrador", error);
+      }
+    }
+  }
+
+  // Return whether the current user has completed the tutorial.
+  // Tries to fetch a fresh value from the backend; falls back to the cached currentUser.
+  async function getTutorialFeito() {
+    try {
+      if (!currentUser || !currentUser.record || !currentUser.record.id) return false;
+      const record = await database.collection('usuario').getOne(currentUser.record.id);
+      return !!record.tutorialFeito;
+    } catch (e) {
+      console.log('getTutorialFeito error', e);
+      return !!(currentUser && currentUser.record && currentUser.record.tutorialFeito);
+    }
+  }
+
   // Demo account login
   // useEffect(() => {
   //   const demoAccountLogin = async () => {
@@ -695,16 +719,18 @@ export const GlobalProvider = ({ children }) => {
     <GlobalContext.Provider
       value={{
         currentUser,
+        setCurrentUser,
         getTarefa,
         setTarefa,
         updateTarefa,
         updateTarefaCompleta,
         delTarefa,
-        setCurrentUser,
         criarLogin,
         login,
         logout,
+        getTutorialFeito,
         updtUsuario,
+        updtTutorialFeito,
         getTags,
         setTag,
         getAnotacoes,
