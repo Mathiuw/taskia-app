@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ChangePassword from "./ChangePassword";
 import CreateAccount from "./CreateAccountScreen";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 import { GlobalContext } from "../components/GlobalContext";
 import styles from "../styles";
@@ -36,6 +36,12 @@ const LoginScreen = ({ navigation }) => {
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+
+  useEffect(()=> {
+    if (typeof currentUser !== 'undefined') {
+      navigation.navigate("Drawer")
+    }
+  }, [currentUser])
 
   const tryLogin = async () => {
     const user = await login(emailInput, passwordInput);

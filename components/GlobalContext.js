@@ -500,6 +500,24 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updtUsuario(tipoNeurodivergencia){
+    const data = {
+      "tipoNeurodivergencia": tipoNeurodivergencia
+    };
+    
+    try {
+      await database.collection('usuario').update(currentUser.record.id, data);
+    } catch (error){
+      console.log('updtUsuario/usuario', error);
+      try {
+        await database.collection('_superusers').update(currentUser.record.id, data);
+      } catch (error){
+        console.log('updtUsuario/administrador', error);
+      }
+    }
+  }
+
+  // Demo account login
   useEffect(() => {
     const demoAccountLogin = async () => {
       await login("mateus.martins@uscsonline.com.br", "12345678");
@@ -517,6 +535,7 @@ export const GlobalProvider = ({ children }) => {
         setCurrentUser,
         criarLogin,
         login,
+        updtUsuario,
         getTags,
         setTag,
         getAnotacoes,

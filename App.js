@@ -40,7 +40,7 @@ const StartAppScreen = () => {
   const { currentUser } = useContext(GlobalContext)
 
   return (
-        <RootStack.Navigator initialRouteName={currentUser !== 'undefined' ? "Drawer" : "User"} screenOptions={{headerShown: false}}>
+        <RootStack.Navigator initialRouteName={typeof currentUser !== 'undefined' ? "Drawer" : "User"} screenOptions={{headerShown: false}}>
           <RootStack.Screen name="Drawer" component={DrawerScreen} />
           <RootStack.Screen name="User" component={LoginStartScreen} />
         </RootStack.Navigator>
@@ -57,6 +57,7 @@ export default function App() {
       <NavigationContainer theme={scheme === "dark" ? DarkTheme : DefaultTheme}>
         <StartAppScreen />
       </NavigationContainer>
+
     </GlobalProvider>
   );
 }
