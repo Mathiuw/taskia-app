@@ -63,7 +63,7 @@ function NoteEdit({ navigation }) {
           <Text style={styles.pickerButtomText}>Cancelar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pickerButtom} onPress={AddNoteHandler}>
-          <Text style={styles.pickerButtomText}>Adicionar</Text>
+          <Text style={styles.pickerButtomText}>Aplicar</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

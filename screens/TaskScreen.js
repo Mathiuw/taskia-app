@@ -6,6 +6,7 @@ import TaskList from "../components/TaskList";
 
 import styles from "../styles";
 import TaskInput from "../components/TaskInput";
+import TaskEdit from "../components/TaskEdit";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ const LoginStack = () => {
     >
       <Stack.Screen name="Lista Tarefas" component={TaskScreen} />
       <Stack.Screen name="Criar Tarefa" component={TaskInput} />
+      <Stack.Screen name="Editar Tarefa" component={TaskEdit} />
     </Stack.Navigator>
   );
 };

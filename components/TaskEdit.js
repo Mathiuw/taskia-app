@@ -261,7 +261,7 @@ function TaskEdit({ navigation }) {
             style={styles.pickerButtom}
             onPress={AddTaskHandler}
           >
-            <Text style={styles.pickerButtomText}>Adicionar</Text>
+            <Text style={styles.pickerButtomText}>Aplicar</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

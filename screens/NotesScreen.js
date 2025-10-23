@@ -9,6 +9,7 @@ import NoteItem from "../components/NoteItem";
 
 import styles from "../styles";
 import { GlobalContext } from "../components/GlobalContext";
+import NoteEdit from "../components/NoteEdit";
 
 const Stack = createNativeStackNavigator()
 
@@ -20,6 +21,7 @@ const NotesStack = () => {
     >
       <Stack.Screen name="Lista Notas" component={NoteScreen} />
       <Stack.Screen name="Criar Nota" component={NoteInput} />
+      <Stack.Screen name="Editar Note" component={NoteEdit} />
     </Stack.Navigator>
   );
 };
