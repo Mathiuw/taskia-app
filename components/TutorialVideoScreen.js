@@ -4,7 +4,7 @@ import { Text } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 
 // video file lives in the project's top-level `assets` folder
-const videoSource = require("../assets/tutorial_teste.mp4")
+const videoSource = require("../assets/AjudAI-Tutorial.mp4")
 
 const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
   const player = useVideoPlayer(videoSource, (player) => {
