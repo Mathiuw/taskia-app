@@ -13,7 +13,7 @@ import { GlobalContext } from "../components/GlobalContext";
 import TaskDatePicker from "../components/TaskDatePicker";
 import styles from "../styles";
 
-const CreateAccountScreen = () => {
+const CreateAccountScreen = ({navigation}) => {
   const { criarLogin } = useContext(GlobalContext);
 
   const [inputUser, setInputUser] = useState("");
@@ -21,7 +21,7 @@ const CreateAccountScreen = () => {
   const [inputPassword, setInputPassword] = useState("");
   const [inputPasswordConfirm, setInputPasswordConfirm] = useState("");
   const [nType, setNType] = useState("");
-  const [inputBirthDate, setInputBirthDate] = useState("");
+  const [inputBirthDate, setInputBirthDate] = useState(new Date());
   const [inputGender, setInputGender] = useState("");
 
   return (
@@ -39,6 +39,7 @@ const CreateAccountScreen = () => {
       <TaskDatePicker
         placeholder="Insira a data de nascimento"
         onDateConfirm={setInputBirthDate}
+        value={inputBirthDate}
       />
       <Text style={localStyles.text1}>Genero</Text>
       <View style={styles.priorityInput}>
@@ -49,7 +50,7 @@ const CreateAccountScreen = () => {
         >
           <Picker.Item label="Masculino" value="M" />
           <Picker.Item label="Feminino" value="F" />
-          <Picker.Item label="Não Binario" value="NB" />
+          <Picker.Item label="Outro" value="O" />
         </Picker>
       </View>
       <Text style={localStyles.text1}>E-Mail</Text>
@@ -90,7 +91,7 @@ const CreateAccountScreen = () => {
             return;
           }
 
-          criarLogin(
+          if (criarLogin(
             inputEmail,
             inputPassword,
             inputPasswordConfirm,
@@ -98,7 +99,11 @@ const CreateAccountScreen = () => {
             nType,
             inputBirthDate,
             inputGender
-          );
+          )) {
+            navigation.goBack();
+          }
+
+
         }}
       >
         <Text style={[styles.pickerButtomText, { fontSize: 18 }]}>Criar Conta</Text>

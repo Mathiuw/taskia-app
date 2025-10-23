@@ -3,6 +3,7 @@ import PocketBase from "pocketbase";
 import * as Notifications from "expo-notifications";
 export const GlobalContext = createContext();
 import { useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const database = new PocketBase(
   "https://pocketbasetcc-production.up.railway.app"
@@ -25,6 +26,52 @@ export const GlobalProvider = ({ children }) => {
 
   // Login Database state and functions
   const [currentUser, setCurrentUser] = useState();
+
+  // load persisted user on mount
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const raw = await AsyncStorage.getItem('@currentUser');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          setCurrentUser(parsed);
+          // restore pocketbase authStore if token present
+          if (parsed && parsed.token) {
+            database.authStore.save(parsed.token, parsed.record);
+          }
+        }
+      } catch (e) {
+        console.log('loadUser error', e);
+      }
+    };
+    loadUser();
+  }, []);
+
+  // persist currentUser whenever it changes
+  useEffect(() => {
+    const saveUser = async () => {
+      try {
+        if (currentUser) {
+          await AsyncStorage.setItem('@currentUser', JSON.stringify(currentUser));
+        } else {
+          await AsyncStorage.removeItem('@currentUser');
+        }
+      } catch (e) {
+        console.log('saveUser error', e);
+      }
+    };
+    saveUser();
+  }, [currentUser]);
+
+  const logout = async () => {
+    try {
+      setCurrentUser(undefined);
+      //database.authStore.clear();
+      await AsyncStorage.removeItem('@currentUser');
+    } catch (e) {
+      console.log('logout error', e);
+    }
+  }
 
   const scheduleNotification = (date) => {
     Notifications.scheduleNotificationAsync({
@@ -49,7 +96,7 @@ export const GlobalProvider = ({ children }) => {
   ) {
     try {
       const maxId = await database.collection("usuario").getList(1, 1, {
-        sort: "-dataDeCriacao",
+        sort: "-created",
       });
 
       let newId;
@@ -73,8 +120,12 @@ export const GlobalProvider = ({ children }) => {
       });
 
       console.log("conta criada", newUser);
+
+      return true;
     } catch (error) {
       console.log(error);
+
+      return false;
     }
   }
 
@@ -243,15 +294,41 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function updateTarefa(id, concluida) {
-    const data = {
-      concluida: concluida,
-    };
-    try {
-      await database.collection("tarefa").update(id, data);
-    } catch (error) {
-      console.log("updateTarefa", error);
-    }
+  // async function updateTarefa(id, concluida) {
+  //   const data = {
+  //     concluida: concluida,
+  //   };
+  //   try {
+  //     await database.collection("tarefa").update(id, data);
+  //   } catch (error) {
+  //     console.log("updateTarefa", error);
+  //   }
+  // }
+
+  async function updateTarefa(id, concluida){
+      const data = {
+          concluida: concluida,
+      };
+      try {
+          await database.collection('tarefa').update(id, data);
+      }catch (error){
+          console.log("updateTarefa/Tarefa", error);
+          return;
+      }
+      if (concluida){
+          try{
+              const subtarefas = await getSubtarefa(id);
+              for (const element of subtarefas) {
+                  try{
+                      const steps = await updateSubtarefa(element.id, concluida);
+                  }catch(error){
+                      console.log("updateTarefa/updateSubtarefa")
+                  }
+              }
+          }catch(error){
+              console.log("updateTarefa/Subtarefa", error);
+         }
+      }
   }
 
   async function updateTarefaCompleta(
@@ -607,12 +684,12 @@ export const GlobalProvider = ({ children }) => {
   }
 
   // Demo account login
-  useEffect(() => {
-    const demoAccountLogin = async () => {
-      await login("mateus.martins@uscsonline.com.br", "12345678");
-    };
-    demoAccountLogin();
-  }, []);
+  // useEffect(() => {
+  //   const demoAccountLogin = async () => {
+  //     await login("mateus.martins@uscsonline.com.br", "12345678");
+  //   };
+  //   demoAccountLogin();
+  // }, []);
 
   return (
     <GlobalContext.Provider
@@ -626,6 +703,7 @@ export const GlobalProvider = ({ children }) => {
         setCurrentUser,
         criarLogin,
         login,
+        logout,
         updtUsuario,
         getTags,
         setTag,
