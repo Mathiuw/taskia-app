@@ -10,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Markdown from "react-native-markdown-display";
 import * as Speech from "expo-speech";
+import { useIsFocused } from '@react-navigation/native';
 
 import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
@@ -82,12 +83,26 @@ const GeminiChat = () => {
 
   const flatListRef = useRef()
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
     const startChat = async () => {
       await receiveAIMessage("Olá");
     };
     startChat();
+
+    // cleanup on unmount
+    return () => {
+      try { Speech.stop(); } catch (e) {}
+    };
   }, []);
+
+  // stop speech when screen loses focus
+  useEffect(() => {
+    if (!isFocused) {
+      try { Speech.stop(); } catch (e) {}
+    }
+  }, [isFocused]);
 
   function addMessage(text, user) {
     if (!text || text.trim() === "") return;
