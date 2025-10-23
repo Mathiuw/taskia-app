@@ -1,18 +1,18 @@
 import { StyleSheet, Text, Pressable, View } from "react-native";
 
-function NoteItem(props) {
+function NoteItem({id, title, text, onDeleteItem, onLongNotePress}) {
     return (
         <Pressable 
             android_ripple={{color: '#cbd26bff'}}
             style={({pressed}) => pressed && styles.pressedItem}
-            onPress={props.onDeleteItem.bind(this, props.id)}
-            onLongPress={() => console.log(`Note long-pressed: id=${props.id}, title=${props.title}`)}
+            onPress={onDeleteItem.bind(this, id)}
+            onLongPress={() => {onLongNotePress(id)} }
             accessibilityHint="Long press to log note info"
             delayLongPress={500}
         >
             <View style={styles.goalItem} >
-                <Text style={styles.noteTitle}>{props.title}</Text>
-                <Text>{props.text}</Text>
+                <Text style={styles.noteTitle}>{title}</Text>
+                <Text>{text}</Text>
             </View>
         </Pressable>
     );

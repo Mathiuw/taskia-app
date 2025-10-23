@@ -254,6 +254,18 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function updateAnotacao(id, nomeAnotacao, descricao) {
+    const data = {
+      nomeAnotacao: nomeAnotacao,
+      descricao: descricao,
+    };
+    try {
+      await database.collection("anotacoes").update(id, data);
+    } catch (error) {
+      console.log("updateTarefa", error);
+    }
+  }
+
   async function delTarefa(idTarefa, idUsuario = currentUser.record.id) {
     if (typeof idTarefa == "undefined") {
       return false;
@@ -598,6 +610,7 @@ export const GlobalProvider = ({ children }) => {
         getAnotacoes,
         setAnotacoes,
         delAnotacoes,
+        updateAnotacao,
         getSubtarefa,
         setSubtarefa,
         updateSubtarefa,

@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -11,24 +11,42 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
 
-function NoteEdit({ navigation }) {
-  const { AddNote, setAnotacoes, } = useContext(GlobalContext);
+function NoteEdit({ navigation, route }) {
+  const { getAnotacoes, updateAnotacao } = useContext(GlobalContext);
+
+  const { noteId } = route.params;
 
   const [noteName, setNoteName] = useState("");
   const [noteContent, setNoteContent] = useState("");
 
   const scheme = useColorScheme();
 
-  async function  AddNoteHandler() {
-    //AddNote(noteName, noteContent);
-    await setAnotacoes(noteName, noteContent)
+  async function applyNoteEdit() {
+    await updateAnotacao(noteId, noteName, noteContent);
     setNoteName("");
     setNoteContent("");
     navigation.goBack();
   }
 
+  useEffect(() => {
+    async function fetchNoteDetails() {
+      // Fetch note details using noteId and populate state
+      // This is a placeholder; replace with actual data fetching logic
+      const noteDetails = await getAnotacoes(noteId);
+      setNoteName(noteDetails.nomeAnotacao);
+      setNoteContent(noteDetails.descricao);
+    }
+    fetchNoteDetails();
+  }, [noteId]);
+
+
   return (
     <SafeAreaView style={[styles.inputModalContainer, {paddingHorizontal: 10}]}>
+      <Text
+        style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+      >
+        Editar Nota
+      </Text>
       <Text
         style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
       >
@@ -62,7 +80,7 @@ function NoteEdit({ navigation }) {
         >
           <Text style={styles.pickerButtomText}>Cancelar</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.pickerButtom} onPress={AddNoteHandler}>
+        <TouchableOpacity style={styles.pickerButtom} onPress={applyNoteEdit}>
           <Text style={styles.pickerButtomText}>Aplicar</Text>
         </TouchableOpacity>
       </View>

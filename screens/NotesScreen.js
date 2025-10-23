@@ -47,6 +47,11 @@ const NoteScreen = ({ navigation }) => {
       },
     ]);
 
+  const onNoteLongPress = (id) => {
+    console.log(`Note long-pressed: id=${id}`);
+    navigation.navigate("Editar Note", { noteId: id });
+  }
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -72,7 +77,6 @@ const NoteScreen = ({ navigation }) => {
     }, [submitNote])
   );
 
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FlatList
@@ -84,6 +88,7 @@ const NoteScreen = ({ navigation }) => {
               title={itemData.item.nomeAnotacao}
               text={itemData.item.descricao}
               onDeleteItem={createTwoButtonAlert}
+              onLongNotePress={onNoteLongPress}
             />
           );
         }}
