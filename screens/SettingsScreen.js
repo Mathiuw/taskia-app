@@ -20,7 +20,7 @@ const SettingsOptionsScreen = ({ navigation }) => {
 
   const logout = () => {
     setCurrentUser()
-    navigation.navigate("User")
+    navigation.replace("User")
   }
 
   return (

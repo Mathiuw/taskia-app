@@ -62,7 +62,7 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
             }
           } catch (e) {}
           await updtTutorialFeito(true)
-          navigation.navigate("Drawer");
+          navigation.replace("Drawer");
         }}
         activeOpacity={0.8}
       >

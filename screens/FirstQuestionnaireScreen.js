@@ -42,7 +42,7 @@ const FisrtQuestionnaireScreen = ({navigation}) => {
         console.log("Result: " + result)
         //await updtUsuario({estiloAprendizagem: result)
         await updtUsuario(result)
-        navigation.navigate("Tutorial")
+        navigation.replace("Tutorial")
     }
 
     const QuestionnairePicker = ({index}) => {

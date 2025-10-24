@@ -42,9 +42,9 @@ const LoginScreen = ({ navigation }) => {
       if (typeof currentUser !== 'undefined') {
         const tutorialFeito = await getTutorialFeito();
         if (tutorialFeito === false) {
-          navigation.navigate("FirstQuestions");
+          navigation.replace("FirstQuestions");
         } else {
-          navigation.navigate("Drawer");
+          navigation.replace("Drawer");
         }
       }
     };
@@ -56,7 +56,7 @@ const LoginScreen = ({ navigation }) => {
     console.log("User: ", user);
 
     if (typeof user !== "undefined") {
-      navigation.navigate("Drawer");
+      navigation.replace("Drawer");
     } else {
       console.error("Login Failed");
     }
