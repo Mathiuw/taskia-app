@@ -166,6 +166,10 @@ export const GlobalProvider = ({ children }) => {
     prioridade,
     tags
   ) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('setTarefa called without currentUser');
+      return false;
+    }
     const maxId = await database.collection("tarefa").getList(1, 1, {
       sort: "-dataDeCriacao",
     });
@@ -205,8 +209,9 @@ export const GlobalProvider = ({ children }) => {
   async function getTarefa(
     dataConclusao,
     id,
-    idUsuario = currentUser.record.id
+    idUsuario
   ) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     console.log("isValid:", database.authStore.isValid);
     console.log("auth model:", database.authStore.record);
     console.log("auth token:", database.authStore.token);
@@ -357,8 +362,13 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function delTarefa(idTarefa, idUsuario = currentUser.record.id) {
+  async function delTarefa(idTarefa, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof idTarefa == "undefined") {
+      return false;
+    }
+    if (!idUsuario) {
+      console.log('delTarefa called without currentUser');
       return false;
     }
     try {
@@ -404,7 +414,8 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function getTags(id, idUsuario = currentUser.record.id) {
+  async function getTags(id, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof id !== "undefined") {
       try {
         const record = await database.collection("tags").getList(1, 1, {
@@ -437,6 +448,10 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function setTag(descricao) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('setTag called without currentUser');
+      return false;
+    }
     const maxId = await database.collection("tags").getList(1, 1, {
       sort: "-dataDeCriacao",
     });
@@ -473,7 +488,8 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function getAnotacoes(id, idUsuario = currentUser.record.id) {
+  async function getAnotacoes(id, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof id !== "undefined") {
       try {
         const record = await database.collection("anotacoes").getList(1, 1, {
@@ -506,6 +522,10 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function setAnotacoes(nomeAnotacao, descricao) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('setAnotacoes called without currentUser');
+      return false;
+    }
     const maxId = await database.collection("anotacoes").getList(1, 1, {
       sort: "-dataDeCriacao",
     });
@@ -544,8 +564,13 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function delAnotacoes(id, idUsuario = currentUser.record.id) {
+  async function delAnotacoes(id, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof id == "undefined") {
+      return false;
+    }
+    if (!idUsuario) {
+      console.log('delAnotacoes called without currentUser');
       return false;
     }
     try {
@@ -564,7 +589,8 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  async function getSubtarefa(idTarefa, id, idUsuario = currentUser.record.id) {
+  async function getSubtarefa(idTarefa, id, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof id !== "undefined") {
       try {
         const record = await database.collection("subtarefa").getList(1, 1, {
@@ -609,6 +635,10 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function setSubtarefa(nomeSubtarefa, idTarefa) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('setSubtarefa called without currentUser');
+      return false;
+    }
     const maxId = await database.collection("subtarefa").getList(1, 1, {
       sort: "-dataDeCriacao",
     });
@@ -638,6 +668,10 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function updtUsuario(tipoNeurodivergencia) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('updtUsuario called without currentUser');
+      return false;
+    }
     const data = {
       tipoNeurodivergencia: tipoNeurodivergencia,
     };
@@ -657,6 +691,10 @@ export const GlobalProvider = ({ children }) => {
   }
 
   async function updtTutorialFeito(tutorialFeito) {
+    if (!currentUser || !currentUser.record || !currentUser.record.id) {
+      console.log('updtTutorialFeito called without currentUser');
+      return false;
+    }
     const data = {
       tutorialFeito: tutorialFeito,
     };

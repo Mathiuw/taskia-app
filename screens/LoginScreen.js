@@ -78,7 +78,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={localStyles.text1}>Senha</Text>
       <TextInput
         style={localStyles.loginTextInput}
-        value={[passwordInput]}
+        value={passwordInput}
         autoCapitalize="none"
         onChangeText={setPasswordInput}
         placeholder="senha"

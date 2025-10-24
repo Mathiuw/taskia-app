@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context"
 import { Picker } from "@react-native-picker/picker"
 import { useContext } from "react"
 import { GlobalContext } from "../components/GlobalContext"
+import { CommonActions } from '@react-navigation/native'
 
 import styles from "../styles"
 
@@ -42,7 +43,14 @@ const QuestionnaireScreen = ({navigation}) => {
         console.log("Result: " + result)
         //await updtUsuario({estiloAprendizagem: result)
         await updtUsuario(result)
-        navigation.goBack()
+
+        // Reset root navigation to Drawer and open IA screen inside the drawer
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Drawer', params: { screen: 'IA' } }],
+            })
+        )
     }
 
     const QuestionnairePicker = ({index}) => {

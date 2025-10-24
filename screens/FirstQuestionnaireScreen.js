@@ -51,10 +51,10 @@ const FisrtQuestionnaireScreen = ({navigation}) => {
                 <Picker
                     selectedValue={answers[index]}
                     onValueChange={(answer) => {
-                        let newAnswers = answers
+                        const newAnswers = [...answers]
                         newAnswers[index] = answer
                         setAnswers(newAnswers)
-                        console.log(answers)
+                        console.log(newAnswers)
                     }}
                     style={{ color: "#0088ffff" }}
                 >
