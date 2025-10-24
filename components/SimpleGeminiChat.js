@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GoogleGenAI, Type } from "@google/genai";
@@ -75,6 +76,39 @@ const SimpleGeminiChat = () => {
   const [chatHistory, setChatHistory] = useState([]);
 
   const isFocused = useIsFocused();
+
+  const flatListRef = useRef()
+
+  // scroll to end when keyboard opens so latest messages are visible
+  useEffect(() => {
+    const onKeyboardShow = () => {
+      setTimeout(() => {
+        try {
+          if (flatListRef.current) {
+            if (typeof flatListRef.current.scrollToEnd === "function") {
+              flatListRef.current.scrollToEnd({ animated: true });
+            } else if (
+              typeof flatListRef.current.scrollToOffset === "function"
+            ) {
+              flatListRef.current.scrollToOffset({
+                offset: 999999,
+                animated: true,
+              });
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+      }, 50);
+    };
+
+    const sub = Keyboard.addListener("keyboardDidShow", onKeyboardShow);
+    return () => {
+      try {
+        sub.remove();
+      } catch (e) {}
+    };
+  }, []);
 
   useEffect(() => {
     const startChat = async () => {
@@ -157,6 +191,25 @@ const SimpleGeminiChat = () => {
 
   const sendMessage = async () => {
     if (!inputText.trim()) return;
+
+    setTimeout(() => {
+            try {
+              if (flatListRef.current) {
+                if (typeof flatListRef.current.scrollToEnd === "function") {
+                  flatListRef.current.scrollToEnd({ animated: true });
+                } else if (
+                  typeof flatListRef.current.scrollToOffset === "function"
+                ) {
+                  flatListRef.current.scrollToOffset({
+                    offset: 999999,
+                    animated: true,
+                  });
+                }
+              }
+            } catch (e) {
+              // ignore
+            }
+          }, 50);
 
     // Add user message to UI
     const userMessage = {
@@ -294,6 +347,25 @@ const SimpleGeminiChat = () => {
       setMessages((prev) => [...prev, errorMessage]);
     }
 
+    setTimeout(() => {
+            try {
+              if (flatListRef.current) {
+                if (typeof flatListRef.current.scrollToEnd === "function") {
+                  flatListRef.current.scrollToEnd({ animated: true });
+                } else if (
+                  typeof flatListRef.current.scrollToOffset === "function"
+                ) {
+                  flatListRef.current.scrollToOffset({
+                    offset: 999999,
+                    animated: true,
+                  });
+                }
+              }
+            } catch (e) {
+              // ignore
+            }
+          }, 50);
+
     setLoading(false);
   };
 
@@ -312,6 +384,7 @@ const SimpleGeminiChat = () => {
         keyboardVerticalOffset={90}
       >
         <FlatList
+          ref={flatListRef}
           data={messages}
           renderItem={renderMessage}
           keyExtractor={(_, index) => index.toString()}

@@ -71,7 +71,8 @@ function TaskItem({
               longPressRef.current = false;
               return;
             }
-            updateTarefa(id, isChecked);
+            await updateTarefa(id, isChecked);
+            updateState(Math.random());
           }}
           isChecked={completed}
           onLongPress={() => {
