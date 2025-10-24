@@ -4,7 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import styles from "../styles";
 import QuestionnaireScreen from "./QuestionnaireScreen";
-import { use, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { GlobalContext } from "../components/GlobalContext";
 
 const SettingsStack = createNativeStackNavigator();
@@ -25,13 +26,21 @@ const SettingsOptionsScreen = ({ navigation }) => {
     navigation.replace("User")
   }
 
-  useEffect(() => {
-    const fetchLearnType = async () => {
-      const type = await getNType();
-      setLearnType(type);
-    };
-    fetchLearnType();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchLearnType = async () => {
+        try {
+          const type = await getNType();
+          setLearnType(type);
+        } catch (error) {
+          setLearnType("Desconhecido");
+          console.error("Error fetching learning type: ", error);
+        }
+      };
+
+      fetchLearnType();
+  }, []));
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

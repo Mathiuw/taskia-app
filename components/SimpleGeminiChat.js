@@ -115,9 +115,11 @@ const SimpleGeminiChat = () => {
       try {
         setLoading(true);
 
+        const learnType = await getNType();
+
         const response = await genAI.models.generateContent({
           model: "gemini-2.5-flash",
-          contents: "Olá!",
+          contents: "Olá! meu estilo de aprendizado é " + learnType,
           config: {
             systemInstruction: GeminiInstructions,
             temperature: 0.9,
@@ -192,6 +194,7 @@ const SimpleGeminiChat = () => {
   const sendMessage = async () => {
     if (!inputText.trim()) return;
 
+    // Scroll to end to show latest message
     setTimeout(() => {
             try {
               if (flatListRef.current) {
@@ -347,6 +350,7 @@ const SimpleGeminiChat = () => {
       setMessages((prev) => [...prev, errorMessage]);
     }
 
+    // Scroll to end to show latest message
     setTimeout(() => {
             try {
               if (flatListRef.current) {
