@@ -56,7 +56,12 @@ const LoginScreen = ({ navigation }) => {
     console.log("User: ", user);
 
     if (typeof user !== "undefined") {
-      navigation.replace("Drawer");
+      if (user.record.tutorialFeito === false) {
+        navigation.replace("FirstQuestions");
+      }
+      else {
+        navigation.replace("Drawer");
+      }
     } else {
       console.error("Login Failed");
     }

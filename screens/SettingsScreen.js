@@ -11,9 +11,10 @@ import { GlobalContext } from "../components/GlobalContext";
 const SettingsStack = createNativeStackNavigator();
 
 const SettingsOptionsScreen = ({ navigation }) => {
-  const { aiVoice, setAIVoice, currentUser, setCurrentUser, getNType } = useContext(GlobalContext);
+  const { aiVoice, setAIVoice, currentUser, setCurrentUser, getNType, updtTutorialFeito, getTutorialFeito } = useContext(GlobalContext);
 
   const [learnType, setLearnType] = useState("");
+  const [tutorialDone, setTutorialDone] = useState("")
 
   const toggleSwitch = () => setAIVoice((previousState) => !previousState);
 
@@ -34,6 +35,14 @@ const SettingsOptionsScreen = ({ navigation }) => {
           setLearnType(type);
         } catch (error) {
           setLearnType("Desconhecido");
+          console.error("Error fetching learning type: ", error);
+        }
+
+        try {
+          const tf = await getTutorialFeito()
+          setTutorialDone(tf)
+        } catch (error) {
+          setTutorialDone("Desconhecido");
           console.error("Error fetching learning type: ", error);
         }
       };
@@ -101,6 +110,23 @@ const SettingsOptionsScreen = ({ navigation }) => {
           <Text style={[styles.pickerButtomText]}>Sair</Text>
         </TouchableOpacity>
       </View>
+        {/* Debug view code */}
+      {/* <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={{ fontSize: 16, color: "#0088ffff"}}>{"tutorial feito: " + tutorialDone }</Text>
+        <TouchableOpacity style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]} onPress={async () => { 
+          await updtTutorialFeito(false) 
+          console.log(getTutorialFeito())
+         }}>
+          <Text style={[styles.pickerButtomText]}>make Tutorial false</Text>
+        </TouchableOpacity>
+      </View>       */}
     </SafeAreaView>
   );
 };

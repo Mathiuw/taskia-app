@@ -100,10 +100,8 @@ const CreateAccountScreen = ({navigation}) => {
             inputBirthDate,
             inputGender
           )) {
-            navigation.goBack();
+            navigation.replace("User");
           }
-
-
         }}
       >
         <Text style={[styles.pickerButtomText, { fontSize: 18 }]}>Criar Conta</Text>
