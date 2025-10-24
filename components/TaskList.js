@@ -11,30 +11,20 @@ const TaskList = ({onTaskLongPress}) => {
   const [tasks, setTasks] = useState([]);
   const [taskSubmitted, setTaskSubmitted] = useState("");
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     let isActive = true;
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await getTarefa();
+          setTasks(response);
+        } catch (e) {
+          console.error("Error focus effect: ", e);
+        }
+      };
+      fetchUser();
 
-  //     const fetchUser = async () => {
-  //       try {
-  //         const response = await getTarefa();
-
-  //         if (isActive) {
-  //           setTasks(response);
-  //         }
-  //       } catch (e) {
-  //         console.error("Error focus effect: ", e);
-  //       }
-  //     };
-
-  //     fetchUser();
-
-  //     return () => {
-  //       isActive = false;
-  //     };
-
-  //   }, [taskSubmitted])
-  // );
+    }, [])
+  );
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -70,7 +60,7 @@ const TaskList = ({onTaskLongPress}) => {
       }}
       keyExtractor={(item) => item.id.toString()}
       ListEmptyComponent={() => {
-        return <Text style={{flex: 1, fontSize:18, color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Nenhuma tarefa :)</Text>;
+        return <Text style={{flex: 1, fontSize:18, fontWeight:"bold", color:"#0088ffff", margin: 15, justifyContent: "center", alignSelf:"center", alignItems: "center"}}>Tudo Feito :)</Text>;
       }}
     />
   );

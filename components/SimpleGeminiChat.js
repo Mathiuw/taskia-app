@@ -69,7 +69,7 @@ const createTaskFunctionDeclaration = {
 };
 
 const SimpleGeminiChat = () => {
-  const { setTarefa, aiVoice } = useContext(GlobalContext);
+  const { setTarefa, aiVoice, getNType } = useContext(GlobalContext);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);

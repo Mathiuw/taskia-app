@@ -4,13 +4,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import styles from "../styles";
 import QuestionnaireScreen from "./QuestionnaireScreen";
-import { useContext } from "react";
+import { use, useContext } from "react";
 import { GlobalContext } from "../components/GlobalContext";
 
 const SettingsStack = createNativeStackNavigator();
 
 const SettingsOptionsScreen = ({ navigation }) => {
-  const { aiVoice, setAIVoice, currentUser, setCurrentUser } = useContext(GlobalContext);
+  const { aiVoice, setAIVoice, currentUser, setCurrentUser, getNType } = useContext(GlobalContext);
+
+  const [learnType, setLearnType] = useState("");
 
   const toggleSwitch = () => setAIVoice((previousState) => !previousState);
 
@@ -22,6 +24,14 @@ const SettingsOptionsScreen = ({ navigation }) => {
     setCurrentUser()
     navigation.replace("User")
   }
+
+  useEffect(() => {
+    const fetchLearnType = async () => {
+      const type = await getNType();
+      setLearnType(type);
+    };
+    fetchLearnType();
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -49,7 +59,7 @@ const SettingsOptionsScreen = ({ navigation }) => {
           marginHorizontal: 20,
         }}
       >
-        <Text style={{ fontSize: 16, color: "#0088ffff"}}>{"Estilo Aprendizado: " + currentUser?.record.tipoNeurodivergencia} </Text>
+        <Text style={{ fontSize: 16, color: "#0088ffff"}}>{"Estilo Aprendizado: " + learnType} </Text>
         <TouchableOpacity style={styles.pickerButtom} onPress={redoQuestions}>
           <Text style={styles.pickerButtomText}>Refazer Questionario</Text>
         </TouchableOpacity>        

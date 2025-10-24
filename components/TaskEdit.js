@@ -198,7 +198,7 @@ function TaskEdit({ navigation, route }) {
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
             onPress={ async () => {
               await delTarefa(taskId);
-              navigation.goBack();
+              navigation.replace("Lista Tarefas");
             }}
           >
             <Text style={styles.pickerButtomText}>Apagar</Text>

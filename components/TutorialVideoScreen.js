@@ -38,13 +38,6 @@ const TutorialVideoScreen = ({ videoUri, onSkip, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Video
-        source={{ uri: "https://drive.google.com/file/d/1XdVjvidDOJNX_Gil7Gkv5cryLpvU4BGn/view?usp=drive_link" }}
-        style={styles.video}
-        shouldPlay={true}
-        isMuted={false}
-        resizeMode="cover"
-      /> */}
       <VideoView 
         player={player}
         style={styles.video}

@@ -22,15 +22,15 @@ const CalendarScreen = () => {
 
   const scheme = useColorScheme();
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const fetchUser = async () => {
-  //        setTasks(await getTarefa(day));
-  //     };
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUser = async () => {
+         setTasks(await getTarefa(day));
+      };
 
-  //     fetchUser();
-  //   }, [day, submitUpdate])
-  // );
+      fetchUser();
+    }, [])
+  );
 
   useEffect(() => {
       const fetchUser = async () => {

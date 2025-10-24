@@ -368,26 +368,6 @@ export const GlobalProvider = ({ children }) => {
       if (record.items.length == 0) {
         return false;
       }
-
-      // try {
-      //   // const lembretes = await database.collection("lembrete").getFullList({
-      //   //   filter: `idTarefa = "${idTarefa}" && idUsuario = "${idUsuario}"`,
-      //   // });
-      //   // if (Array.isArray(lembretes)) {
-      //   //   for (let i = 0; i < lembretes.length; i++) {
-      //   //     await database.collection("lembrete").delete(lembretes[i].id);
-      //   //   }
-      //   // } else {
-      //   //   console.log("jfkldsjfskl");
-      //   //   await database.collection("lembrete").delete(lembretes.id);
-      //   // }
-
-
-
-      // } catch (error) {
-      //   console.log("delTarefa/lembrete", error);
-      // }
-
       try {
         const subtarefas = await database.collection("subtarefa").getFullList({
           filter: `idUsuario = "${idUsuario}" && idTarefa = "${idTarefa}"`,
@@ -708,13 +688,16 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  // Demo account login
-  // useEffect(() => {
-  //   const demoAccountLogin = async () => {
-  //     await login("mateus.martins@uscsonline.com.br", "12345678");
-  //   };
-  //   demoAccountLogin();
-  // }, []);
+  async function getNType() {
+    try {
+      if (typeof currentUser === "undefined") return false;
+      const record = await database.collection('usuario').getOne(currentUser.record.id);
+      return record.tipoNeurodivergencia;
+    } catch (e) {
+      console.log('getNType error', e);
+      return (currentUser && currentUser.record && currentUser.record.tipoNeurodivergencia);
+    }
+  }  
 
   return (
     <GlobalContext.Provider
@@ -730,6 +713,7 @@ export const GlobalProvider = ({ children }) => {
         login,
         logout,
         getTutorialFeito,
+        getNType,
         updtUsuario,
         updtTutorialFeito,
         getTags,
