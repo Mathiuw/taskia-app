@@ -20,6 +20,7 @@ import HelpScreen from "./screens/HelpScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import TutorialVideoScreen from "./components/TutorialVideoScreen";
 import FisrtQuestionnaireScreen from "./screens/FirstQuestionnaireScreen";
+import SimpleGeminiChat from "./components/SimpleGeminiChat";
 
 const RootStack = createNativeStackNavigator();
 
@@ -27,7 +28,7 @@ const Drawer = createDrawerNavigator();
 const DrawerScreen = () => {
   return(
         <Drawer.Navigator initialRouteName="IA" screenOptions={{drawerType:"back"}}>
-          <Drawer.Screen name="IA" component={GeminiChat} />
+          <Drawer.Screen name="IA" component={SimpleGeminiChat} />
           <Drawer.Screen name="Tarefas" component={TaskScreen} />
           <Drawer.Screen name="Calendario" component={CalendarScreen} />
           <Drawer.Screen name="Notas" component={NoteScreen} />

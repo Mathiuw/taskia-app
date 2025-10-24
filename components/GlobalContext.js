@@ -5,6 +5,7 @@ export const GlobalContext = createContext();
 import { useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const database = new PocketBase(
   "https://pocketbasetcc-production.up.railway.app"
 );

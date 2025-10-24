@@ -44,7 +44,7 @@ function TaskInput({ navigation }) {
 
   // Notifications
   const [shouldScheduleNotification, setShouldScheduleNotification] =
-    useState(true);
+    useState(false);
 
   const toggleSwitch = () =>
     setShouldScheduleNotification((previousState) => !previousState);
