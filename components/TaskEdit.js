@@ -19,7 +19,7 @@ function TaskEdit({ navigation, route }) {
 
   const { taskId } = route.params;
 
-  const { getTags, setTag, getTarefa, updateTarefaCompleta } = useContext(GlobalContext);
+  const { getTags, setTag, getTarefa, updateTarefaCompleta, delTarefa } = useContext(GlobalContext);
 
   const scheme = useColorScheme();
 
@@ -196,11 +196,12 @@ function TaskEdit({ navigation, route }) {
         <View style={styles.buttomContainer}>
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
-            onPress={() => {
+            onPress={ async () => {
+              await delTarefa(taskId);
               navigation.goBack();
             }}
           >
-            <Text style={styles.pickerButtomText}>Cancelar</Text>
+            <Text style={styles.pickerButtomText}>Apagar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.pickerButtom}

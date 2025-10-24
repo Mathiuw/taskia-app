@@ -54,19 +54,7 @@ const SettingsOptionsScreen = ({ navigation }) => {
           <Text style={styles.pickerButtomText}>Refazer Questionario</Text>
         </TouchableOpacity>        
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginHorizontal: 20,
-        }}
-      >
-        <Text style={{ fontSize: 16, color: "#0088ffff"}}>Conta atual: {currentUser?.record.nome} </Text>
-        <TouchableOpacity style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]} onPress={logout}>
-          <Text style={[styles.pickerButtomText]}>Sair</Text>
-        </TouchableOpacity>
-      </View>
+
       <View
         style={{
           flexDirection: "row",
@@ -80,6 +68,20 @@ const SettingsOptionsScreen = ({ navigation }) => {
           <Text style={styles.pickerButtomText}>Rever Tutorial</Text>
         </TouchableOpacity>        
       </View>      
+
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginHorizontal: 20,
+        }}
+      >
+        <Text style={{ fontSize: 16, color: "#0088ffff"}}>Conta atual: {currentUser?.record.nome} </Text>
+        <TouchableOpacity style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]} onPress={logout}>
+          <Text style={[styles.pickerButtomText]}>Sair</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };

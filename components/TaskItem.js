@@ -72,12 +72,6 @@ function TaskItem({
               return;
             }
             updateTarefa(id, isChecked);
-            if (isChecked === true) {
-              console.log("Deleting task id: " + id);
-              //await sleep(500)
-              await delTarefa(id);
-              updateState(Math.random());
-            }
           }}
           isChecked={completed}
           onLongPress={() => {

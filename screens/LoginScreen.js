@@ -32,7 +32,7 @@ const LoginStack = () => {
 };
 
 const LoginScreen = ({ navigation }) => {
-  const { login, currentUser,getTutorialFeito } = useContext(GlobalContext);
+  const { login, currentUser, getTutorialFeito } = useContext(GlobalContext);
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");

@@ -698,12 +698,12 @@ export const GlobalProvider = ({ children }) => {
   // Tries to fetch a fresh value from the backend; falls back to the cached currentUser.
   async function getTutorialFeito() {
     try {
-      if (!currentUser || !currentUser.record || !currentUser.record.id) return false;
+      if (typeof currentUser === "undefined") return false;
       const record = await database.collection('usuario').getOne(currentUser.record.id);
-      return !!record.tutorialFeito;
+      return record.tutorialFeito;
     } catch (e) {
       console.log('getTutorialFeito error', e);
-      return !!(currentUser && currentUser.record && currentUser.record.tutorialFeito);
+      return (currentUser && currentUser.record && currentUser.record.tutorialFeito);
     }
   }
 
