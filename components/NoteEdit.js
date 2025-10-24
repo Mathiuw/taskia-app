@@ -12,7 +12,7 @@ import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
 
 function NoteEdit({ navigation, route }) {
-  const { getAnotacoes, updateAnotacao } = useContext(GlobalContext);
+  const { getAnotacoes, updateAnotacao, delAnotacoes } = useContext(GlobalContext);
 
   const { noteId } = route.params;
 
@@ -74,11 +74,12 @@ function NoteEdit({ navigation, route }) {
       <View style={styles.buttomContainer}>
         <TouchableOpacity
           style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
-          onPress={() => {
+          onPress={ async () => {
+            await delAnotacoes(noteId);
             navigation.goBack();
           }}
         >
-          <Text style={styles.pickerButtomText}>Cancelar</Text>
+          <Text style={styles.pickerButtomText}>Apagar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.pickerButtom} onPress={applyNoteEdit}>
           <Text style={styles.pickerButtomText}>Aplicar</Text>
