@@ -14,6 +14,8 @@ import { Picker } from "@react-native-picker/picker";
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 
+import StepItem from "./StepItem";
+
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 import TagItem from "./TagItem";
@@ -54,7 +56,7 @@ function TaskInput({ navigation }) {
     setShouldScheduleNotification((previousState) => !previousState);
 
   async function AddTaskHandler() {
-    await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag);
+    await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag.id);
     setTaskName("");
     setSteps([]);
     setDueDate(new Date());
@@ -127,7 +129,7 @@ function TaskInput({ navigation }) {
         <FlatList
           style={{ flexGrow: 0 }}
           data={steps}
-          renderItem={stepItem}
+          renderItem={({ item }) => <StepItem item={item} onRemove={RemoveStep} />}
           scrollEnabled={false}
           ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
@@ -213,7 +215,7 @@ function TaskInput({ navigation }) {
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
-          Tag selecionada: {selectedTag?.descricao}
+          {`Tag selecionada: ` + (selectedTag ? selectedTag.descricao : "Nenhuma")}
         </Text>
         <TextInput
           style={styles.textInput}

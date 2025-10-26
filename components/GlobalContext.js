@@ -233,7 +233,7 @@ export const GlobalProvider = ({ children }) => {
       const record = await database.collection("tarefa").create(data);
 
       for (const element of subTarefas) {
-        await setSubtarefa(element.title, data.id);
+        await setSubtarefa(element.nomeSubtarefa, data.id);
       }
 
       return record;

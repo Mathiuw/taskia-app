@@ -53,13 +53,18 @@ function TaskEdit({ navigation, route }) {
       startDate,
       dueDate,
       priority,
-      selectedTag,
+      selectedTag.id,
       steps
     );
+    
+    // Reset states
     setTaskName("");
     setDueDate(new Date());
     setStartDate(new Date());
     setTags([]);
+    setSteps([]);
+    setSelectedTag(undefined);
+    setPriority("");
 
     navigation.goBack();
   }
@@ -85,7 +90,9 @@ function TaskEdit({ navigation, route }) {
       setSteps(taskDetails.steps || []);
       setDueDate(new Date(taskDetails.dataConclusao));
       setPriority(taskDetails.prioridade);
-      setSelectedTag(taskDetails.idTag);
+
+      const taskTags = await getTags(taskDetails.idTag);
+      setSelectedTag(taskTags);
     }
     fetchTaskDetails();
   }, [taskId]);
@@ -213,7 +220,7 @@ function TaskEdit({ navigation, route }) {
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
-          Tag selecionada: {selectedTag?.descricao}
+          {`Tag selecionada: ` + (selectedTag ? selectedTag.descricao : "Nenhuma")}
         </Text>
         <TextInput
           style={styles.textInput}
