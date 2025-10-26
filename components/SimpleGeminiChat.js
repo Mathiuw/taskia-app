@@ -68,6 +68,54 @@ const createTaskFunctionDeclaration = {
   },
 };
 
+// Batch creation: allows the model to create several tasks in a single function call
+const createTasksFunctionDeclaration = {
+  name: "create_tasks",
+  description:
+    "Cria múltiplas tarefas de uma só vez. Use quando o usuário descrever várias tarefas no mesmo pedido.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      tasks: {
+        type: Type.ARRAY,
+        description: "Lista de tarefas a serem criadas",
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            taskName: { type: Type.STRING, description: "Nome da tarefa" },
+            startDate: {
+              type: Type.STRING,
+              description: 'Data do inicio da tarefa (e.g., "2024-07-29")',
+            },
+            dueDate: {
+              type: Type.STRING,
+              description: 'Data do fim da tarefa (e.g., "2024-07-29")',
+            },
+            steps: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  title: { type: Type.STRING, description: "Nome da etapa" },
+                },
+                required: ["title"],
+              },
+              description: "Etapas da tarefa",
+            },
+            priority: {
+              type: Type.INTEGER,
+              description:
+                "A prioridade da tarefa, podendo ser: alta, media ou baixa, sendo alta = 2, media = 1 e baixa = 0",
+            },
+          },
+          required: ["taskName", "dueDate", "priority"],
+        },
+      },
+    },
+    required: ["tasks"],
+  },
+};
+
 const SimpleGeminiChat = () => {
   const { setTarefa, aiVoice, getNType } = useContext(GlobalContext);
   const [messages, setMessages] = useState([]);
@@ -259,7 +307,10 @@ const SimpleGeminiChat = () => {
           topP: 0.95,
           tools: [
             {
-              functionDeclarations: [createTaskFunctionDeclaration],
+              functionDeclarations: [
+                createTaskFunctionDeclaration,
+                createTasksFunctionDeclaration,
+              ],
             },
           ],
         },
@@ -309,19 +360,40 @@ const SimpleGeminiChat = () => {
       }
 
       if (response.functionCalls && response.functionCalls.length > 0) {
-        const functionCall = response.functionCalls[0]; // Assuming one function call
-        console.log(`Function to call: ${functionCall.name}`);
-        console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
-        // In a real app, you would call your actual function here:
-        // const result = await scheduleMeeting(functionCall.args);
+        // Process all function calls returned by the model
+        for (const functionCall of response.functionCalls) {
+          try {
+            console.log(`Function to call: ${functionCall.name}`);
+            console.log(`Arguments: ${JSON.stringify(functionCall.args)}`);
 
-        await setTarefa(
-          functionCall.args.taskName,
-          functionCall.args.startDate,
-          functionCall.args.dueDate,
-          functionCall.args.steps,
-          functionCall.args.priority
-        );
+            if (functionCall.name === "create_task") {
+              const a = functionCall.args || {};
+              await setTarefa(
+                a.taskName,
+                a.startDate || null,
+                a.dueDate || null,
+                Array.isArray(a.steps) ? a.steps : [],
+                typeof a.priority === "number" ? a.priority : 0
+              );
+            } else if (functionCall.name === "create_tasks") {
+              const tasks = (functionCall.args && functionCall.args.tasks) || [];
+              if (Array.isArray(tasks)) {
+                for (const t of tasks) {
+                  const task = t || {};
+                  await setTarefa(
+                    task.taskName,
+                    task.startDate || null,
+                    task.dueDate || null,
+                    Array.isArray(task.steps) ? task.steps : [],
+                    typeof task.priority === "number" ? task.priority : 0
+                  );
+                }
+              }
+            }
+          } catch (fcErr) {
+            console.warn("Error handling function call:", fcErr);
+          }
+        }
       } else {
         console.log("No function call found in the response.");
       }
