@@ -14,6 +14,8 @@ const SettingsOptionsScreen = ({ navigation }) => {
   const { aiVoice, setAIVoice, currentUser, setCurrentUser, getNType, updtTutorialFeito, getTutorialFeito } = useContext(GlobalContext);
 
   const [learnType, setLearnType] = useState("");
+
+  // Debug state
   const [tutorialDone, setTutorialDone] = useState("")
 
   const toggleSwitch = () => setAIVoice((previousState) => !previousState);

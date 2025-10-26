@@ -64,6 +64,43 @@ export const GlobalProvider = ({ children }) => {
     saveUser();
   }, [currentUser]);
 
+  // load persisted aiVoice on mount
+  useEffect(() => {
+    const loadAIVoice = async () => {
+      try {
+        const raw = await AsyncStorage.getItem('@aiVoice');
+        if (raw !== null) {
+          try {
+            const parsed = JSON.parse(raw);
+            if (typeof parsed === 'boolean') {
+              setAIVoice(parsed);
+            } else if (raw === 'true' || raw === 'false') {
+              setAIVoice(raw === 'true');
+            }
+          } catch (_e) {
+            // fallback for non-JSON boolean strings
+            if (raw === 'true' || raw === 'false') setAIVoice(raw === 'true');
+          }
+        }
+      } catch (e) {
+        console.log('loadAIVoice error', e);
+      }
+    };
+    loadAIVoice();
+  }, []);
+
+  // persist aiVoice whenever it changes
+  useEffect(() => {
+    const saveAIVoice = async () => {
+      try {
+        await AsyncStorage.setItem('@aiVoice', JSON.stringify(aiVoice));
+      } catch (e) {
+        console.log('saveAIVoice error', e);
+      }
+    };
+    saveAIVoice();
+  }, [aiVoice]);
+
   const logout = async () => {
     try {
       setCurrentUser(undefined);
@@ -221,8 +258,8 @@ export const GlobalProvider = ({ children }) => {
       try {
         const record = await database.collection("tarefa").getList(1, 1, {
           filter: `id = "${id}"`,
-        });
-        const item = record && record.items && record.items[0];
+  });
+  const item = record && record.items && record.items[0];
         if (!item) return [];
 
         // include subtarefas as steps when fetching a single task
