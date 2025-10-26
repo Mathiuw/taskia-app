@@ -222,7 +222,17 @@ export const GlobalProvider = ({ children }) => {
         const record = await database.collection("tarefa").getList(1, 1, {
           filter: `id = "${id}"`,
         });
-        return record.items[0];
+        const item = record && record.items && record.items[0];
+        if (!item) return [];
+
+        // include subtarefas as steps when fetching a single task
+        try {
+          const steps = await getSubtarefa(id);
+          return { ...item, steps };
+        } catch (e) {
+          console.log("getTarefa/tarefaId steps fetch", e);
+          return { ...item, steps: [] };
+        }
       } catch (error) {
         console.log("getTarefa/tarefaId", error);
         return [];
@@ -335,7 +345,9 @@ export const GlobalProvider = ({ children }) => {
     dataInicio,
     dataConclusao,
     prioridade,
-    tags) {
+    tags,
+    steps // optional: array of steps to fully replace existing subtarefas
+  ) {
     const data = {
       descricao: descricao,
       dataInicio: dataInicio,
@@ -345,6 +357,28 @@ export const GlobalProvider = ({ children }) => {
     };
     try {
       await database.collection("tarefa").update(id, data);
+      // If steps are provided, replace subtarefas to match the provided list
+      if (Array.isArray(steps)) {
+        try {
+          const existing = await getSubtarefa(id);
+          if (Array.isArray(existing)) {
+            for (const el of existing) {
+              try { await delSubtarefa(el.id); } catch (e) { console.log('updateTarefaCompleta/delSubtarefa el', e); }
+            }
+          } else if (existing && existing.id) {
+            try { await delSubtarefa(existing.id); } catch (e) { console.log('updateTarefaCompleta/delSubtarefa one', e); }
+          }
+
+          for (const st of steps) {
+            const title = (st && (st.title || st.nomeSubtarefa || st.nome || st.descricao)) || null;
+            if (title) {
+              try { await setSubtarefa(title, id); } catch (e) { console.log('updateTarefaCompleta/setSubtarefa', e); }
+            }
+          }
+        } catch (e) {
+          console.log('updateTarefaCompleta/steps handling', e);
+        }
+      }
     } catch (error) {
       console.log("updateTarefa", error);
     }
@@ -688,6 +722,31 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function delSubtarefa(id, idUsuario) {
+    idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
+    if (typeof id == "undefined") {
+      return false;
+    }
+    if (!idUsuario) {
+      console.log('delSubtarefa called without currentUser');
+      return false;
+    }
+    try {
+      const record = await database.collection("subtarefa").getList(1, 1, {
+        filter: `id = "${id}" && idUsuario = "${idUsuario}"`,
+      });
+
+      if (record.items.length == 0) {
+        return false;
+      }
+      await database.collection("subtarefa").delete(id);
+      return true;
+    } catch (error) {
+      console.log("delSubtarefa", error);
+      return false;
+    }
+  }
+
   async function updtUsuario(tipoNeurodivergencia) {
     if (!currentUser || !currentUser.record || !currentUser.record.id) {
       console.log('updtUsuario called without currentUser');
@@ -784,6 +843,7 @@ export const GlobalProvider = ({ children }) => {
         updateAnotacao,
         getSubtarefa,
         setSubtarefa,
+        delSubtarefa,
         updateSubtarefa,
         aiVoice,
         setAIVoice,

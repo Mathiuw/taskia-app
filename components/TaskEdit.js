@@ -15,6 +15,7 @@ import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 import TagItem from "./TagItem";
+import StepItem from "./StepItem";
 
 function TaskEdit({ navigation, route }) {
 
@@ -41,6 +42,9 @@ function TaskEdit({ navigation, route }) {
   const [tagInput, setTagInput] = useState("");
   const [submitTag, setSubmitTag] = useState("");
 
+  // Steps
+  const [stepInput, setStepInput] = useState("");
+
   async function UpdateTask() {
     //await setTarefa(taskName, startDate, dueDate, steps, priority, selectedTag);
     await updateTarefaCompleta(
@@ -49,7 +53,8 @@ function TaskEdit({ navigation, route }) {
       startDate,
       dueDate,
       priority,
-      selectedTag
+      selectedTag,
+      steps
     );
     setTaskName("");
     setDueDate(new Date());
@@ -59,12 +64,25 @@ function TaskEdit({ navigation, route }) {
     navigation.goBack();
   }
 
+  function AddStep(title) {
+    setSteps([...steps, { key: Math.random(), id: Math.random(), nomeSubtarefa: title }]);
+  }
+
+  function RemoveStep(id) {
+    const newSteps = steps.filter((step) => step.id !== id);
+    setSteps(newSteps);
+  }
+
   useEffect(() => {
-    // Fetch task details using taskId and populate states
+    // Fetch task details using taskId
     async function fetchTaskDetails() {
       const taskDetails = await getTarefa(undefined, taskId);
+      console.log("Fetched task details:", taskDetails);
+
+      // Populate states with fetched details
       setTaskName(taskDetails.descricao);
       setStartDate(new Date(taskDetails.dataInicio));  
+      setSteps(taskDetails.steps || []);
       setDueDate(new Date(taskDetails.dataConclusao));
       setPriority(taskDetails.prioridade);
       setSelectedTag(taskDetails.idTag);
@@ -94,7 +112,7 @@ function TaskEdit({ navigation, route }) {
       return () => {
         isActive = false;
       };
-    }, [submitTag,updateState])
+    }, [submitTag, updateState])
   );
 
   return (
@@ -117,6 +135,31 @@ function TaskEdit({ navigation, route }) {
           onChangeText={setTaskName}
           value={taskName}
         />
+
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Etapas
+        </Text>
+        <FlatList
+          style={{ flexGrow: 0 }}
+          data={steps}
+          renderItem={({ item }) => <StepItem item={item} onRemove={RemoveStep} /> }
+          scrollEnabled={false}
+          ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
+        />
+        <TextInput
+          style={styles.textInput}
+          placeholder="Nome da etapa"
+          value={stepInput}
+          onChangeText={setStepInput}
+          placeholderTextColor={"#0088ffff"}
+          onSubmitEditing={() => {
+            AddStep(stepInput);
+            setStepInput("");
+          }}
+        />
+
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >

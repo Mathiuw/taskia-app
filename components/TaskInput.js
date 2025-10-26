@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
-import Ionicons from "@expo/vector-icons/Ionicons";
+
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
 import TagItem from "./TagItem";
@@ -68,31 +68,14 @@ function TaskInput({ navigation }) {
     navigation.goBack();
   }
 
-  // Step item component
-  const stepItem = ({ item }) => {
-    return (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TextInput
-          style={{ alignSelf: "flex-start", color: "#0088ffff" }}
-          defaultValue={item.title}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            RemoveStep(item.title);
-          }}
-        >
-          <Ionicons name="remove-circle-outline" size={24} color="red" />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+
 
   function AddStep(title) {
-    setSteps([...steps, { key: Math.random(), title: title }]);
+    setSteps([...steps, { key: Math.random(), id: Math.random(), nomeSubtarefa: title }]);
   }
 
   function RemoveStep(title) {
-    const newSteps = steps.filter((step) => step.title !== title);
+    const newSteps = steps.filter((step) => step.nomeSubtarefa !== title);
     setSteps(newSteps);
   }
 
