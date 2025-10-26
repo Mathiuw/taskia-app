@@ -4,7 +4,6 @@ import { useContext, useRef } from "react";
 import { GlobalContext } from "./GlobalContext";
 import styles from "../styles";
 import { FlatList, View, Text, useColorScheme, Pressable } from "react-native";
-import { sleep } from "./sleep";
 
 function TaskItem({
   id,
@@ -61,7 +60,7 @@ function TaskItem({
         <BouncyCheckbox
           style={styles.taskItem}
           size={25}
-          text={title + " - " + formatDateBR(startDate) + "  -->  " + formatDateBR(dueDate)}
+          text={startDate ? title + " - " + formatDateBR(startDate) + "  -->  " + formatDateBR(dueDate) : title + " - " + formatDateBR(dueDate)}
           fillColor={
             priority === 2 ? "red" : priority === 1 ? "orange" : "green"
           }
