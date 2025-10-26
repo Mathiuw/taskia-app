@@ -3,7 +3,8 @@ import { useContext, useRef } from "react";
 
 import { GlobalContext } from "./GlobalContext";
 import styles from "../styles";
-import { FlatList, View, Text, useColorScheme, Pressable } from "react-native";
+import { FlatList, View, Text, useColorScheme } from "react-native";
+import { LongPressGestureHandler } from "react-native-gesture-handler";
 
 function TaskItem({
   id,
@@ -57,29 +58,39 @@ function TaskItem({
   return (
     <View>
       <View>
-        <BouncyCheckbox
-          style={styles.taskItem}
-          size={25}
-          text={startDate ? title + " - " + formatDateBR(startDate) + "  -->  " + formatDateBR(dueDate) : title + " - " + formatDateBR(dueDate)}
-          fillColor={
-            priority === 2 ? "red" : priority === 1 ? "orange" : "green"
-          }
-          unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
-          onPress={async (isChecked) => {
-            if (longPressRef.current) {
-              longPressRef.current = false;
-              return;
-            }
-            await updateTarefa(id, isChecked);
-            updateState(Math.random());
+        <LongPressGestureHandler
+          minDurationMs={350}
+          onActivated={() => {
+            longPressRef.current = true;
+            console.log("Long pressed task id: " + id);
+            if (typeof onTaskLongPress === 'function') onTaskLongPress(id);
           }}
-          isChecked={completed}
-          onLongPress={() => {
-              longPressRef.current = true;
-              console.log("Long pressed task id: " + id);
-              if (typeof onTaskLongPress === 'function') onTaskLongPress(id);
-          }}
-        />
+          onEnded={() => { longPressRef.current = false; }}
+          onCancelled={() => { longPressRef.current = false; }}
+          onFailed={() => { longPressRef.current = false; }}
+        >
+          <View>
+            <BouncyCheckbox
+              style={styles.taskItem}
+              size={25}
+              text={startDate ? title + " - " + formatDateBR(startDate) + "  -->  " + formatDateBR(dueDate) : title + " - " + formatDateBR(dueDate)}
+              fillColor={
+                priority === 2 ? "red" : priority === 1 ? "orange" : "green"
+              }
+              unFillColor={scheme === "dark" ? "#000000ff" : "#fff"}
+              disableBuiltInState
+              onPress={async (isChecked) => {
+                if (longPressRef.current) {
+                  longPressRef.current = false;
+                  return;
+                }
+                await updateTarefa(id, isChecked);
+                updateState(Math.random());
+              }}
+              isChecked={completed}
+            />
+          </View>
+        </LongPressGestureHandler>
       </View>
       <FlatList
         style={{ marginStart: 30 }}
