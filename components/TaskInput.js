@@ -8,6 +8,8 @@ import {
   FlatList,
   ScrollView,
   Switch,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
@@ -107,8 +109,13 @@ function TaskInput({ navigation }) {
   );
 
   return (
-    <SafeAreaView style={styles.inputModalContainer}>
-      <ScrollView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 64}
+    >
+      <SafeAreaView style={styles.inputModalContainer}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -245,8 +252,9 @@ function TaskInput({ navigation }) {
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

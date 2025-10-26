@@ -7,6 +7,8 @@ import {
   useColorScheme,
   FlatList,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
@@ -123,8 +125,13 @@ function TaskEdit({ navigation, route }) {
   );
 
   return (
-    <SafeAreaView style={styles.inputModalContainer}>
-      <ScrollView>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 64}
+    >
+      <SafeAreaView style={styles.inputModalContainer}>
+        <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -251,8 +258,9 @@ function TaskEdit({ navigation, route }) {
             <Text style={styles.pickerButtomText}>Aplicar</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
