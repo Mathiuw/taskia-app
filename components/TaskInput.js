@@ -237,8 +237,11 @@ function TaskInput({ navigation }) {
           onChangeText={setTagInput}
           placeholderTextColor={"#0088ffff"}
           onSubmitEditing={async () => {
-            await setTag(tagInput);
-            setSubmitTag(tagInput);
+            const trimmedTag = tagInput.trim();
+            if (trimmedTag) {
+              await setTag(trimmedTag);
+              setSubmitTag(trimmedTag);
+            }
             setTagInput("");
           }}
         />

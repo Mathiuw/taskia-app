@@ -126,11 +126,11 @@ function TaskEdit({ navigation, route }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, marginHorizontal: 20 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 64}
     >
-      <SafeAreaView style={styles.inputModalContainer}>
+      <SafeAreaView>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
         <View style={styles.formContainer}>
         <Text
@@ -238,8 +238,11 @@ function TaskEdit({ navigation, route }) {
           onChangeText={setTagInput}
           placeholderTextColor={"#0088ffff"}
           onSubmitEditing={async () => {
-            await setTag(tagInput);
-            setSubmitTag(tagInput);
+            const trimmedTag = tagInput.trim();
+            if (trimmedTag) {
+              await setTag(trimmedTag);
+              setSubmitTag(trimmedTag);
+            }
             setTagInput("");
           }}
         />
