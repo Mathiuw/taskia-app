@@ -17,7 +17,7 @@ import { useFocusEffect } from "@react-navigation/core";
 
 function TaskEdit({ navigation, route }) {
 
-  const { taskId } = route.params;
+  const { taskId, backScreen } = route.params;
 
   const { getTags, setTag, getTarefa, updateTarefaCompleta, delTarefa } = useContext(GlobalContext);
 
@@ -198,7 +198,7 @@ function TaskEdit({ navigation, route }) {
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
             onPress={ async () => {
               await delTarefa(taskId);
-              navigation.replace("Lista Tarefas");
+              navigation.replace(backScreen);
             }}
           >
             <Text style={styles.pickerButtomText}>Apagar</Text>

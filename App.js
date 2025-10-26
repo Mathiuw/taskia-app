@@ -11,9 +11,7 @@ import { GlobalProvider, GlobalContext } from "./components/GlobalContext";
 import { useContext } from "react";
 
 // Screens import
-import GeminiChat from "./components/GeminiChat";
 import TaskScreen from "./screens/TaskScreen";
-import CalendarScreen from "./screens/CalendarScreen";
 import NoteScreen from "./screens/NotesScreen";
 import LoginStartScreen from "./screens/LoginScreen";
 import HelpScreen from "./screens/HelpScreen";
@@ -21,6 +19,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 import TutorialVideoScreen from "./components/TutorialVideoScreen";
 import FisrtQuestionnaireScreen from "./screens/FirstQuestionnaireScreen";
 import SimpleGeminiChat from "./components/SimpleGeminiChat";
+import CalendarStackScreen from "./screens/CalendarScreen";
 
 const RootStack = createNativeStackNavigator();
 
@@ -30,7 +29,7 @@ const DrawerScreen = () => {
         <Drawer.Navigator initialRouteName="IA" screenOptions={{drawerType:"back"}}>
           <Drawer.Screen name="IA" component={SimpleGeminiChat} />
           <Drawer.Screen name="Tarefas" component={TaskScreen} />
-          <Drawer.Screen name="Calendario" component={CalendarScreen} />
+          <Drawer.Screen name="Calendario" component={CalendarStackScreen} />
           <Drawer.Screen name="Notas" component={NoteScreen} />
           <Drawer.Screen name="Configuracoes" component={SettingsScreen} />
           <Drawer.Screen name="Ajuda" component={HelpScreen} />

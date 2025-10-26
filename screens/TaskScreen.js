@@ -1,6 +1,9 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useContext, useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { GlobalContext } from "../components/GlobalContext";
 
 import TaskList from "../components/TaskList";
 
@@ -12,14 +15,49 @@ const Stack = createNativeStackNavigator();
 
 const TaskScreen = ({ navigation }) => {
 
+  const { getTarefa } = useContext(GlobalContext);
+
+  const [tasks, setTasks] = useState([]);
+  const [taskSubmitted, setTaskSubmitted] = useState("");
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUser = async () => {
+        try {
+          const response = await getTarefa();
+          setTasks(response);
+        } catch (e) {
+          console.error("Error focus effect: ", e);
+        }
+      };
+      fetchUser();
+
+    }, [])
+  );
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getTarefa();
+        setTasks(response);
+      } catch (e) {
+        console.error("Error use effect: ", e);
+      }
+    };
+
+    fetchUser();
+  }, [taskSubmitted]);
+
+
+
   const onTaskLongPress = (id) => {
     console.log(`Task long-pressed: id=${id}`);
-    navigation.navigate("Editar Tarefa", { taskId: id });
+    navigation.navigate("Editar Tarefa", { taskId: id, backScreen: "Lista Tarefas" });
   }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TaskList onTaskLongPress={onTaskLongPress} />
+      <TaskList tasks={tasks} updateState={setTaskSubmitted} onTaskLongPress={onTaskLongPress} />
       <TouchableOpacity
         style={styles.addBottomButtom}
         onPress={() => {

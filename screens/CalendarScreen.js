@@ -1,19 +1,33 @@
-import { View, Text, StyleSheet, useColorScheme } from "react-native";
+import { View, Text, StyleSheet, useColorScheme, TouchableOpacity } from "react-native";
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { GlobalContext } from "../components/GlobalContext";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import TaskInput from "../components/TaskInput";
+import TaskEdit from "../components/TaskEdit";
 
+import { useFocusEffect } from "@react-navigation/core";
 import { ptBR } from "../components/utils/localeCalendarConfig";
+import styles from "../styles";
+import TaskList from "../components/TaskList";
 
 LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
 
-import TaskList from "../components/TaskList";
-import TaskListCalendar from "../components/TasklistCalendar";
-import { GlobalContext } from "../components/GlobalContext";
+const calendarStack = createNativeStackNavigator();
 
-import { useFocusEffect } from "@react-navigation/core";
+const CalendarStackScreen = () => {
+  return (
+    <calendarStack.Navigator initialRouteName="Calendario" screenOptions={{headerShown: false}}>
+      <calendarStack.Screen name="Calendario" component={CalendarScreen} />
+      <calendarStack.Screen name="Criar Tarefa" component={TaskInput} />
+      <calendarStack.Screen name="Editar Tarefa" component={TaskEdit} />
+    </calendarStack.Navigator>
+  );
+};
 
-const CalendarScreen = () => {
+const CalendarScreen = ({navigation}) => {
   const [tasks, setTasks] = useState(getTarefa);
 
   const { getTarefa } = useContext(GlobalContext);
@@ -39,25 +53,41 @@ const CalendarScreen = () => {
       fetchUser();
     }, [day, submitUpdate]);
 
+  const onTaskLongPress = (id) => {
+    console.log(`Task long-pressed: id=${id}`);
+    navigation.navigate("Editar Tarefa", { taskId: id, backScreen: "Calendario" });
+  }
+
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View>
         <Calendar
-          style={styles.calendar}
-          headerStyle={styles.header}
-          theme={scheme === "dark" ? styles.themeDark : styles.themeLight}
+          style={localStyles.calendar}
+          headerStyle={localStyles.header}
+          theme={scheme === "dark" ? localStyles.themeDark : localStyles.themeLight}
           onDayPress={setDay}
           markedDates={day && { [day.dateString]: { selected: true } }}
         />
       </View>
       <View style={{ flex: 1 }}>
-        <TaskListCalendar tasks={tasks} updateState={setSubmitUpdate} />
+        {/*<TaskListCalendar tasks={tasks} updateState={setSubmitUpdate} /> */}
+        <TaskList tasks={tasks} updateState={setSubmitUpdate} onTaskLongPress={onTaskLongPress}/>
+        <TouchableOpacity
+          style={styles.addBottomButtom}
+          onPress={() => {
+            navigation.navigate("Criar Tarefa");
+          }}
+        >
+          <Text style={[styles.buttomText, { fontSize: 18 }]}>
+            Adicionar Tarefa
+          </Text>
+        </TouchableOpacity>           
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   calendar: {
     backgroundColor: "transparent",
   },
@@ -93,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CalendarScreen;
+export default CalendarStackScreen;
