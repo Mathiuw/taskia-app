@@ -14,12 +14,14 @@ import TaskDatePicker from "./TaskDatePicker";
 import styles from "../styles";
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
+import TagItem from "./TagItem";
 
 function TaskEdit({ navigation, route }) {
 
   const { taskId, backScreen } = route.params;
 
-  const { getTags, setTag, getTarefa, updateTarefaCompleta, delTarefa } = useContext(GlobalContext);
+  const { getTags, setTag, getTarefa, updateTarefaCompleta, delTarefa, delTags } = useContext(GlobalContext);
+  const [updateState, setUpdateState] = useState("");
 
   const scheme = useColorScheme();
 
@@ -70,17 +72,6 @@ function TaskEdit({ navigation, route }) {
     fetchTaskDetails();
   }, [taskId]);
 
-  // Tag item component
-  const TagItem = ({ item }) => {
-    return (
-      <View style={styles.tagContainer}>
-        <TouchableOpacity onPress={() => {setSelectedTag(item)}}>
-          <Text style={styles.pickerButtomText}>{item.descricao}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-
   // Get tags on focus
   useFocusEffect(
     useCallback(() => {
@@ -103,7 +94,7 @@ function TaskEdit({ navigation, route }) {
       return () => {
         isActive = false;
       };
-    }, [submitTag])
+    }, [submitTag,updateState])
   );
 
   return (
@@ -171,7 +162,7 @@ function TaskEdit({ navigation, route }) {
         <FlatList
           style={{ flexGrow: 0 }}
           data={tags}
-          renderItem={TagItem}
+          renderItem={({ item }) => <TagItem item={item} onSelect={setSelectedTag} onLongPress={delTags} updateState={setUpdateState} />}
           horizontal={true}
           scrollEnabled={false}
           ListEmptyComponent={<Text>*Sem tags criadas</Text>}

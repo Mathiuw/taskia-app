@@ -16,9 +16,10 @@ import styles from "../styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { GlobalContext } from "./GlobalContext";
 import { useFocusEffect } from "@react-navigation/core";
+import TagItem from "./TagItem";
 
 function TaskInput({ navigation }) {
-  const { setTarefa, getTags, setTag, scheduleNotification } =
+  const { setTarefa, getTags, setTag, delTags, scheduleNotification } =
     useContext(GlobalContext);
 
   const scheme = useColorScheme();
@@ -45,6 +46,9 @@ function TaskInput({ navigation }) {
   // Notifications
   const [shouldScheduleNotification, setShouldScheduleNotification] =
     useState(false);
+
+  // Update state
+  const [updateState, setUpdateState] = useState("");
 
   const toggleSwitch = () =>
     setShouldScheduleNotification((previousState) => !previousState);
@@ -92,16 +96,6 @@ function TaskInput({ navigation }) {
     setSteps(newSteps);
   }
 
-  // Tag item component
-  const TagItem = ({ item }) => {
-    return (
-      <View style={styles.tagContainer}>
-        <TouchableOpacity onPress={() => {setSelectedTag(item)}}>
-          <Text style={styles.pickerButtomText}>{item.descricao}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
 
   useFocusEffect(
     useCallback(() => {
@@ -124,7 +118,7 @@ function TaskInput({ navigation }) {
       return () => {
         isActive = false;
       };
-    }, [submitTag])
+    }, [submitTag, updateState])
   );
 
   return (
@@ -228,7 +222,7 @@ function TaskInput({ navigation }) {
         <FlatList
           style={{ flexGrow: 0 }}
           data={tags}
-          renderItem={TagItem}
+          renderItem={({ item }) => <TagItem item={item} onSelect={setSelectedTag} onLongPress={delTags} updateState={setUpdateState} />}
           horizontal={true}
           scrollEnabled={false}
           ListEmptyComponent={<Text>*Sem tags criadas</Text>}
@@ -254,7 +248,7 @@ function TaskInput({ navigation }) {
           <TouchableOpacity
             style={[styles.pickerButtom, { backgroundColor: "#ff0000ff" }]}
             onPress={() => {
-              navigation.goBack();
+              navigation.replace("Lista Tarefas");
             }}
           >
             <Text style={styles.pickerButtomText}>Cancelar</Text>

@@ -488,6 +488,27 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
+  async function delTags(idTag, idUsuario = currentUser.record.id) {
+      if (typeof idTag == "undefined") {
+          return false;
+      }
+      try {
+          const record = await database.collection('tags').getList(1, 1, {
+              filter: `id = "${idTag}" && idUsuario = "${idUsuario}"`
+          });
+
+          if (record.items.length == 0) {
+              return false;
+          }
+
+          await database.collection('tags').delete(idTag)
+          return true;
+      } catch (error) {
+          console.log("delTag", error)
+          return false;
+      }
+  }
+
   async function getAnotacoes(id, idUsuario) {
     idUsuario = typeof idUsuario !== 'undefined' ? idUsuario : (currentUser && currentUser.record ? currentUser.record.id : undefined);
     if (typeof id !== "undefined") {
@@ -756,6 +777,7 @@ export const GlobalProvider = ({ children }) => {
         updtTutorialFeito,
         getTags,
         setTag,
+        delTags,
         getAnotacoes,
         setAnotacoes,
         delAnotacoes,
