@@ -80,46 +80,86 @@ const styles = StyleSheet.create({
     alignItems:"center"
   },
 
+  // Generic form container to center content and add paddings
+  formContainer: {
+    width: '100%',
+    maxWidth: 640,
+    alignSelf: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+
   nameTextLight: {
     fontSize: 20,
     alignSelf: "flex-start",
-    marginHorizontal: 50,
-    marginTop: 15,
+    marginTop: 16,
+    color: '#0b0b0b',
   },
 
   nameTextDark: {
     fontSize: 20,
     alignSelf: "flex-start",
-    marginHorizontal: 50,
-    marginTop: 15,
+    marginTop: 16,
     color: '#fff'
   },
 
+  // Legacy textInput used across app; keep but improve responsiveness
   textInput: {
     borderWidth: 2,
     borderColor: "#0088ffff",
     color: "#0088ffff",
-    marginVertical: 5,
-    borderRadius: 50,
-    width: 300,
-    padding: 16,
+    marginVertical: 6,
+    borderRadius: 16,
+    width: '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignSelf: 'stretch',
+  },
+
+  // Modern input alias (same as textInput for now)
+  input: {
+    borderWidth: 2,
+    borderColor: "#0088ffff",
+    color: "#0088ffff",
+    marginVertical: 6,
+    borderRadius: 16,
+    width: '100%',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignSelf: 'stretch',
   },
 
   priorityInput: {
     borderWidth: 2,
     borderColor: "#0088ffff",
     color: "#0088ffff",
-    marginVertical: 5,
+    marginVertical: 6,
     justifyContent: "center",
-    paddingHorizontal:10,
-    borderRadius: 50,
+    paddingHorizontal:12,
+    borderRadius: 16,
     height: 50,
-    width: 300,
+    width: '100%',
+    alignSelf: 'stretch',
+  },
+
+  // Generic row helpers
+  rowBetween: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+
+  // Spacing between sections
+  sectionSpacer: {
+    height: 8,
   },
 
   buttomContainer: {
     marginTop: 16,
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   pickerButtom: {
@@ -163,6 +203,11 @@ const styles = StyleSheet.create({
     padding: 4,
     marginRight: 5,
     marginBottom: 5,
+  },
+
+  // Tag list row padding
+  tagRow: {
+    paddingVertical: 6,
   },
 
   headerContainer: {

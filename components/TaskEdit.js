@@ -132,6 +132,7 @@ function TaskEdit({ navigation, route }) {
     >
       <SafeAreaView style={styles.inputModalContainer}>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
+        <View style={styles.formContainer}>
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
@@ -143,7 +144,7 @@ function TaskEdit({ navigation, route }) {
           Nome
         </Text>
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da tarefa"
           placeholderTextColor={"#0088ffff"}
           onChangeText={setTaskName}
@@ -163,7 +164,7 @@ function TaskEdit({ navigation, route }) {
           ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da etapa"
           value={stepInput}
           onChangeText={setStepInput}
@@ -222,6 +223,7 @@ function TaskEdit({ navigation, route }) {
           renderItem={({ item }) => <TagItem item={item} onSelect={setSelectedTag} onLongPress={delTags} updateState={setUpdateState} />}
           horizontal={true}
           scrollEnabled={false}
+          contentContainerStyle={styles.tagRow}
           ListEmptyComponent={<Text>*Sem tags criadas</Text>}
         />
         <Text
@@ -230,7 +232,7 @@ function TaskEdit({ navigation, route }) {
           {`Tag selecionada: ` + (selectedTag ? selectedTag.descricao : "Nenhuma")}
         </Text>
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da tag"
           value={tagInput}
           onChangeText={setTagInput}
@@ -257,6 +259,7 @@ function TaskEdit({ navigation, route }) {
           >
             <Text style={styles.pickerButtomText}>Aplicar</Text>
           </TouchableOpacity>
+        </View>
         </View>
         </ScrollView>
       </SafeAreaView>

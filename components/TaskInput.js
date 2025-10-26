@@ -73,13 +73,12 @@ function TaskInput({ navigation }) {
   }
 
 
-
   function AddStep(title) {
     setSteps([...steps, { key: Math.random(), id: Math.random(), nomeSubtarefa: title }]);
   }
 
-  function RemoveStep(title) {
-    const newSteps = steps.filter((step) => step.nomeSubtarefa !== title);
+  function RemoveStep(id) {
+    const newSteps = steps.filter((step) => step.id !== id);
     setSteps(newSteps);
   }
 
@@ -110,19 +109,25 @@ function TaskInput({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, marginHorizontal: 20 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 64}
     >
-      <SafeAreaView style={styles.inputModalContainer}>
+      <SafeAreaView>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 24 }}>
+        <View style={styles.formContainer}>
+        <Text
+          style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
+        >
+          Criar Tarefa
+        </Text>          
         <Text
           style={scheme === "dark" ? styles.nameTextDark : styles.nameTextLight}
         >
           Nome
         </Text>
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da tarefa"
           placeholderTextColor={"#0088ffff"}
           onChangeText={setTaskName}
@@ -141,7 +146,7 @@ function TaskInput({ navigation }) {
           ListEmptyComponent={<Text>*Sem etapas ainda</Text>}
         />
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da etapa"
           value={stepInput}
           onChangeText={setStepInput}
@@ -172,7 +177,7 @@ function TaskInput({ navigation }) {
           onDateConfirm={setDueDate}
           value={dueDate}
         />
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={styles.rowBetween}>
           <Text
             style={
               scheme === "dark" ? styles.nameTextDark : styles.nameTextLight
@@ -217,6 +222,7 @@ function TaskInput({ navigation }) {
           renderItem={({ item }) => <TagItem item={item} onSelect={setSelectedTag} onLongPress={delTags} updateState={setUpdateState} />}
           horizontal={true}
           scrollEnabled={false}
+          contentContainerStyle={styles.tagRow}
           ListEmptyComponent={<Text>*Sem tags criadas</Text>}
         />
         <Text
@@ -225,7 +231,7 @@ function TaskInput({ navigation }) {
           {`Tag selecionada: ` + (selectedTag ? selectedTag.descricao : "Nenhuma")}
         </Text>
         <TextInput
-          style={styles.textInput}
+          style={styles.input}
           placeholder="Nome da tag"
           value={tagInput}
           onChangeText={setTagInput}
@@ -251,6 +257,7 @@ function TaskInput({ navigation }) {
           >
             <Text style={styles.pickerButtomText}>Adicionar</Text>
           </TouchableOpacity>
+        </View>
         </View>
         </ScrollView>
       </SafeAreaView>
